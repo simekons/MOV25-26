@@ -1,4 +1,8 @@
 package com.example.desktopengine;
 
-public class DesktopEngine {
+import com.example.engine.IEngine;
+
+public class DesktopEngine implements IEngine
+{
+
 }
