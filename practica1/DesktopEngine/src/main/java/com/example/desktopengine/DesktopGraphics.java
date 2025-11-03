@@ -157,9 +157,13 @@ public class DesktopGraphics implements IGraphics
     // Método que dibuja un rectángulo relleno.
     @Override
     public void fillRectangle(float cx, float cy, float width, float height) {
-        height -= cy;
-        width -= cx;
+
         graphics2D.fillRect((int)cx, (int)cy, (int)width, (int)height);
+    }
+
+    @Override
+    public void drawRect(float cx, float cy, float width, float height){
+        graphics2D.drawRect((int)cx, (int)cy, (int)width, (int)height);
     }
 
     // Método que dibuja un rectángulo relleno con los bordes redondeados.

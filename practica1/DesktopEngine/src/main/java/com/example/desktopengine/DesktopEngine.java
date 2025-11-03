@@ -33,7 +33,7 @@ public class DesktopEngine implements IEngine, Runnable
         this.desktopInput = new DesktopInput();
         this.desktopAudio = new DesktopAudio();
 
-        desktopGraphics.setLogicSize(400, 600);
+        desktopGraphics.setLogicSize(900, 600);
 
 
         this.jFrame.addMouseListener(this.desktopInput);

@@ -1,6 +1,7 @@
 package com.example.desktopgame;
 
 import com.example.desktopengine.DesktopEngine;
+import com.example.gamelogic.GameScene;
 import com.example.gamelogic.MenuScene;
 
 import javax.swing.JFrame;
@@ -14,10 +15,11 @@ public class DesktopGame {
 
         // Crea la ventana.
         JFrame jFrame = new JFrame("Puzzle Bobble");
-        jFrame.setSize(800, 800);
+        jFrame.setSize(900, 600);
         // Crea el motor.
         DesktopEngine DesktopEngine = new DesktopEngine(jFrame);
 
+        GameScene gameScene = new GameScene(DesktopEngine);
         if(isDebug){
             System.out.println("DEBUG");
         }
@@ -28,7 +30,7 @@ public class DesktopGame {
 
         // Crea la escena de menú y la asigna como escena actual.
         MenuScene menuScene = new MenuScene(DesktopEngine);
-        DesktopEngine.setScenes(menuScene);
+        DesktopEngine.setScenes(gameScene);
         // Ejecuta la aplicación.
         DesktopEngine.run();
     }

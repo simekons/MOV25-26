@@ -41,4 +41,5 @@ public interface IGraphics
     // Setter del tamaño lógico
     public void setLogicSize(float w, float h);
 
+    void drawRect(float cx, float cy, float width, float height);
 }
