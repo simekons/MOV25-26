@@ -13,6 +13,10 @@ public class Cell {
 
     private boolean path;
 
+    private boolean tower;
+
+    private boolean available;
+
     public Cell(IGraphics iGraphics, float x, float y, float size, int color, int row, int col, boolean path){
         this.iGraphics = iGraphics;
         this.color = color;
@@ -22,6 +26,8 @@ public class Cell {
         this.y = y;
         this.size = size;
         this.path = path;
+        this.tower = false;
+        this.available = false;
     }
 
     public void render(){
@@ -30,6 +36,9 @@ public class Cell {
         iGraphics.setColor(this.color);
 
         if (!this.path){
+            if (this.available){
+                iGraphics.setColor(0xff00AA00);
+            }
             iGraphics.drawRect(x, y, size, size);
         }
         else {
@@ -37,8 +46,12 @@ public class Cell {
         }
     }
 
+    public void setTower(boolean tower) { this.tower = tower; }
+
+    public void setAvailable(boolean available) { this.available = available; }
     public boolean getPath() { return this.path; }
 
+    public boolean getTower() { return this.tower; }
     public int getRow() { return this.row; }
 
     public int getColumn() { return this.column; }

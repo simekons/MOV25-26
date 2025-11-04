@@ -23,22 +23,35 @@ public class GameScene implements IScene {
 
     private ArrayList<Enemy> enemies;
 
+    private ArrayList<Tower> towers;
     private float cooldown = 1.0f;
 
     private float timer = 0.0f;
+
+    private Button tower1;
+    private IImage tower1img;
+    private Button tower2;
+    private IImage tower2img;
+    private Button tower3;
+    private IImage tower3img;
 
     public GameScene(IEngine iEngine){
         this.iEngine = iEngine;
         this.iGraphics = this.iEngine.getGraphics();
 
         loadAssets();
-        //this.cell = new Cell(this.iGraphics, 200, 200, 300, 0xff000000, 3, 4);
 
         this.exitButton = new Button(this.iGraphics, this.exitImage, 25, 25, 50, 50);
 
         this.cells = new MapGrid(8, 15, 50, 50);
         createCells();
         this.enemies = new ArrayList<Enemy>();
+
+        this.tower1 = new Button(this.iGraphics, this.tower1img, 600, 550, 50, 50);
+        this.tower2= new Button(this.iGraphics, this.tower2img, 660, 550, 50, 50);
+        this.tower3 = new Button(this.iGraphics, this.tower3img, 720, 550, 50, 50);
+
+        this.towers = new ArrayList<Tower>();
     }
 
     private void createCells(){
@@ -57,7 +70,9 @@ public class GameScene implements IScene {
     }
 
     public void loadAssets(){
-        // this.exitImage = iGraphics.loadImage("sprites/exit.png");
+        this.tower1img = this.iGraphics.loadImage("sprites/tower1.png");
+        this.tower2img = this.iGraphics.loadImage("sprites/tower2.png");
+        this.tower3img = this.iGraphics.loadImage("sprites/tower3.png");
     }
 
     private void addEnemy(){
@@ -80,6 +95,12 @@ public class GameScene implements IScene {
         for (Enemy e : this.enemies){
             e.render();
         }
+
+        for (Tower t : this.towers){
+            t.render();
+        }
+
+        this.tower1.render();
     }
 
     @Override
@@ -98,6 +119,39 @@ public class GameScene implements IScene {
 
     @Override
     public void handleInput(List<IInput.TouchEvent> events) {
+        for (IInput.TouchEvent e : events){
+            switch(e.type){
+                case TOUCH_UP:
+                    if (tower1.imageIsTouched(e.x, e.y)){
+                        showAvailableCells(true);
+                    }
+                    if (e.x > 0 && e.x < 900 && e.y > 0 && e.y < 500){
+                        int w = 900 / this.cells.getColumns();
+                        System.out.println("e.x: " + e.x + " e.y: " + e.y + " w: " + e.x/w + " h: " + e.y/w);
 
+                        int row = (int)(e.y / w);
+                        int col = (int)(e.x / w);
+
+                        float centerX = col * w + w / 2f;
+                        float centerY = row * w + w / 2f;
+
+                        this.towers.add(new Tower(this.iGraphics, centerX, centerY, (e.y)/w, (e.x)/w, 20, 50, 0, this.cells));
+
+                        showAvailableCells(false);
+
+                        this.cells.getCell((e.y)/w, (e.x)/w).setTower(true);
+                    }
+            }
+        }
+    }
+
+    private void showAvailableCells(boolean available){
+        for (int i = 0; i < this.cells.getRows(); i++){
+            for (int j = 0; j < this.cells.getColumns(); j++){
+                if (!this.cells.getCell(i, j).getPath() && !this.cells.getCell(i, j).getTower()){
+                    this.cells.getCell(i, j).setAvailable(available);
+                }
+            }
+        }
     }
 }

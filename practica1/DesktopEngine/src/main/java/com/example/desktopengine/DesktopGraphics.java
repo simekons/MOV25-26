@@ -142,7 +142,7 @@ public class DesktopGraphics implements IGraphics
         try {
             img = ImageIO.read(new FileInputStream(assetsRoute + path));
         } catch (IOException exception) {
-
+            System.out.println("NO HAY IMAGEN");
         }
         return new DesktopImage(img);
     }
