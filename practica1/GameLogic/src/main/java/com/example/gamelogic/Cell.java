@@ -69,5 +69,8 @@ public class Cell {
     public int getRow() { return this.row; }
 
     public int getColumn() { return this.column; }
+    public float getX() { return this.x; }
+    public float getY() { return this.y; }
+    public float getSize() { return this.size; }
 
 }

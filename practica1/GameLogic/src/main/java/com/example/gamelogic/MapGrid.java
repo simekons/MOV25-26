@@ -1,5 +1,7 @@
 package com.example.gamelogic;
 
+import java.util.ArrayList;
+import java.util.List;
 import com.example.engine.IGraphics;
 
 public class MapGrid {
@@ -16,6 +18,7 @@ public class MapGrid {
 
     private Cell[][] cells;
     private Cell startingPoint;
+    private List<float[]> pathPositions = new ArrayList<>();
 
     private IGraphics iGraphics; // tu motor gráfico o contexto de renderizado
 
@@ -39,17 +42,9 @@ public class MapGrid {
 
         this.cells = new Cell[rows][columns];
 
-        // crear celdas usando el mapa
         createCellsFromMap(mapData.map);
     }
 
-
-    /**
-     * Crea las celdas del grid.
-     */
-    /**
-     * Crea las celdas del grid usando un string de mapa (# = camino, . = vacío).
-     */
     private void createCellsFromMap(String map) {
         for (int row = 0; row < rows; row++) {
             for (int col = 0; col < columns; col++) {
@@ -75,14 +70,57 @@ public class MapGrid {
 
                 addCell(cell, row, col);
 
-                // El punto de inicio solo si está en la primera columna
+                // Guardar punto inicial (columna 0)
                 if (path && col == 0) {
                     startingPoint = cell;
                 }
             }
         }
+
+        buildPathPositions();
     }
 
+    private void buildPathPositions() {
+        if (startingPoint == null) return;
+
+        boolean[][] visited = new boolean[rows][columns];
+        Cell current = startingPoint;
+
+        pathPositions.clear();
+        pathPositions.add(new float[]{
+                current.getX() + current.getSize() / 2f,
+                current.getY() + current.getSize() / 2f
+        });
+        visited[current.getRow()][current.getColumn()] = true;
+
+        boolean foundNext = true;
+        while (foundNext) {
+            foundNext = false;
+            int r = current.getRow();
+            int c = current.getColumn();
+
+            // Direcciones: arriba, derecha, abajo, izquierda
+            int[][] dirs = {{-1,0},{0,1},{1,0},{0,-1}};
+            for (int[] d : dirs) {
+                int nr = r + d[0];
+                int nc = c + d[1];
+
+                if (nr >= 0 && nr < rows && nc >= 0 && nc < columns) {
+                    Cell neighbor = getCell(nr, nc);
+                    if (neighbor != null && neighbor.getPath() && !visited[nr][nc]) {
+                        current = neighbor;
+                        visited[nr][nc] = true;
+                        pathPositions.add(new float[]{
+                                neighbor.getX() + neighbor.getSize() / 2f,
+                                neighbor.getY() + neighbor.getSize() / 2f
+                        });
+                        foundNext = true;
+                        break;
+                    }
+                }
+            }
+        }
+    }
 
     /**
      * Dibuja todas las celdas en pantalla.
@@ -115,6 +153,10 @@ public class MapGrid {
 
     public int getRows() { return rows; }
     public int getColumns() { return columns; }
+
+    public List<float[]> getPathPositions() {
+        return pathPositions;
+    }
 
     public float getCellSize() { return cellSize; }
     public float getOffsetX() { return offsetX; }

@@ -115,7 +115,7 @@ public class GameScene implements IScene {
         }
 
         for (Enemy e : this.enemies){
-            e.movement(deltaTime);
+            e.update(deltaTime);
         }
     }
 
