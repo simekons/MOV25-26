@@ -19,7 +19,7 @@ public class GameScene implements IScene {
 
     //private Cell cell;
 
-    private MapGrid cells;
+    private MapGrid mapGrid;
     private boolean grid = false;
 
     private boolean upgrades = false;
@@ -32,11 +32,11 @@ public class GameScene implements IScene {
     private float timer = 0.0f;
 
     private int type = -1;
-    private Button tower1;
+    private CostButton tower1;
+    private CostButton tower2;
+    private CostButton tower3;
     private IImage tower1img;
-    private Button tower2;
     private IImage tower2img;
-    private Button tower3;
     private IImage tower3img;
 
     private Button sword;
@@ -54,13 +54,16 @@ public class GameScene implements IScene {
 
         this.exitButton = new Button(this.iGraphics, this.exitImage, 25, 25, 50, 50);
 
-        this.cells = new MapGrid(8, 15, 50, 50);
-        createCells();
+        this.mapGrid = new MapGrid(8, 15, 600, 320, iGraphics);
+        //createCells();
         this.enemies = new ArrayList<Enemy>();
 
-        this.tower1 = new Button(this.iGraphics, this.tower1img, 600, 550, 50, 50);
-        this.tower2= new Button(this.iGraphics, this.tower2img, 660, 550, 50, 50);
-        this.tower3 = new Button(this.iGraphics, this.tower3img, 720, 550, 50, 50);
+        var fontButton = iGraphics.createFont("fonts/fff.ttf", 5, false, false);
+        this.tower1 = new CostButton(this.iGraphics, fontButton, this.tower1img, 445, 360, 50, 50, "100", 0xFFFFFFFF, 0xFF000000);
+        this.tower2 = new CostButton(this.iGraphics, fontButton, this.tower1img, 505, 360, 50, 50, "100", 0xFFFFFFFF, 0xFF000000);
+        this.tower3 = new CostButton(this.iGraphics, fontButton, this.tower1img, 565, 360, 50, 50, "100", 0xFFFFFFFF, 0xFF000000);
+        //this.tower2= new Button(this.iGraphics, this.tower2img, 660, 550, 50, 50);
+        //this.tower3 = new Button(this.iGraphics, this.tower3img, 720, 550, 50, 50);
 
         this.sword = new Button(this.iGraphics, this.sword_img, 600, 550, 75, 75);
         this.bow = new Button(this.iGraphics, this.bow_img, 700, 550, 75, 75);
@@ -68,20 +71,21 @@ public class GameScene implements IScene {
         this.towers = new ArrayList<Tower>();
     }
 
+    /*
     private void createCells(){
-        int w = 900 / this.cells.getColumns();
+        int w = 900 / this.mapGrid.getColumns();
         for (int row = 0; row < 8; row++){
             for (int col = 0; col < 15; col++){
                 boolean path = row == 4 ? true : false;
                 Cell cell = new Cell(this.iGraphics, w * col, w * row,w, 0xff000000, row, col, path);
-                this.cells.addCell(cell, row, col);
+                this.mapGrid.addCell(cell, row, col);
 
-                if (path && this.cells.getStartingPoint() == null){
-                    this.cells.setStartingPoint(row, col);
+                if (path && this.mapGrid.getStartingPoint() == null){
+                    this.mapGrid.setStartingPoint(row, col);
                 }
             }
         }
-    }
+    }*/
 
     public void loadAssets(){
         this.tower1img = this.iGraphics.loadImage("sprites/tower1.png");
@@ -94,19 +98,29 @@ public class GameScene implements IScene {
     }
 
     private void addEnemy(){
-        enemies.add(new Enemy(this.iGraphics, 40, 15, true, this.cells));
+        enemies.add(new Enemy(this.iGraphics, 40, 15, true, this.mapGrid));
     }
 
     @Override
     public void render() {
+        // Banda de abajo
+        iGraphics.setColor(0xFF808080);
+        iGraphics.fillRectangle(0, 320,600,80);
+
+        mapGrid.render();
+        tower1.render();
+        tower2.render();
+        tower3.render();
+
+        /*
         //this.cell.render();
-        for (int row = 0; row < cells.getRows(); row++){
-            for (int col = 0; col < cells.getColumns(); col++){
-                this.cells.getCell(row, col).render();
+        for (int row = 0; row < mapGrid.getRows(); row++){
+            for (int col = 0; col < mapGrid.getColumns(); col++){
+                this.mapGrid.getCell(row, col).render();
             }
         }
 
-        int h = (900/this.cells.getColumns()) * 80;
+        int h = (900/this.mapGrid.getColumns()) * 80;
         this.iGraphics.setColor(0xffBBBBBB);
         iGraphics.fillRectangle(0, 500, 900, 100);
 
@@ -128,6 +142,8 @@ public class GameScene implements IScene {
             this.tower2.render();
             this.tower3.render();
         }
+
+         */
     }
 
     @Override
@@ -150,15 +166,15 @@ public class GameScene implements IScene {
             switch(e.type){
                 case TOUCH_UP:
                     if (!upgrades){
-                        if (tower1.imageIsTouched(e.x, e.y)){
+                        if (tower1.isTouched(e.x, e.y)){
                             showAvailableCells(true);
                             type = 0;
                         }
-                        if (tower2.imageIsTouched(e.x, e.y)){
+                        if (tower2.isTouched(e.x, e.y)){
                             showAvailableCells(true);
                             type = 1;
                         }
-                        if (tower3.imageIsTouched(e.x, e.y)){
+                        if (tower3.isTouched(e.x, e.y)){
                             showAvailableCells(true);
                             type = 2;
                         }
@@ -177,24 +193,24 @@ public class GameScene implements IScene {
                     }
 
                     if (e.x > 0 && e.x < 900 && e.y > 0 && e.y < 500){
-                        int w = 900 / this.cells.getColumns();
+                        int w = 900 / this.mapGrid.getColumns();
                         System.out.println("e.x: " + e.x + " e.y: " + e.y + " w: " + e.x/w + " h: " + e.y/w);
 
                         int row = (int)(e.y / w);
                         int col = (int)(e.x / w);
 
-                        if (this.cells.getCell(row, col).getTower()){
+                        if (this.mapGrid.getCell(row, col).getTower()){
                             upgrades = true;
                         }
-                        else if (grid && !this.cells.getCell(row, col).getPath()) {
+                        else if (grid && !this.mapGrid.getCell(row, col).getPath()) {
                             float centerX = col * w + w / 2f;
                             float centerY = row * w + w / 2f;
 
-                            this.towers.add(new Tower(this.iGraphics, centerX, centerY, row, col, 30, 50, this.type, this.cells, this.cells.getCell(row, col)));
+                            this.towers.add(new Tower(this.iGraphics, centerX, centerY, row, col, 30, 50, this.type, this.mapGrid, this.mapGrid.getCell(row, col)));
 
                             showAvailableCells(false);
 
-                            this.cells.getCell(row, col).setTower(true);
+                            this.mapGrid.getCell(row, col).setTower(true);
                             this.grid = false;
                             type = -1;
                         }
@@ -207,10 +223,10 @@ public class GameScene implements IScene {
 
     private void showAvailableCells(boolean available){
         this.grid = true;
-        for (int i = 0; i < this.cells.getRows(); i++){
-            for (int j = 0; j < this.cells.getColumns(); j++){
-                if (!this.cells.getCell(i, j).getPath() && !this.cells.getCell(i, j).getTower()){
-                    this.cells.getCell(i, j).setAvailable(available);
+        for (int i = 0; i < this.mapGrid.getRows(); i++){
+            for (int j = 0; j < this.mapGrid.getColumns(); j++){
+                if (!this.mapGrid.getCell(i, j).getPath() && !this.mapGrid.getCell(i, j).getTower()){
+                    this.mapGrid.getCell(i, j).setAvailable(available);
                 }
             }
         }
