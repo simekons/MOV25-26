@@ -18,8 +18,8 @@ public class Button {
     {
         iGraphics = graphics;
         iFont = font;
-        this.x = x;
-        this.y = y;
+        this.x = x - (width/2);
+        this.y = y - (height/2);
         this.width = width;
         this.height = height;
         this.text = text;
@@ -42,15 +42,20 @@ public class Button {
             iGraphics.drawImage(iImage, (int) x, (int) y, (int) width, (int) height);
         else {
             iGraphics.setColor(color);
-            iGraphics.fillRoundRectangle(x, y, width, height, 20);
+            iGraphics.fillRoundRectangle(x, y, width, height, 5);
             iGraphics.setColor(0xff000000);
-            //iGraphics.drawText(iFont, text, x + ((width - x) / 2), y + ((height - y) / 2 + 20));
+            iGraphics.drawText(iFont, text, x + (width / 2), y + (height / 2) + 5);
         }
     }
 
     public boolean isTouched(int touchX, int touchY)
     {
-        return touchX >= x && touchX <= (x + (width - x)) && touchY >= y && touchY <= (y + (height - y));
+        float left = (iImage != null) ? (x - width / 2) : x;
+        float top = (iImage != null) ? (y - height / 2) : y;
+        float right = left + width;
+        float bottom = top + height;
+
+        return touchX >= left && touchX <= right && touchY >= top && touchY <= bottom;
     }
 
     public boolean imageIsTouched(int touchX, int touchY)

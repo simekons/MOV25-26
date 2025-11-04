@@ -41,8 +41,6 @@ public class AndroidEngine implements IEngine, Runnable {
         this.androidGraphics = new AndroidGraphics(surfaceView, a);
         this.androidAudio = new AndroidAudio(a);
 
-        androidGraphics.setLogicSize(400,600);
-
         this.surfaceView.setOnTouchListener(this.androidInput);
     }
 
@@ -150,4 +148,9 @@ public class AndroidEngine implements IEngine, Runnable {
     // Escena actual.
     @Override
     public void setScenes(IScene scene) { this.scene = scene; }
+
+    @Override
+    public void setLogicSize(float x, float y) {
+        androidGraphics.setLogicSize(x,y);
+    }
 }

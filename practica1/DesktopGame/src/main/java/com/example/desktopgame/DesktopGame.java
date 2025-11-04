@@ -14,12 +14,13 @@ public class DesktopGame {
         boolean isDebug = java.lang.management.ManagementFactory. getRuntimeMXBean(). getInputArguments().toString().indexOf("jdwp") >= 0;
 
         // Crea la ventana.
-        JFrame jFrame = new JFrame("Puzzle Bobble");
-        jFrame.setSize(900, 600);
+        JFrame jFrame = new JFrame("Tower Defense");
+        jFrame.setSize(1200, 800);
         // Crea el motor.
-        DesktopEngine DesktopEngine = new DesktopEngine(jFrame);
+        DesktopEngine desktopEngine = new DesktopEngine(jFrame);
+        desktopEngine.setLogicSize(600,400);
 
-        GameScene gameScene = new GameScene(DesktopEngine);
+        GameScene gameScene = new GameScene(desktopEngine);
         if(isDebug){
             System.out.println("DEBUG");
         }
@@ -29,9 +30,9 @@ public class DesktopGame {
         }
 
         // Crea la escena de menú y la asigna como escena actual.
-        MenuScene menuScene = new MenuScene(DesktopEngine);
-        DesktopEngine.setScenes(gameScene);
+        MenuScene menuScene = new MenuScene(desktopEngine);
+        desktopEngine.setScenes(menuScene);
         // Ejecuta la aplicación.
-        DesktopEngine.run();
+        desktopEngine.run();
     }
 }

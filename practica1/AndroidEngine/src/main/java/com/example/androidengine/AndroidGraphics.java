@@ -146,6 +146,14 @@ public class AndroidGraphics implements IGraphics
         canvas.drawRoundRect(cx, cy, width, height, arc, arc, this.paint);
     }
 
+    // Dibujo de rectángulo
+    @Override
+    public void drawRect(float cx, float cy, float width, float height) {
+        Paint stroke = new Paint(paint);
+        stroke.setStyle(Paint.Style.STROKE);
+        canvas.drawRect(cx, cy, cx + width, cy + height, stroke);
+    }
+
     // Método que dibuja una línea.
     @Override
     public void drawLine(float initX, float initY, float endX, float endY, int width) {

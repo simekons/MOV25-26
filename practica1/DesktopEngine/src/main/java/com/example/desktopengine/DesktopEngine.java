@@ -33,9 +33,6 @@ public class DesktopEngine implements IEngine, Runnable
         this.desktopInput = new DesktopInput();
         this.desktopAudio = new DesktopAudio();
 
-        desktopGraphics.setLogicSize(900, 600);
-
-
         this.jFrame.addMouseListener(this.desktopInput);
         this.jFrame.addMouseMotionListener(this.desktopInput);
     }
@@ -104,4 +101,9 @@ public class DesktopEngine implements IEngine, Runnable
     // Escena actual.
     @Override
     public void setScenes(IScene scene) { this.scene = scene; }
+
+    @Override
+    public void setLogicSize(float x, float y) {
+        desktopGraphics.setLogicSize(x, y);
+    }
 }

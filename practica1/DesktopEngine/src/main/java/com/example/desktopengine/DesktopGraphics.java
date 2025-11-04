@@ -169,8 +169,6 @@ public class DesktopGraphics implements IGraphics
     // Método que dibuja un rectángulo relleno con los bordes redondeados.
     @Override
     public void fillRoundRectangle(float cx, float cy, float width, float height, float arc) {
-        height -= cy;
-        width -= cx;
         graphics2D.fillRoundRect((int)cx, (int)cy, (int)width, (int)height, (int)arc * 2, (int)arc * 2);
     }
 
