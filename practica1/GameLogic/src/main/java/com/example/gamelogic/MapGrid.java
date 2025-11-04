@@ -19,43 +19,46 @@ public class MapGrid {
 
     private IGraphics iGraphics; // tu motor gráfico o contexto de renderizado
 
-    public MapGrid(int rows, int columns, float screenWidth, float screenHeight, IGraphics iGraphics) {
-        this.rows = rows;
-        this.columns = columns;
+    public MapGrid(Maps mapData, float screenWidth, float screenHeight, IGraphics iGraphics) {
+        this.rows = mapData.rows;
+        this.columns = mapData.cols;
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
         this.iGraphics = iGraphics;
 
-        // tamaño ideal de celda
+        // tamaño de celda cuadrada
         float idealCellWidth = screenWidth / columns;
         float idealCellHeight = screenHeight / rows;
-
-        // mantener celdas cuadradas
         this.cellSize = Math.min(idealCellWidth, idealCellHeight);
 
-        // dimensiones reales del grid
-        float gridWidth = this.cellSize * columns;
-        float gridHeight = this.cellSize * rows;
-
-        // centrar el grid
+        // centrar grid
+        float gridWidth = cellSize * columns;
+        float gridHeight = cellSize * rows;
         this.offsetX = (screenWidth - gridWidth) / 2f;
         this.offsetY = (screenHeight - gridHeight) / 2f;
 
-        // crear matriz de celdas
-        this.cells = new Cell[this.rows][this.columns];
+        this.cells = new Cell[rows][columns];
 
-        // crear celdas automáticamente
-        createCells();
+        // crear celdas usando el mapa
+        createCellsFromMap(mapData.map);
     }
+
 
     /**
      * Crea las celdas del grid.
      */
-    private void createCells() {
+    /**
+     * Crea las celdas del grid usando un string de mapa (# = camino, . = vacío).
+     */
+    private void createCellsFromMap(String map) {
         for (int row = 0; row < rows; row++) {
             for (int col = 0; col < columns; col++) {
 
-                boolean path = (row == 4); // ejemplo: fila 4 es camino
+                int index = row * columns + col;
+                char c = map.charAt(index);
+
+                boolean path = (c == '#'); // el carácter '#' marca el camino
+
                 float x = offsetX + col * cellSize;
                 float y = offsetY + row * cellSize;
 
@@ -72,12 +75,14 @@ public class MapGrid {
 
                 addCell(cell, row, col);
 
-                if (path && startingPoint == null) {
+                // El punto de inicio solo si está en la primera columna
+                if (path && col == 0) {
                     startingPoint = cell;
                 }
             }
         }
     }
+
 
     /**
      * Dibuja todas las celdas en pantalla.
@@ -114,5 +119,17 @@ public class MapGrid {
     public float getCellSize() { return cellSize; }
     public float getOffsetX() { return offsetX; }
     public float getOffsetY() { return offsetY; }
+
+    public void showAvailableCells(boolean available) {
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < columns; col++) {
+                Cell cell = cells[row][col];
+
+                if (!cell.getPath() && !cell.getTower()) {
+                    cell.setAvailable(available);
+                }
+            }
+        }
+    }
 }
 

@@ -14,9 +14,6 @@ public class GameScene implements IScene {
     private IEngine iEngine;
     private IGraphics iGraphics;
 
-    private Button exitButton;
-    private IImage exitImage;
-
     //private Cell cell;
 
     private MapGrid mapGrid;
@@ -39,11 +36,11 @@ public class GameScene implements IScene {
     private IImage tower2img;
     private IImage tower3img;
 
-    private Button sword;
+    private CostButton sword;
     private IImage sword_img;
-    private Button bow;
+    private CostButton bow;
     private IImage bow_img;
-    private Button clock;
+    private CostButton clock;
     private IImage clock_img;
 
     public GameScene(IEngine iEngine){
@@ -52,40 +49,23 @@ public class GameScene implements IScene {
 
         loadAssets();
 
-        this.exitButton = new Button(this.iGraphics, this.exitImage, 25, 25, 50, 50);
-
-        this.mapGrid = new MapGrid(8, 15, 600, 320, iGraphics);
+        Maps map1 = Maps.level1();
+        this.mapGrid = new MapGrid(map1, 600, 320, iGraphics);
         //createCells();
         this.enemies = new ArrayList<Enemy>();
 
-        var fontButton = iGraphics.createFont("fonts/fff.ttf", 5, false, false);
-        this.tower1 = new CostButton(this.iGraphics, fontButton, this.tower1img, 445, 360, 50, 50, "100", 0xFFFFFFFF, 0xFF000000);
-        this.tower2 = new CostButton(this.iGraphics, fontButton, this.tower1img, 505, 360, 50, 50, "100", 0xFFFFFFFF, 0xFF000000);
-        this.tower3 = new CostButton(this.iGraphics, fontButton, this.tower1img, 565, 360, 50, 50, "100", 0xFFFFFFFF, 0xFF000000);
+        var fontButton = iGraphics.createFont("fonts/fff.ttf", 10, false, false);
+        this.tower1 = new CostButton(this.iGraphics, fontButton, this.tower1img, 445, 360, 50, 50, 100, 0xFFFFFFFF, 0xFF000000);
+        this.tower2 = new CostButton(this.iGraphics, fontButton, this.tower1img, 505, 360, 50, 50, 150, 0xFFFFFFFF, 0xFF000000);
+        this.tower3 = new CostButton(this.iGraphics, fontButton, this.tower1img, 565, 360, 50, 50, 200, 0xFFFFFFFF, 0xFF000000);
         //this.tower2= new Button(this.iGraphics, this.tower2img, 660, 550, 50, 50);
         //this.tower3 = new Button(this.iGraphics, this.tower3img, 720, 550, 50, 50);
 
-        this.sword = new Button(this.iGraphics, this.sword_img, 600, 550, 75, 75);
-        this.bow = new Button(this.iGraphics, this.bow_img, 700, 550, 75, 75);
-        this.clock = new Button(this.iGraphics, this.clock_img, 800, 550, 75, 75);
+        this.sword = new CostButton(this.iGraphics, fontButton, this.sword_img, 445, 360, 50, 50, 75, 0xFFFFFFFF, 0xFF000000);
+        this.bow = new CostButton(this.iGraphics, fontButton, this.bow_img, 505, 360, 50, 50, 75, 0xFFFFFFFF, 0xFF000000);
+        this.clock = new CostButton(this.iGraphics, fontButton, this.clock_img, 565, 360, 50, 50, 100, 0xFFFFFFFF, 0xFF000000);
         this.towers = new ArrayList<Tower>();
     }
-
-    /*
-    private void createCells(){
-        int w = 900 / this.mapGrid.getColumns();
-        for (int row = 0; row < 8; row++){
-            for (int col = 0; col < 15; col++){
-                boolean path = row == 4 ? true : false;
-                Cell cell = new Cell(this.iGraphics, w * col, w * row,w, 0xff000000, row, col, path);
-                this.mapGrid.addCell(cell, row, col);
-
-                if (path && this.mapGrid.getStartingPoint() == null){
-                    this.mapGrid.setStartingPoint(row, col);
-                }
-            }
-        }
-    }*/
 
     public void loadAssets(){
         this.tower1img = this.iGraphics.loadImage("sprites/tower1.png");
@@ -98,7 +78,7 @@ public class GameScene implements IScene {
     }
 
     private void addEnemy(){
-        enemies.add(new Enemy(this.iGraphics, 40, 15, true, this.mapGrid));
+        enemies.add(new Enemy(this.iGraphics, 40, 5, true, this.mapGrid));
     }
 
     @Override
@@ -108,29 +88,6 @@ public class GameScene implements IScene {
         iGraphics.fillRectangle(0, 320,600,80);
 
         mapGrid.render();
-        tower1.render();
-        tower2.render();
-        tower3.render();
-
-        /*
-        //this.cell.render();
-        for (int row = 0; row < mapGrid.getRows(); row++){
-            for (int col = 0; col < mapGrid.getColumns(); col++){
-                this.mapGrid.getCell(row, col).render();
-            }
-        }
-
-        int h = (900/this.mapGrid.getColumns()) * 80;
-        this.iGraphics.setColor(0xffBBBBBB);
-        iGraphics.fillRectangle(0, 500, 900, 100);
-
-        for (Enemy e : this.enemies){
-            e.render();
-        }
-
-        for (Tower t : this.towers){
-            t.render();
-        }
 
         if (upgrades) {
             this.sword.render();
@@ -143,7 +100,9 @@ public class GameScene implements IScene {
             this.tower3.render();
         }
 
-         */
+        for (Enemy e : this.enemies){
+            e.render();
+        }
     }
 
     @Override
@@ -167,60 +126,35 @@ public class GameScene implements IScene {
                 case TOUCH_UP:
                     if (!upgrades){
                         if (tower1.isTouched(e.x, e.y)){
-                            showAvailableCells(true);
+                            mapGrid.showAvailableCells(true);
                             type = 0;
                         }
                         if (tower2.isTouched(e.x, e.y)){
-                            showAvailableCells(true);
+                            mapGrid.showAvailableCells(true);
                             type = 1;
                         }
                         if (tower3.isTouched(e.x, e.y)){
-                            showAvailableCells(true);
+                            mapGrid.showAvailableCells(true);
                             type = 2;
                         }
                     }
                     else {
-                        if (sword.imageIsTouched(e.x, e.y)){
+                        if (sword.isTouched(e.x, e.y)){
                             //rr
                             upgrades = false;
                         }
-                        if (bow.imageIsTouched(e.x, e.y)){
+                        if (bow.isTouched(e.x, e.y)){
                             //rr
                         }
-                        if (clock.imageIsTouched(e.x, e.y)){
+                        if (clock.isTouched(e.x, e.y)){
                             //r
                         }
                     }
-
-                    if (e.x > 0 && e.x < 900 && e.y > 0 && e.y < 500){
-                        int w = 900 / this.mapGrid.getColumns();
-                        System.out.println("e.x: " + e.x + " e.y: " + e.y + " w: " + e.x/w + " h: " + e.y/w);
-
-                        int row = (int)(e.y / w);
-                        int col = (int)(e.x / w);
-
-                        if (this.mapGrid.getCell(row, col).getTower()){
-                            upgrades = true;
-                        }
-                        else if (grid && !this.mapGrid.getCell(row, col).getPath()) {
-                            float centerX = col * w + w / 2f;
-                            float centerY = row * w + w / 2f;
-
-                            this.towers.add(new Tower(this.iGraphics, centerX, centerY, row, col, 30, 50, this.type, this.mapGrid, this.mapGrid.getCell(row, col)));
-
-                            showAvailableCells(false);
-
-                            this.mapGrid.getCell(row, col).setTower(true);
-                            this.grid = false;
-                            type = -1;
-                        }
-
-                    }
-
             }
         }
     }
 
+    /*
     private void showAvailableCells(boolean available){
         this.grid = true;
         for (int i = 0; i < this.mapGrid.getRows(); i++){
@@ -230,5 +164,5 @@ public class GameScene implements IScene {
                 }
             }
         }
-    }
+    }*/
 }

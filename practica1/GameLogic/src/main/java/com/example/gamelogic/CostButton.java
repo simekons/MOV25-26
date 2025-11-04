@@ -12,14 +12,16 @@ public class CostButton {
     private String text;
     private float x, y, width, height;
     private int buttonColor, textColor;
+    private int cost;
 
     public CostButton(IGraphics graphics, IFont font, IImage image,
                       float x, float y, float width, float height,
-                      String text, int buttonColor, int textColor) {
+                      int cost, int buttonColor, int textColor) {
         this.iGraphics = graphics;
         this.iFont = font;
         this.iImage = image;
-        this.text = text;
+        this.cost = cost;
+        this.text = "" + cost;
         this.x = x - (width / 2);
         this.y = y - (height / 2);
         this.width = width;
@@ -40,18 +42,28 @@ public class CostButton {
         float marginX = width * 0.1f;
         float marginY = imageHeight * 0.1f;
 
-        // Dimensiones ajustadas para la imagen
-        float imageDrawWidth = width - (2 * marginX);
-        float imageDrawHeight = imageHeight - (2 * marginY);
+        // Área disponible para la imagen dentro del botón
+        float availableWidth = width - (2 * marginX);
+        float availableHeight = imageHeight - (2 * marginY);
 
-        // Posicionar la imagen centrada en su área
-        float imageX = x + (width / 2);
-        float imageY = y + (imageHeight / 2);
-
-        // Dibujar imagen dentro del margen
+        // Dibujar imagen dentro del margen manteniendo proporciones
         if (iImage != null) {
+            int originalWidth = iImage.getWidth();
+            int originalHeight = iImage.getHeight();
+
+            // Calcular factor de escala proporcional
+            float scale = Math.min(availableWidth / originalWidth, availableHeight / originalHeight);
+
+            // Dimensiones finales de la imagen escalada
+            float finalWidth = originalWidth * scale;
+            float finalHeight = originalHeight * scale;
+
+            // Centrar imagen dentro del área disponible
+            float imageX = x + (width / 2);
+            float imageY = y + (imageHeight / 2);
+
             iGraphics.drawImage(iImage, (int) imageX, (int) imageY,
-                    (int) imageDrawWidth, (int) imageDrawHeight);
+                    (int) finalWidth, (int) finalHeight);
         }
 
         // Dibujar texto debajo de la imagen
@@ -82,5 +94,9 @@ public class CostButton {
 
     public void setTextColor(int color) {
         this.textColor = color;
+    }
+
+    public int getCost() {
+        return this.cost;
     }
 }

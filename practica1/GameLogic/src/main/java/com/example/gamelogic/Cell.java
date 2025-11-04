@@ -30,21 +30,35 @@ public class Cell {
         this.available = false;
     }
 
-    public void render(){
-
-        this.color = this.path ? 0xffAAAA00 : 0xff000000;
-        iGraphics.setColor(this.color);
-
-        if (!this.path){
-            if (this.available){
-                iGraphics.setColor(0xff00AA00);
-            }
-            iGraphics.drawRect(x, y, size, size);
-        }
-        else {
+    public void render() {
+        // Si es camino, se dibuja llena
+        if (this.path) {
+            iGraphics.setColor(0xffAAAA00); // color del camino (amarillo)
             iGraphics.fillRectangle(x, y, size, size);
         }
+        else {
+            // Primero, relleno (fondo)
+            /*
+            if (this.tower) {
+                iGraphics.setColor(0xff444444); // gris si hay torre
+                iGraphics.fillRectangle(x, y, size, size);
+            } else {
+                iGraphics.setColor(0xff000000); // fondo negro normal
+                iGraphics.fillRectangle(x, y, size, size);
+            }*/
+
+            // Luego, el borde
+            if (this.available) {
+                iGraphics.setColor(0xff00AA00); // borde verde si está disponible
+            } else {
+                iGraphics.setColor(0xff000000); // borde negro si no lo está
+            }
+
+            // Dibuja solo el borde
+            iGraphics.drawRect(x, y, size, size);
+        }
     }
+
 
     public void setTower(boolean tower) { this.tower = tower; }
 
@@ -55,4 +69,5 @@ public class Cell {
     public int getRow() { return this.row; }
 
     public int getColumn() { return this.column; }
+
 }
