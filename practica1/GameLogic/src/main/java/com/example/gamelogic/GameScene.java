@@ -20,6 +20,9 @@ public class GameScene implements IScene {
     //private Cell cell;
 
     private MapGrid cells;
+    private boolean grid = false;
+
+    private boolean upgrades = false;
 
     private ArrayList<Enemy> enemies;
 
@@ -28,12 +31,20 @@ public class GameScene implements IScene {
 
     private float timer = 0.0f;
 
+    private int type = -1;
     private Button tower1;
     private IImage tower1img;
     private Button tower2;
     private IImage tower2img;
     private Button tower3;
     private IImage tower3img;
+
+    private Button sword;
+    private IImage sword_img;
+    private Button bow;
+    private IImage bow_img;
+    private Button clock;
+    private IImage clock_img;
 
     public GameScene(IEngine iEngine){
         this.iEngine = iEngine;
@@ -51,6 +62,9 @@ public class GameScene implements IScene {
         this.tower2= new Button(this.iGraphics, this.tower2img, 660, 550, 50, 50);
         this.tower3 = new Button(this.iGraphics, this.tower3img, 720, 550, 50, 50);
 
+        this.sword = new Button(this.iGraphics, this.sword_img, 600, 550, 75, 75);
+        this.bow = new Button(this.iGraphics, this.bow_img, 700, 550, 75, 75);
+        this.clock = new Button(this.iGraphics, this.clock_img, 800, 550, 75, 75);
         this.towers = new ArrayList<Tower>();
     }
 
@@ -71,8 +85,12 @@ public class GameScene implements IScene {
 
     public void loadAssets(){
         this.tower1img = this.iGraphics.loadImage("sprites/tower1.png");
-        this.tower2img = this.iGraphics.loadImage("sprites/tower2.png");
-        this.tower3img = this.iGraphics.loadImage("sprites/tower3.png");
+        this.tower2img = this.iGraphics.loadImage("sprites/tower1.png");
+        this.tower3img = this.iGraphics.loadImage("sprites/tower1.png");
+
+        this.bow_img = this.iGraphics.loadImage("sprites/bow.png");
+        this.sword_img = this.iGraphics.loadImage("sprites/sword.png");
+        this.clock_img = this.iGraphics.loadImage("sprites/clock.png");
     }
 
     private void addEnemy(){
@@ -100,7 +118,16 @@ public class GameScene implements IScene {
             t.render();
         }
 
-        this.tower1.render();
+        if (upgrades) {
+            this.sword.render();
+            this.bow.render();
+            this.clock.render();
+        }
+        else{
+            this.tower1.render();
+            this.tower2.render();
+            this.tower3.render();
+        }
     }
 
     @Override
@@ -122,9 +149,33 @@ public class GameScene implements IScene {
         for (IInput.TouchEvent e : events){
             switch(e.type){
                 case TOUCH_UP:
-                    if (tower1.imageIsTouched(e.x, e.y)){
-                        showAvailableCells(true);
+                    if (!upgrades){
+                        if (tower1.imageIsTouched(e.x, e.y)){
+                            showAvailableCells(true);
+                            type = 0;
+                        }
+                        if (tower2.imageIsTouched(e.x, e.y)){
+                            showAvailableCells(true);
+                            type = 1;
+                        }
+                        if (tower3.imageIsTouched(e.x, e.y)){
+                            showAvailableCells(true);
+                            type = 2;
+                        }
                     }
+                    else {
+                        if (sword.imageIsTouched(e.x, e.y)){
+                            //rr
+                            upgrades = false;
+                        }
+                        if (bow.imageIsTouched(e.x, e.y)){
+                            //rr
+                        }
+                        if (clock.imageIsTouched(e.x, e.y)){
+                            //r
+                        }
+                    }
+
                     if (e.x > 0 && e.x < 900 && e.y > 0 && e.y < 500){
                         int w = 900 / this.cells.getColumns();
                         System.out.println("e.x: " + e.x + " e.y: " + e.y + " w: " + e.x/w + " h: " + e.y/w);
@@ -132,20 +183,30 @@ public class GameScene implements IScene {
                         int row = (int)(e.y / w);
                         int col = (int)(e.x / w);
 
-                        float centerX = col * w + w / 2f;
-                        float centerY = row * w + w / 2f;
+                        if (this.cells.getCell(row, col).getTower()){
+                            upgrades = true;
+                        }
+                        else if (grid && !this.cells.getCell(row, col).getPath()) {
+                            float centerX = col * w + w / 2f;
+                            float centerY = row * w + w / 2f;
 
-                        this.towers.add(new Tower(this.iGraphics, centerX, centerY, (e.y)/w, (e.x)/w, 20, 50, 0, this.cells));
+                            this.towers.add(new Tower(this.iGraphics, centerX, centerY, row, col, 30, 50, this.type, this.cells, this.cells.getCell(row, col)));
 
-                        showAvailableCells(false);
+                            showAvailableCells(false);
 
-                        this.cells.getCell((e.y)/w, (e.x)/w).setTower(true);
+                            this.cells.getCell(row, col).setTower(true);
+                            this.grid = false;
+                            type = -1;
+                        }
+
                     }
+
             }
         }
     }
 
     private void showAvailableCells(boolean available){
+        this.grid = true;
         for (int i = 0; i < this.cells.getRows(); i++){
             for (int j = 0; j < this.cells.getColumns(); j++){
                 if (!this.cells.getCell(i, j).getPath() && !this.cells.getCell(i, j).getTower()){
