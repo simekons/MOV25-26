@@ -10,6 +10,8 @@ public class MapGrid {
 
     private Cell[][] cells;
 
+    private Cell startingPoint;
+
     public MapGrid(int rows, int columns, float cellWidth, float cellHeight){
         this.rows = rows;
         this.columns = columns;
@@ -30,5 +32,8 @@ public class MapGrid {
     public int getRows() { return this.rows; }
     public int getColumns() { return this.columns; }
 
+    public Cell getStartingPoint() { return this.startingPoint; }
+
+    public void setStartingPoint(int row, int column) { this.startingPoint = this.cells[row][column]; }
     public Cell getCell(int row, int column) { return this.cells[row][column]; }
 }

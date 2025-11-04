@@ -36,4 +36,10 @@ public class Cell {
             iGraphics.fillRectangle(x, y, size, size);
         }
     }
+
+    public boolean getPath() { return this.path; }
+
+    public int getRow() { return this.row; }
+
+    public int getColumn() { return this.column; }
 }
