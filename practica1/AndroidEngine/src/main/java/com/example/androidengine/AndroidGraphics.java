@@ -136,29 +136,45 @@ public class AndroidGraphics implements IGraphics
 
     // Método que dibuja un rectángulo relleno.
     @Override
-    public void fillRectangle(float cx, float cy, float width, float height) {
-        canvas.drawRect(cx, cy, width, height, this.paint);
+    public void fillRectangle(float x, float y, float width, float height) {
+        float left = x;
+        float top = y;
+        float right = x + width;
+        float bottom = y + height;
+        canvas.drawRect(left, top, right, bottom, this.paint);
     }
+
 
     // Método que dibuja un rectángulo relleno con los bordes redondeados.
     @Override
-    public void fillRoundRectangle(float cx, float cy, float width, float height, float arc) {
-        canvas.drawRoundRect(cx, cy, width, height, arc, arc, this.paint);
+    public void fillRoundRectangle(float x, float y, float width, float height, float arc) {
+        float left = x;
+        float top = y;
+        float right = x + width;
+        float bottom = y + height;
+        canvas.drawRoundRect(left, top, right, bottom, arc, arc, paint);
     }
+
 
     // Dibujo de rectángulo
     @Override
-    public void drawRect(float cx, float cy, float width, float height) {
+    public void drawRect(float x, float y, float width, float height) {
         Paint stroke = new Paint(paint);
         stroke.setStyle(Paint.Style.STROKE);
-        canvas.drawRect(cx, cy, cx + width, cy + height, stroke);
+        float left = x;
+        float top = y;
+        float right = x + width;
+        float bottom = y + height;
+        canvas.drawRect(left, top, right, bottom, stroke);
     }
 
     // Método que dibuja una línea.
     @Override
     public void drawLine(float initX, float initY, float endX, float endY, int width) {
+        float stroke = this.paint.getStrokeWidth();
         this.paint.setStrokeWidth(width);
         canvas.drawLine(initX, initY, endX, endY, this.paint);
+        this.paint.setStrokeWidth(stroke);
     }
 
     // Método que dibuja un hexágono.
