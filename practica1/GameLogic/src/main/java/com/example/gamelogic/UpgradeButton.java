@@ -4,7 +4,7 @@ import com.example.engine.IFont;
 import com.example.engine.IGraphics;
 import com.example.engine.IImage;
 
-public class CostButton {
+public class UpgradeButton {
 
     private IGraphics iGraphics;
     private IFont iFont;
@@ -14,9 +14,9 @@ public class CostButton {
     private int buttonColor, textColor;
     private int cost;
 
-    public CostButton(IGraphics graphics, IFont font, IImage image,
-                      float x, float y, float width, float height,
-                      int cost, int buttonColor, int textColor) {
+    public UpgradeButton(IGraphics graphics, IFont font, IImage image,
+                         float x, float y, float width, float height,
+                         int cost, int buttonColor, int textColor) {
         this.iGraphics = graphics;
         this.iFont = font;
         this.iImage = image;

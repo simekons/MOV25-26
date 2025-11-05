@@ -40,8 +40,8 @@ public class Enemy {
 
     public void render() {
         if (!isActive) return;
-        this.iGraphics.setColor(0xFF00FF88);
-        this.iGraphics.drawCircle(x, y, radius);
+        this.iGraphics.setColor(0xFF00FF00);
+        this.iGraphics.fillCircle(x, y, radius);
     }
 
     public void update(float delta) {

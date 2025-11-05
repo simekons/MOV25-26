@@ -193,13 +193,58 @@ public class DesktopGraphics implements IGraphics
         graphics2D.drawPolygon(xPoints, yPoints, sides);
     }
 
+    @Override
+    public void fillHexagon(float x, float y, float radius) {
+        int sides = 6;
+        int[] xPoints = new int[sides];
+        int[] yPoints = new int[sides];
+
+        for (int i = 0; i < sides; i++) {
+            xPoints[i] = (int) (x + radius * Math.cos(Math.toRadians(60 * i - 30)));
+            yPoints[i] = (int) (y + radius * Math.sin(Math.toRadians(60 * i - 30)));
+        }
+
+        graphics2D.fillPolygon(xPoints, yPoints, sides);
+    }
+
+
     // Método que dibuja un círculo.
     @Override
     public void drawCircle(float cx, float cy, float radius) {
         cx -= radius;
         cy -= radius;
-        graphics2D.fillOval((int)cx, (int)cy, (int)radius * 2, (int)radius * 2);
+
+        graphics2D.drawOval((int) cx, (int) cy, (int) radius * 2, (int) radius * 2);
     }
+
+    @Override
+    public void fillCircle(float cx, float cy, float radius) {
+        cx -= radius;
+        cy -= radius;
+
+        graphics2D.fillOval((int) cx, (int) cy, (int) radius * 2, (int) radius * 2);
+    }
+
+    @Override
+    public void fillTriangle(float x1, float y1, float x2, float y2, float x3, float y3) {
+        int sides = 3;
+        int[] xPoints = new int[sides];
+        int[] yPoints = new int[sides];
+
+        xPoints[0] = (int) x1;
+        yPoints[0] = (int) y1;
+
+        xPoints[1] = (int) x2;
+        yPoints[1] = (int) y2;
+
+        xPoints[2] = (int) x3;
+        yPoints[2] = (int) y3;
+
+        graphics2D.fillPolygon(xPoints, yPoints, sides);
+    }
+
+
+
 
     // Método que crea una fuente.
     @Override

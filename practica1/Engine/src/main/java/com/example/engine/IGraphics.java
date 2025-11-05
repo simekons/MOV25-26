@@ -20,8 +20,11 @@ public interface IGraphics
     public void drawLine(float initX, float initY, float endX, float endY, int width);
     // Dibuja un hexágono en unas coordenadas y con un tamaño dado
     public void drawHexagon(float x, float y, float radius);
+    public void fillHexagon(float x, float y, float radius);
     // Dibuja un círculo en unas coordenadas y un con un tamaño dado
     public void drawCircle(float cx, float cy, float radius);
+    public void fillCircle(float cx, float cy, float radius);
+    public void fillTriangle(float x1, float y1, float x2, float y2, float x3, float y3);
     // Crea una fuente con una ruta dada, tamaño y estilo
     public IFont createFont(String fontFile, int size, boolean bold, boolean italic);
     // Settea una fuente para renderizar

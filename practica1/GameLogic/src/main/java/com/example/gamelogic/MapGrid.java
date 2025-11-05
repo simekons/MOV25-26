@@ -162,6 +162,55 @@ public class MapGrid {
     public float getOffsetX() { return offsetX; }
     public float getOffsetY() { return offsetY; }
 
+    public Tower placeTowerAt(float x, float y, TowerType type, IGraphics iGraphics) {
+        // Obtener la celda en la posición del clic
+        Cell cell = getCellAtPosition(x, y);
+
+        if (cell == null) return null;
+        if (cell.getPath() || cell.getTower()) return null; // No colocar en el camino ni donde ya hay torre
+        if (!cell.isAvailable()) return null; // Solo si es available
+
+        // Crear torre
+        Tower tower = new Tower(
+                iGraphics,
+                cell.getX() + cell.getSize() / 2f,
+                cell.getY() + cell.getSize() / 2f,
+                cell.getRow(),
+                cell.getColumn(),
+                cell.getSize() * 0.6f, // un poco más pequeña que la celda
+                100,                   // costo ejemplo
+                type,
+                this,
+                cell
+        );
+
+        // Marcar celda como ocupada
+        cell.setTower(true);
+        cell.setAvailable(false);
+
+        return tower;
+    }
+
+    public Cell getCellAtPosition(float x, float y) {
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < columns; col++) {
+                Cell cell = getCell(row, col);
+                if (cell == null) continue;
+
+                float cx = cell.getX();
+                float cy = cell.getY();
+                float size = cell.getSize();
+
+                // Verificar si el clic está dentro de los límites de la celda
+                if (x >= cx && x <= cx + size && y >= cy && y <= cy + size) {
+                    return cell;
+                }
+            }
+        }
+        return null; // no se tocó ninguna celda
+    }
+
+
     public void showAvailableCells(boolean available) {
         for (int row = 0; row < rows; row++) {
             for (int col = 0; col < columns; col++) {

@@ -181,11 +181,47 @@ public class AndroidGraphics implements IGraphics
         paint.setStyle(Paint.Style.FILL);
     }
 
+    @Override
+    public void fillHexagon(float x, float y, float radius) {
+        path.reset();
+        for (int i = 0; i < 6; i++) {
+            float cx = (float) (x + radius * Math.cos(Math.toRadians(60 * i - 30)));
+            float cy = (float) (y + radius * Math.sin(Math.toRadians(60 * i - 30)));
+            if (i == 0) {
+                path.moveTo(cx, cy);
+            } else {
+                path.lineTo(cx, cy);
+            }
+        }
+        path.close();
+        canvas.drawPath(path, paint);
+    }
+
     // Método que dibuja un círculo.
     @Override
     public void drawCircle(float cx, float cy, float radius) {
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setStrokeWidth(1);
+        canvas.drawCircle(cx, cy, radius, this.paint);
+        paint.setStyle(Paint.Style.FILL);
+    }
+
+    @Override
+    public void fillCircle(float cx, float cy, float radius) {
         canvas.drawCircle(cx, cy, radius, this.paint);
     }
+
+    @Override
+    public void fillTriangle(float x1, float y1, float x2, float y2, float x3, float y3) {
+        path.reset();
+        path.moveTo(x1, y1);
+        path.lineTo(x2, y2);
+        path.lineTo(x3, y3);
+        path.close();
+
+        canvas.drawPath(path, paint);
+    }
+
 
     // Método que crea una fuente.
     @Override

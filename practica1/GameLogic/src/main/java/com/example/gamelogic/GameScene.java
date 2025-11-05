@@ -28,19 +28,19 @@ public class GameScene implements IScene {
 
     private float timer = 0.0f;
 
-    private int type = -1;
-    private CostButton tower1;
-    private CostButton tower2;
-    private CostButton tower3;
+    private TowerType type = null;
+    private TowerButton tower1;
+    private TowerButton tower2;
+    private TowerButton tower3;
     private IImage tower1img;
     private IImage tower2img;
     private IImage tower3img;
 
-    private CostButton sword;
+    private UpgradeButton sword;
     private IImage sword_img;
-    private CostButton bow;
+    private UpgradeButton bow;
     private IImage bow_img;
-    private CostButton clock;
+    private UpgradeButton clock;
     private IImage clock_img;
 
     public GameScene(IEngine iEngine){
@@ -55,15 +55,15 @@ public class GameScene implements IScene {
         this.enemies = new ArrayList<Enemy>();
 
         var fontButton = iGraphics.createFont("fonts/fff.ttf", 10, false, false);
-        this.tower1 = new CostButton(this.iGraphics, fontButton, this.tower1img, 445, 360, 50, 50, 100, 0xFFFFFFFF, 0xFF000000);
-        this.tower2 = new CostButton(this.iGraphics, fontButton, this.tower1img, 505, 360, 50, 50, 150, 0xFFFFFFFF, 0xFF000000);
-        this.tower3 = new CostButton(this.iGraphics, fontButton, this.tower1img, 565, 360, 50, 50, 200, 0xFFFFFFFF, 0xFF000000);
+        this.tower1 = new TowerButton(this.iGraphics, fontButton, 445, 360, 50, 50, 100, TowerType.Rayo, 0xFFFFFFFF, 0xFF000000);
+        this.tower2 = new TowerButton(this.iGraphics, fontButton, 505, 360, 50, 50, 150, TowerType.Hielo, 0xFFFFFFFF, 0xFF000000);
+        this.tower3 = new TowerButton(this.iGraphics, fontButton, 565, 360, 50, 50, 200, TowerType.Fuego, 0xFFFFFFFF, 0xFF000000);
         //this.tower2= new Button(this.iGraphics, this.tower2img, 660, 550, 50, 50);
         //this.tower3 = new Button(this.iGraphics, this.tower3img, 720, 550, 50, 50);
 
-        this.sword = new CostButton(this.iGraphics, fontButton, this.sword_img, 445, 360, 50, 50, 75, 0xFFFFFFFF, 0xFF000000);
-        this.bow = new CostButton(this.iGraphics, fontButton, this.bow_img, 505, 360, 50, 50, 75, 0xFFFFFFFF, 0xFF000000);
-        this.clock = new CostButton(this.iGraphics, fontButton, this.clock_img, 565, 360, 50, 50, 100, 0xFFFFFFFF, 0xFF000000);
+        this.sword = new UpgradeButton(this.iGraphics, fontButton, this.sword_img, 445, 360, 50, 50, 75, 0xFFFFFFFF, 0xFF000000);
+        this.bow = new UpgradeButton(this.iGraphics, fontButton, this.bow_img, 505, 360, 50, 50, 75, 0xFFFFFFFF, 0xFF000000);
+        this.clock = new UpgradeButton(this.iGraphics, fontButton, this.clock_img, 565, 360, 50, 50, 100, 0xFFFFFFFF, 0xFF000000);
         this.towers = new ArrayList<Tower>();
     }
 
@@ -103,6 +103,10 @@ public class GameScene implements IScene {
         for (Enemy e : this.enemies){
             e.render();
         }
+
+        for(Tower t : this.towers){
+            t.render();
+        }
     }
 
     @Override
@@ -124,24 +128,42 @@ public class GameScene implements IScene {
         for (IInput.TouchEvent e : events){
             switch(e.type){
                 case TOUCH_UP:
+                    upgrades = false;
+                    for (Tower tower : towers) {
+                        tower.setSelected(false);
+                        if (tower.isTouched(e.x, e.y)) {
+                            tower.setSelected(true);
+                            upgrades = true;
+                        }
+                    }
+
                     if (!upgrades){
-                        if (tower1.isTouched(e.x, e.y)){
-                            mapGrid.showAvailableCells(true);
-                            type = 0;
+                        if (type != null) {
+                            Tower tower = mapGrid.placeTowerAt(e.x, e.y, type, iGraphics);
+                            if (tower != null) {
+                                towers.add(tower); // lista global de torres en tu juego
+                            }
+                            mapGrid.showAvailableCells(false);
+                            type = null;
                         }
-                        if (tower2.isTouched(e.x, e.y)){
-                            mapGrid.showAvailableCells(true);
-                            type = 1;
-                        }
-                        if (tower3.isTouched(e.x, e.y)){
-                            mapGrid.showAvailableCells(true);
-                            type = 2;
+                        else{
+                            if (tower1.isTouched(e.x, e.y)){
+                                mapGrid.showAvailableCells(true);
+                                type = tower1.getTipo();
+                            }
+                            else if (tower2.isTouched(e.x, e.y)){
+                                mapGrid.showAvailableCells(true);
+                                type = tower2.getTipo();
+                            }
+                            else if (tower3.isTouched(e.x, e.y)){
+                                mapGrid.showAvailableCells(true);
+                                type = tower3.getTipo();
+                            }
                         }
                     }
                     else {
                         if (sword.isTouched(e.x, e.y)){
                             //rr
-                            upgrades = false;
                         }
                         if (bow.isTouched(e.x, e.y)){
                             //rr
@@ -149,6 +171,7 @@ public class GameScene implements IScene {
                         if (clock.isTouched(e.x, e.y)){
                             //r
                         }
+
                     }
             }
         }
