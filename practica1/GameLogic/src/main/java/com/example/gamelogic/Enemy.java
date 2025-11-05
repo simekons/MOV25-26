@@ -17,6 +17,8 @@ public class Enemy {
     private int vida;
     private int defensa;
     private float radius;
+
+    private float speedModifier;
     private boolean isActive;
 
     private List<float[]> path;   // Lista de posiciones (centros de celdas)
@@ -27,6 +29,9 @@ public class Enemy {
         this.speed = speed;
         this.radius = radius;
         this.isActive = isActive;
+        this.vida = 30;
+        this.defensa = 0;
+        this.speedModifier = 1f;
 
         // Obtener la ruta del mapa
         this.path = map.getPathPositions();
@@ -68,11 +73,25 @@ public class Enemy {
         dy /= distance;
 
         // Avanzar hacia el objetivo
-        x += dx * speed * delta;
-        y += dy * speed * delta;
+        x += dx * speed * delta * speedModifier;
+        y += dy * speed * delta * speedModifier;
     }
 
     public boolean isActive() {
         return isActive;
+    }
+
+    public float getX() {return this.x;}
+    public float getY() {return this.y;}
+
+    public void makeDamage(int amount) {
+        this.vida -= Math.max((amount - defensa), 0);
+        if (this.vida <= 0) {
+            this.isActive = false;
+        }
+    }
+
+    public void setSpeedModifier(float slowFactor) {
+        speedModifier = slowFactor;
     }
 }

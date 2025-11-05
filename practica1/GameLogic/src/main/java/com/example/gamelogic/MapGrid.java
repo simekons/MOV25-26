@@ -163,33 +163,31 @@ public class MapGrid {
     public float getOffsetY() { return offsetY; }
 
     public Tower placeTowerAt(float x, float y, TowerType type, IGraphics iGraphics) {
-        // Obtener la celda en la posición del clic
         Cell cell = getCellAtPosition(x, y);
 
-        if (cell == null) return null;
-        if (cell.getPath() || cell.getTower()) return null; // No colocar en el camino ni donde ya hay torre
-        if (!cell.isAvailable()) return null; // Solo si es available
+        if (cell == null || cell.getPath() || cell.getTower() || !cell.isAvailable())
+            return null;
 
-        // Crear torre
-        Tower tower = new Tower(
-                iGraphics,
-                cell.getX() + cell.getSize() / 2f,
-                cell.getY() + cell.getSize() / 2f,
-                cell.getRow(),
-                cell.getColumn(),
-                cell.getSize() * 0.6f, // un poco más pequeña que la celda
-                100,                   // costo ejemplo
-                type,
-                this,
-                cell
-        );
+        Tower tower;
 
-        // Marcar celda como ocupada
+        float size = cell.getSize() * 0.6f;
+        int row = cell.getRow();
+        int column = cell.getColumn();
+        int cost = 100; // ejemplo
+
+        switch (type) {
+            case Rayo -> tower = new TowerRayo(iGraphics, row, column, size, cost, cell);
+            case Fuego -> tower = new TowerFuego(iGraphics, row, column, size, cost, cell);
+            case Hielo -> tower = new TowerHielo(iGraphics, row, column, size, cost, cell);
+            default -> throw new IllegalArgumentException("Tipo de torre no válido");
+        }
+
         cell.setTower(true);
         cell.setAvailable(false);
 
         return tower;
     }
+
 
     public Cell getCellAtPosition(float x, float y) {
         for (int row = 0; row < rows; row++) {

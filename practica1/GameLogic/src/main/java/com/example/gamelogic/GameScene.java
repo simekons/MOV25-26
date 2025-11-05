@@ -58,8 +58,6 @@ public class GameScene implements IScene {
         this.tower1 = new TowerButton(this.iGraphics, fontButton, 445, 360, 50, 50, 100, TowerType.Rayo, 0xFFFFFFFF, 0xFF000000);
         this.tower2 = new TowerButton(this.iGraphics, fontButton, 505, 360, 50, 50, 150, TowerType.Hielo, 0xFFFFFFFF, 0xFF000000);
         this.tower3 = new TowerButton(this.iGraphics, fontButton, 565, 360, 50, 50, 200, TowerType.Fuego, 0xFFFFFFFF, 0xFF000000);
-        //this.tower2= new Button(this.iGraphics, this.tower2img, 660, 550, 50, 50);
-        //this.tower3 = new Button(this.iGraphics, this.tower3img, 720, 550, 50, 50);
 
         this.sword = new UpgradeButton(this.iGraphics, fontButton, this.sword_img, 445, 360, 50, 50, 75, 0xFFFFFFFF, 0xFF000000);
         this.bow = new UpgradeButton(this.iGraphics, fontButton, this.bow_img, 505, 360, 50, 50, 75, 0xFFFFFFFF, 0xFF000000);
@@ -118,7 +116,13 @@ public class GameScene implements IScene {
             cooldown += 1.0f;
         }
 
-        for (Enemy e : this.enemies){
+        for (Tower tower : towers) {
+            tower.update(deltaTime, enemies);
+        }
+
+        enemies.removeIf(e -> !e.isActive());
+
+        for (Enemy e : enemies) {
             e.update(deltaTime);
         }
     }
@@ -171,21 +175,8 @@ public class GameScene implements IScene {
                         if (clock.isTouched(e.x, e.y)){
                             //r
                         }
-
                     }
             }
         }
     }
-
-    /*
-    private void showAvailableCells(boolean available){
-        this.grid = true;
-        for (int i = 0; i < this.mapGrid.getRows(); i++){
-            for (int j = 0; j < this.mapGrid.getColumns(); j++){
-                if (!this.mapGrid.getCell(i, j).getPath() && !this.mapGrid.getCell(i, j).getTower()){
-                    this.mapGrid.getCell(i, j).setAvailable(available);
-                }
-            }
-        }
-    }*/
 }
