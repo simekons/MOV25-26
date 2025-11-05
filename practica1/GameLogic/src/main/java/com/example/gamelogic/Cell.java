@@ -33,7 +33,7 @@ public class Cell {
     public void render() {
         // Si es camino, se dibuja llena
         if (this.path) {
-            iGraphics.setColor(0xff562B05); // color del camino (amarillo)
+            iGraphics.setColor(0xff653c10); // color del camino (amarillo)
             iGraphics.fillRectangle(x, y, size, size);
         }
         else {

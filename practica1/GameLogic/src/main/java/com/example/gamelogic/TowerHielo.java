@@ -31,7 +31,7 @@ public class TowerHielo extends Tower {
 
     @Override
     public void render() {
-        iGraphics.setColor(0xFF8000FF);
+        iGraphics.setColor(0xFF88539E);
         float side = size;
         iGraphics.fillRectangle(x - side / 2f, y - side / 2f, side, side);
 

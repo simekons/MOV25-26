@@ -28,6 +28,7 @@ public class Enemy {
 
     private float speedModifier;
     private boolean isActive;
+    private boolean reachEnd = false;
 
     private List<float[]> path;   // Lista de posiciones (centros de celdas)
     private int currentTarget;    // Índice del waypoint actual
@@ -57,7 +58,7 @@ public class Enemy {
 
     public void render() {
         if (!isActive) return;
-        this.iGraphics.setColor(0xFF00FF00);
+        this.iGraphics.setColor(0xFF009b3f);
         this.iGraphics.fillCircle(x, y, radius);
     }
 
@@ -76,7 +77,8 @@ public class Enemy {
             // Llegó al siguiente punto
             currentTarget++;
             if (currentTarget >= path.size()) {
-                isActive = false; // llegó al final
+                isActive = false;
+                reachEnd = true; // llegó al final
             }
             return;
         }
@@ -91,6 +93,9 @@ public class Enemy {
 
     public boolean isActive() {
         return isActive;
+    }
+    public boolean reachedEnd() {
+        return reachEnd;
     }
 
     public float getX() {return this.x;}

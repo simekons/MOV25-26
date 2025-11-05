@@ -28,7 +28,7 @@ public class TowerFuego extends Tower {
     public void render() {
         // Renderiza la torre
         float radius = size / 2f;
-        iGraphics.setColor(0xFFFF0000);
+        iGraphics.setColor(0xFFE1050F);
         iGraphics.fillHexagon(x, y, radius);
 
         // Renderiza el rango si está seleccionada

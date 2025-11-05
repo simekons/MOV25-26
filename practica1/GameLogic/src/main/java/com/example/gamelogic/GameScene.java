@@ -2,6 +2,7 @@ package com.example.gamelogic;
 
 import com.example.engine.IAudio;
 import com.example.engine.IEngine;
+import com.example.engine.IFont;
 import com.example.engine.IGraphics;
 import com.example.engine.IImage;
 import com.example.engine.IInput;
@@ -10,6 +11,7 @@ import com.example.engine.ISound;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Iterator;
 
 public class GameScene implements IScene {
 
@@ -31,6 +33,13 @@ public class GameScene implements IScene {
     private float cooldown = 1.0f;
 
     private float timer = 0.0f;
+    private int enemiesSpawned = 0;   // enemigos spawneados durante la oleada
+    private int enemiesPerWave = 5;   // enemigos por oleada
+    private float waveCooldown = 3.0f; // cooldown oleadas
+    private boolean spawningWave = true;
+
+    private int money = 0;
+    private int lives = 10;
 
     private TowerType type = null;
     private TowerButton tower1;
@@ -39,6 +48,8 @@ public class GameScene implements IScene {
     private IImage tower1img;
     private IImage tower2img;
     private IImage tower3img;
+    private IImage coinimg;
+    private IImage heartimg;
 
     private UpgradeButton sword;
     private IImage sword_img;
@@ -48,6 +59,7 @@ public class GameScene implements IScene {
     private IImage clock_img;
 
     private ISound click;
+    private IFont moneyText;
 
 
     public GameScene(IEngine iEngine){
@@ -82,7 +94,12 @@ public class GameScene implements IScene {
         this.sword_img = this.iGraphics.loadImage("sprites/sword.png");
         this.clock_img = this.iGraphics.loadImage("sprites/clock.png");
 
+        this.coinimg = this.iGraphics.loadImage("sprites/coin.png");
+        this.heartimg = this.iGraphics.loadImage("sprites/heart.png");
+
         click = this.iAudio.newSound("music/click.wav");
+
+        moneyText = iGraphics.createFont("fonts/fff.ttf", 15, false, false);
     }
 
     private void addEnemy(){
@@ -96,6 +113,12 @@ public class GameScene implements IScene {
         iGraphics.fillRectangle(0, 320,600,80);
 
         mapGrid.render();
+
+        iGraphics.setColor(0xFF000000);
+        iGraphics.drawImage(coinimg, 15, 380, 30, 30);
+        iGraphics.drawText(moneyText, String.valueOf(money), 50, 390);
+        iGraphics.drawImage(heartimg, 18, 340, 30, 30);
+        iGraphics.drawText(moneyText, String.valueOf(lives), 50, 350);
 
         if (upgrades) {
             this.sword.render();
@@ -121,6 +144,27 @@ public class GameScene implements IScene {
     public void update(float deltaTime) {
 
         timer += deltaTime;
+
+        if (spawningWave) {
+            if (timer > cooldown && enemiesSpawned < enemiesPerWave) {
+                addEnemy();
+                enemiesSpawned++;
+                cooldown += 1.0f;
+            }
+
+            if (enemiesSpawned >= enemiesPerWave) {
+                spawningWave = false;
+                timer = 0;
+            }
+        }
+        else {
+            if (timer > waveCooldown) {
+                spawningWave = true;
+                enemiesSpawned = 0;
+                cooldown = timer + 1.0f;
+            }
+        }
+
         if (timer > cooldown){
             addEnemy();
             cooldown += 1.0f;
@@ -128,6 +172,18 @@ public class GameScene implements IScene {
 
         for (Tower tower : towers) {
             tower.update(deltaTime, enemies);
+        }
+
+        Iterator<Enemy> it = enemies.iterator();
+        while (it.hasNext()) {
+            Enemy e = it.next();
+            if (!e.isActive()) {
+                if(!e.reachedEnd())
+                    money += 10;
+                else
+                    lives -= 1;
+                it.remove();
+            }
         }
 
         enemies.removeIf(e -> !e.isActive());
@@ -161,17 +217,24 @@ public class GameScene implements IScene {
                             this.iAudio.playSound(this.click, false);
                             mapGrid.showAvailableCells(false);
                             type = null;
+
+                            tower1.setSelected(false);
+                            tower2.setSelected(false);
+                            tower3.setSelected(false);
                         }
                         else{
                             if (tower1.isTouched(e.x, e.y)){
+                                tower1.setSelected(true);
                                 mapGrid.showAvailableCells(true);
                                 type = tower1.getTipo();
                             }
                             else if (tower2.isTouched(e.x, e.y)){
+                                tower2.setSelected(true);
                                 mapGrid.showAvailableCells(true);
                                 type = tower2.getTipo();
                             }
                             else if (tower3.isTouched(e.x, e.y)){
+                                tower3.setSelected(true);
                                 mapGrid.showAvailableCells(true);
                                 type = tower3.getTipo();
                             }

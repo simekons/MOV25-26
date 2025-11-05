@@ -39,7 +39,11 @@ public class TowerRayo extends Tower {
 
         if (selected) iGraphics.drawCircle(x, y, range);
         if (shotTimer > 0f && currentTarget != null)
+        {
+            iGraphics.setColor(0x47a8dc);
             iGraphics.drawLine(x, y, currentTarget.getX(), currentTarget.getY(), 5);
+            iGraphics.setColor(0xFF000000);
+        }
     }
 
     @Override

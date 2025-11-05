@@ -11,6 +11,7 @@ public class TowerButton {
     private float x, y, width, height;
     private int buttonColor, textColor;
     private int cost;
+    private boolean selected;
     private TowerType tipo; // 0, 1 o 2
 
     public TowerButton(IGraphics graphics, IFont font,
@@ -27,6 +28,7 @@ public class TowerButton {
         this.height = height;
         this.buttonColor = buttonColor;
         this.textColor = textColor;
+        this.selected = false;
     }
 
     public void render() {
@@ -68,7 +70,7 @@ public class TowerButton {
                 iGraphics.fillTriangle(x1, y1, x2, y2, x3, y3);
                 break;
             case Hielo:
-                iGraphics.setColor(0xFF800080);
+                iGraphics.setColor(0xFF88539E);
 
                 // Hacer el cuadrado del tamaño máximo posible dentro del área disponible
                 float side = Math.min(availableWidth, availableHeight);
@@ -82,7 +84,7 @@ public class TowerButton {
                 break;
 
             case Fuego:
-                iGraphics.setColor(0xFFFF0000);
+                iGraphics.setColor(0xFFE1050F);
                 float radius = Math.min(availableWidth, availableHeight) / 2;
                 iGraphics.fillHexagon(drawX, drawY, radius);
                 break;
@@ -106,12 +108,26 @@ public class TowerButton {
         return touchX >= left && touchX <= right && touchY >= top && touchY <= bottom;
     }
 
+    public void changeButtonColor()
+    {
+        this.selected = !this.selected;
+        if(selected)
+            buttonColor = 0xFF800080;
+        else
+            buttonColor = 0xFFFFFFFF;
+    }
+
     public void setText(String text) {
         this.text = text;
     }
 
     public void setTextColor(int color) {
         this.textColor = color;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
+        buttonColor = this.selected ? 0xFFD3D3D3 : 0xFFFFFFFF;
     }
 
     public int getCost() {
