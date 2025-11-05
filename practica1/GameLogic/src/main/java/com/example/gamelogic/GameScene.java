@@ -1,10 +1,12 @@
 package com.example.gamelogic;
 
+import com.example.engine.IAudio;
 import com.example.engine.IEngine;
 import com.example.engine.IGraphics;
 import com.example.engine.IImage;
 import com.example.engine.IInput;
 import com.example.engine.IScene;
+import com.example.engine.ISound;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +15,8 @@ public class GameScene implements IScene {
 
     private IEngine iEngine;
     private IGraphics iGraphics;
+
+    private IAudio iAudio;
 
     //private Cell cell;
 
@@ -43,9 +47,13 @@ public class GameScene implements IScene {
     private UpgradeButton clock;
     private IImage clock_img;
 
+    private ISound click;
+
+
     public GameScene(IEngine iEngine){
         this.iEngine = iEngine;
         this.iGraphics = this.iEngine.getGraphics();
+        this.iAudio = this.iEngine.getAudio();
 
         loadAssets();
 
@@ -73,10 +81,12 @@ public class GameScene implements IScene {
         this.bow_img = this.iGraphics.loadImage("sprites/bow.png");
         this.sword_img = this.iGraphics.loadImage("sprites/sword.png");
         this.clock_img = this.iGraphics.loadImage("sprites/clock.png");
+
+        click = this.iAudio.newSound("music/click.wav");
     }
 
     private void addEnemy(){
-        enemies.add(new Enemy(this.iGraphics, 40, 5, true, this.mapGrid));
+        enemies.add(new Enemy(this.iGraphics, this.iAudio, 40, 5, true, this.mapGrid));
     }
 
     @Override
@@ -143,10 +153,12 @@ public class GameScene implements IScene {
 
                     if (!upgrades){
                         if (type != null) {
-                            Tower tower = mapGrid.placeTowerAt(e.x, e.y, type, iGraphics);
+                            Tower tower = mapGrid.placeTowerAt(e.x, e.y, type, iGraphics, this.iAudio);
+
                             if (tower != null) {
                                 towers.add(tower); // lista global de torres en tu juego
                             }
+                            this.iAudio.playSound(this.click, false);
                             mapGrid.showAvailableCells(false);
                             type = null;
                         }

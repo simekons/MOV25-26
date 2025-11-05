@@ -1,6 +1,9 @@
 package com.example.gamelogic;
 
+import com.example.engine.IAudio;
 import com.example.engine.IGraphics;
+import com.example.engine.ISound;
+
 import java.util.List;
 
 public class TowerFuego extends Tower {
@@ -8,11 +11,17 @@ public class TowerFuego extends Tower {
     private final float areaRadius = 30f; // radio del área de efecto
     private float explosionX = -1, explosionY = -1; // posición de la explosión
 
-    public TowerFuego(IGraphics iGraphics, int row, int column, float size, int cost, Cell cell) {
+    private IAudio iAudio;
+    private ISound fire;
+    public TowerFuego(IGraphics iGraphics, IAudio iAudio, int row, int column, float size, int cost, Cell cell) {
         super(iGraphics, row, column, size, cost, cell);
         this.damage = 5;
         this.range = 75;
         this.cooldown = 2f;
+
+        this.iAudio = iAudio;
+
+        this.fire = this.iAudio.newSound("music/fire.wav");
     }
 
     @Override
@@ -87,6 +96,7 @@ public class TowerFuego extends Tower {
                             other.makeDamage(damage);
                         }
                     }
+                    this.iAudio.playSound(this.fire, false);
                     break; // ya atacó a un enemigo, salir del loop
                 }
             }

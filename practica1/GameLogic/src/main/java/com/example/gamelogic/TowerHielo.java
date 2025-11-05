@@ -1,6 +1,10 @@
 package com.example.gamelogic;
 
+import com.example.engine.IAudio;
 import com.example.engine.IGraphics;
+import com.example.engine.IScene;
+import com.example.engine.ISound;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -10,11 +14,19 @@ public class TowerHielo extends Tower {
     private final float slowFactor = 0.5f; // 50% de velocidad
     private Set<Enemy> slowedEnemies = new HashSet<>(); // enemigos que esta torre está ralentizando
 
-    public TowerHielo(IGraphics iGraphics, int row, int column, float size, int cost, Cell cell) {
+    private IAudio iAudio;
+
+    private ISound ice;
+
+    public TowerHielo(IGraphics iGraphics, IAudio iAudio, int row, int column, float size, int cost, Cell cell) {
         super(iGraphics, row, column, size, cost, cell);
         this.damage = 7;
         this.range = 60;
         this.cooldown = 3f;
+
+        this.iAudio = iAudio;
+
+        this.ice = this.iAudio.newSound("music/ice.wav");
     }
 
     @Override
@@ -87,6 +99,7 @@ public class TowerHielo extends Tower {
             currentTarget = target;
             shotTimer = 0.2f;
             timeSinceLastShot = 0f;
+            this.iAudio.playSound(this.ice, false);
         }
     }
 }

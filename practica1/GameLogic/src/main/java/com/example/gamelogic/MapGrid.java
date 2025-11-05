@@ -2,6 +2,8 @@ package com.example.gamelogic;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.example.engine.IAudio;
 import com.example.engine.IGraphics;
 
 public class MapGrid {
@@ -162,7 +164,7 @@ public class MapGrid {
     public float getOffsetX() { return offsetX; }
     public float getOffsetY() { return offsetY; }
 
-    public Tower placeTowerAt(float x, float y, TowerType type, IGraphics iGraphics) {
+    public Tower placeTowerAt(float x, float y, TowerType type, IGraphics iGraphics, IAudio iAudio) {
         Cell cell = getCellAtPosition(x, y);
 
         if (cell == null || cell.getPath() || cell.getTower() || !cell.isAvailable())
@@ -176,9 +178,9 @@ public class MapGrid {
         int cost = 100; // ejemplo
 
         switch (type) {
-            case Rayo -> tower = new TowerRayo(iGraphics, row, column, size, cost, cell);
-            case Fuego -> tower = new TowerFuego(iGraphics, row, column, size, cost, cell);
-            case Hielo -> tower = new TowerHielo(iGraphics, row, column, size, cost, cell);
+            case Rayo -> tower = new TowerRayo(iGraphics, iAudio, row, column, size, cost, cell);
+            case Fuego -> tower = new TowerFuego(iGraphics, iAudio, row, column, size, cost, cell);
+            case Hielo -> tower = new TowerHielo(iGraphics, iAudio, row, column, size, cost, cell);
             default -> throw new IllegalArgumentException("Tipo de torre no válido");
         }
 

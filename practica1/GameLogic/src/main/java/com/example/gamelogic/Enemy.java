@@ -1,6 +1,9 @@
 package com.example.gamelogic;
 
+import com.example.engine.IAudio;
 import com.example.engine.IGraphics;
+import com.example.engine.ISound;
+
 import java.util.List;
 
 enum EnemyResist { Nada, Rayo, Hielo, Fuego }
@@ -8,6 +11,11 @@ enum EnemyResist { Nada, Rayo, Hielo, Fuego }
 public class Enemy {
 
     private IGraphics iGraphics;
+
+    private IAudio iAudio;
+
+    private ISound death;
+
     private int color;
 
     private float x;
@@ -24,7 +32,7 @@ public class Enemy {
     private List<float[]> path;   // Lista de posiciones (centros de celdas)
     private int currentTarget;    // Índice del waypoint actual
 
-    public Enemy(IGraphics iGraphics, float speed, float radius, boolean isActive, MapGrid map) {
+    public Enemy(IGraphics iGraphics, IAudio iAudio, float speed, float radius, boolean isActive, MapGrid map) {
         this.iGraphics = iGraphics;
         this.speed = speed;
         this.radius = radius;
@@ -41,6 +49,10 @@ public class Enemy {
             this.x = path.get(0)[0];
             this.y = path.get(0)[1];
         }
+
+        this.iAudio = iAudio;
+
+        this.death = this.iAudio.newSound("music/death.wav");
     }
 
     public void render() {
@@ -87,6 +99,7 @@ public class Enemy {
     public void makeDamage(int amount) {
         this.vida -= Math.max((amount - defensa), 0);
         if (this.vida <= 0) {
+            this.iAudio.playSound(this.death, false);
             this.isActive = false;
         }
     }
