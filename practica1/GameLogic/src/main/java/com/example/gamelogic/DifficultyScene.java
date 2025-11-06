@@ -52,6 +52,8 @@ public class DifficultyScene implements IScene {
         longButton = new Button(iGraphics, fontButton, 300,225,150,50, "Long", 0xFF808080);
         infButton = new Button(iGraphics, fontButton, 300,300,150,50, "Infinity", 0xFF808080);
         titleFont = iGraphics.createFont("fonts/pixelGotic.ttf", 35, false, false);
+
+        this.soundButton = this.iAudio.newSound("music/button.wav");
     }
 
     // RENDERIZADO
@@ -64,16 +66,16 @@ public class DifficultyScene implements IScene {
         infButton.render();
     }
 
-    // Update.
+    // UPDATE
     @Override
     public void update(float deltaTime) {
         if(startGame){
-            //iAudio.playSound(soundButton, false);
+            iAudio.playSound(soundButton, false);
             iEngine.setScenes(new GameScene(iEngine, this.difficulty));
         }
     }
 
-    // Input.
+    // INPUT
     @Override
     public void handleInput(List<IInput.TouchEvent> events) {
         for(IInput.TouchEvent e : events)

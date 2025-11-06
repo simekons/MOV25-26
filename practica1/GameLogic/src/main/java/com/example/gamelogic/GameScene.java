@@ -14,58 +14,89 @@ import java.util.List;
 import java.util.Iterator;
 import java.util.Random;
 
+/*
+ * GameScene implementa las funcionalidades del juego principal.
+ */
 public class GameScene implements IScene {
 
+    // Engine.
     private IEngine iEngine;
+
+    // Graphics.
     private IGraphics iGraphics;
 
+    // Audio.
     private IAudio iAudio;
 
-    //private Cell cell;
-
+    // Mapa de juego.
     private MapGrid mapGrid;
-    private boolean grid = false;
 
+    // ¿Está por mejorar? (sí/no)
     private boolean upgrades = false;
 
+    // Array de enemigos.
     private ArrayList<Enemy> enemies;
 
+    // Array de torres.
     private ArrayList<Tower> towers;
+
+    // Torre activa.
     private Tower activeTower;
+
+    // Cooldown de aparición de enemigos.
     private float cooldown = 1.0f;
 
+    // Temporizador para las oleadas.
     private float timer = 0.0f;
+
+    // Enemigos spawneados.
     private int enemiesSpawned = 0;
+
+    // Enemigos por oleada.
     private int enemiesPerWave = 5;
+
+    // Cooldown de oleada.
     private float waveCooldown = 3.0f;
+
+    // Espera entre oleadas.
     private float waveRestTimer = 0;
+
+    // ¿Se está spawneando una oleada? (sí/no)
     private boolean spawningWave = true;
 
+    // Dinero actual.
     private int money;
+
+    // Vidas actuales.
     private int lives = 10;
 
+    // Tipo de torre.
     private TowerType type = null;
-    private TowerButton tower1;
-    private TowerButton tower2;
-    private TowerButton tower3;
+
+    // Torres.
+    private TowerButton tower1, tower2, tower3;
+
+    // Imágenes de dinero/vida.
     private IImage coinimg;
     private IImage heartimg;
 
-    private UpgradeButton sword;
-    private IImage sword_img;
-    private UpgradeButton bow;
-    private IImage bow_img;
-    private UpgradeButton clock;
-    private IImage clock_img;
+    // Botones de mejoras.
+    private UpgradeButton sword, bow, clock;
+    private IImage sword_img, bow_img, clock_img;
 
-    private ISound click;
+    // Sonidos.
+    private ISound turret, upgrade;
+
+    // Fuente.
     private IFont moneyText;
 
+    // Dificultad.
     private int difficulty;
 
+    // Oleada.
     private int wave = 0;
 
-
+    // CONSTRUCTORA
     public GameScene(IEngine iEngine, int difficulty) {
         this.iEngine = iEngine;
         this.iGraphics = this.iEngine.getGraphics();
@@ -89,6 +120,7 @@ public class GameScene implements IScene {
         this.towers = new ArrayList<Tower>();
     }
 
+    // Carga de recursos.
     public void loadAssets() {
         this.bow_img = this.iGraphics.loadImage("sprites/bow.png");
         this.sword_img = this.iGraphics.loadImage("sprites/sword.png");
@@ -97,59 +129,14 @@ public class GameScene implements IScene {
         this.coinimg = this.iGraphics.loadImage("sprites/coin.png");
         this.heartimg = this.iGraphics.loadImage("sprites/heart.png");
 
-        click = this.iAudio.newSound("music/click.wav");
+        this.turret = this.iAudio.newSound("music/turret.wav");
+
+        this.upgrade = this.iAudio.newSound("music/upgrade.wav");
 
         moneyText = iGraphics.createFont("fonts/fff.ttf", 15, false, false);
     }
 
-    private void addEnemy(int wave) {
-        int vida = 30 + (wave * 15);
-        int defensa = 0 + (wave * 2);
-
-        EnemyResist resist = EnemyResist.Nada;
-
-        if (this.wave >= 2) {
-            Random n = new Random();
-            int valor = n.nextInt(3);
-            resist = EnemyResist.values()[valor];
-        }
-
-        enemies.add(new Enemy(this.iGraphics, this.iAudio, 10, 5, true, this.mapGrid, vida, defensa, resist));
-    }
-
-    private void waves() {
-
-        switch (this.difficulty) {
-            case 0:
-                if (this.wave < 3) {
-                    enemiesPerWave = 5 + this.wave;
-                    waveCooldown = 5.0f;
-                } else {
-                    // Victory
-                }
-                break;
-            case 1:
-                if (this.wave < 7) {
-                    enemiesPerWave = 7 + this.wave;
-                    waveCooldown = 4.0f;
-                } else {
-                    // Victory
-                }
-                break;
-            case 2:
-                enemiesPerWave = 10 + this.wave;
-                waveCooldown = 3.0f;
-                break;
-        }
-
-        enemiesSpawned = 0;
-        spawningWave = true;
-        cooldown = 0;
-        timer = 0;
-
-        this.wave++;
-    }
-
+    // RENDERIZADO
     @Override
     public void render() {
         // Banda de abajo
@@ -186,6 +173,7 @@ public class GameScene implements IScene {
         iGraphics.drawText(moneyText, "Oleada " + (this.wave + 1), 525, 25);
     }
 
+    // UPDATE
     @Override
     public void update(float deltaTime) {
 
@@ -203,23 +191,26 @@ public class GameScene implements IScene {
                 timer = 0;
             }
         } else {
-            if (enemies.isEmpty()) { // no quedan enemigos vivos
-                waveRestTimer += deltaTime; // pequeño tiempo de descanso entre waves
+            if (enemies.isEmpty()) { // Si no quedan enemigos vivos.
+                waveRestTimer += deltaTime; // Temporizador entre oleadas.
 
                 if (waveRestTimer > waveCooldown) {
                     waveRestTimer = 0;
-                    waves(); // iniciar siguiente wave
+                    this.wave++;
+                    waves(); // iniciar siguiente oleada.
                 }
             } else {
-                // reset del descanso si todavía quedan enemigos
+                // Resetear el temporizador si todavía quedan enemigos.
                 waveRestTimer = 0;
             }
         }
 
+        // Actualizar los enemigos.
         for (Enemy e : enemies) {
             e.update(deltaTime);
         }
 
+        // Actualizar las torres.
         for (Tower tower : towers) {
             tower.update(deltaTime, enemies);
         }
@@ -229,7 +220,7 @@ public class GameScene implements IScene {
             Enemy e = it.next();
             if (!e.isActive()) {
                 if (!e.reachedEnd())
-                    money += 10;
+                    money += 50;
                 else
                     lives -= 1;
                 it.remove();
@@ -238,11 +229,12 @@ public class GameScene implements IScene {
 
         enemies.removeIf(e -> !e.isActive());
 
-        for (Enemy e : enemies) {
-            e.update(deltaTime);
+        if (lives == 0){
+            iEngine.setScenes(new FinalScene(this.iEngine, this.difficulty, false));
         }
     }
 
+    // INPUT
     @Override
     public void handleInput(List<IInput.TouchEvent> events) {
         for (IInput.TouchEvent e : events) {
@@ -261,6 +253,62 @@ public class GameScene implements IScene {
         }
     }
 
+    // Añadir enemigos.
+    private void addEnemy(int wave) {
+        int vida = 30 + (wave * 15);
+        int defensa = 0 + (wave * 2);
+        int speed = 20;
+        EnemyResist resist = EnemyResist.Nada;
+
+        if (this.wave >= 2) {
+            // Resistencias.
+            Random n = new Random();
+            int valor = n.nextInt(3);
+            resist = EnemyResist.values()[valor];
+
+            // Velocidad.
+            if (valor == 2){
+                speed += 10;
+            }
+        }
+
+        enemies.add(new Enemy(this.iGraphics, this.iAudio, speed, 5, true, this.mapGrid, vida, defensa, resist));
+    }
+
+    // Gestor de oleadas.
+    private void waves() {
+
+        switch (this.difficulty) {
+            case 0:
+                if (this.wave < 3) {
+                    enemiesPerWave = 5 + this.wave;
+                    waveCooldown = 5.0f;
+                } else {
+                    this.iEngine.setScenes(new FinalScene(this.iEngine, this.difficulty, true));
+                }
+                break;
+            case 1:
+                if (this.wave < 7) {
+                    enemiesPerWave = 7 + this.wave;
+                    waveCooldown = 4.0f;
+                } else {
+                    this.iEngine.setScenes(new FinalScene(this.iEngine, this.difficulty, true));
+                }
+                break;
+            case 2:
+                enemiesPerWave = 10 + this.wave;
+                waveCooldown = 3.0f;
+                break;
+        }
+
+        enemiesSpawned = 0;
+        spawningWave = true;
+        cooldown = 0;
+        timer = 0;
+
+    }
+
+    // Gestor para seleccionar una torre.
     private boolean handleTowerSelection(IInput.TouchEvent e) {
         for (Tower tower : towers) {
             if (tower.isTouched(e.x, e.y)) {
@@ -281,6 +329,7 @@ public class GameScene implements IScene {
         return false;
     }
 
+    // Gestor para posicionar la torre (tras clicar botón).
     private boolean handleTowerPlacement(IInput.TouchEvent e) {
         if (type == null) return false;
 
@@ -292,10 +341,9 @@ public class GameScene implements IScene {
                 case Hielo -> money -= tower2.getCost();
                 case Fuego -> money -= tower3.getCost();
             }
+            iAudio.playSound(turret, false);
             towers.add(tower);
         }
-
-        iAudio.playSound(click, false);
         mapGrid.showAvailableCells(false);
         type = null;
 
@@ -306,6 +354,7 @@ public class GameScene implements IScene {
         return true;
     }
 
+    // Gestor para clicar un botón de torre.
     private void handleTowerTypeSelection(IInput.TouchEvent e) {
         if (tower1.isTouched(e.x, e.y)) {
             selectTowerType(tower1);
@@ -316,36 +365,50 @@ public class GameScene implements IScene {
         }
     }
 
+    // Activar botón de torre (si hay dinero).
     private void selectTowerType(TowerButton towerBtn) {
-        towerBtn.setSelected(true);
         if(money >= towerBtn.getCost()){
+            towerBtn.setSelected(true);
             mapGrid.showAvailableCells(true);
             type = towerBtn.getTipo();
         }
     }
 
+    // Gestor de mejoras.
     private void handleUpgrades(IInput.TouchEvent e) {
-        if (sword.isTouched(e.x, e.y) && canAffordUpgrade(sword)) {
-            applyUpgrade(0, sword);
-        } else if (bow.isTouched(e.x, e.y) && canAffordUpgrade(bow)) {
-            applyUpgrade(1, bow);
-        } else if (clock.isTouched(e.x, e.y) && canAffordUpgrade(clock)) {
-            applyUpgrade(2, clock);
+        if (sword.isTouched(e.x, e.y)) {
+            if(canAffordUpgrade(sword)){
+                this.iAudio.playSound(this.upgrade, false);
+                applyUpgrade(0, sword);
+            }
+        } else if (bow.isTouched(e.x, e.y)) {
+            if(canAffordUpgrade(bow)){
+                this.iAudio.playSound(this.upgrade, false);
+                applyUpgrade(1, bow);
+            }
+        } else if (clock.isTouched(e.x, e.y)) {
+            if(canAffordUpgrade(clock)){
+                this.iAudio.playSound(this.upgrade, false);
+                applyUpgrade(2, clock);
+            }
         } else {
             upgrades = false;
         }
     }
 
+    // ¿Puede comprar una mejora? (sí/no)
     private boolean canAffordUpgrade(UpgradeButton upgradeBtn) {
         return money >= upgradeBtn.getCost();
     }
 
+    // Aplicar mejora.
     private void applyUpgrade(int upgradeId, UpgradeButton upgradeBtn) {
         activeTower.activateUpgrade(upgradeId);
         money -= upgradeBtn.getCost();
         upgrades = false;
     }
 
+    // Deselector de torres.
     private void deselectAllTowers() {
         for (Tower tower : towers) {
             tower.setSelected(false);
