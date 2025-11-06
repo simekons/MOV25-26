@@ -26,7 +26,7 @@ public abstract class Tower {
 
     // Daño, rango y cooldown.
     protected int damage, range;
-    private float cooldown;
+    protected float cooldown;
 
     // Coste.
     protected int cost;
