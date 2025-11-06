@@ -63,7 +63,7 @@ public class TowerRayo extends Tower {
                 float dy = e.getY() - y;
                 float dist = (float) Math.sqrt(dx * dx + dy * dy);
                 if (dist <= range) {
-                    e.makeDamage(damage);
+                    e.makeDamage(damage, EnemyResist.Rayo);
                     currentTarget = e;
                     shotTimer = 0.2f;
                     timeSinceLastShot = 0f;

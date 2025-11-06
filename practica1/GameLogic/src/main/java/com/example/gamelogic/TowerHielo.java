@@ -95,7 +95,7 @@ public class TowerHielo extends Tower {
 
         // Disparo al primer enemigo dentro del rango
         if (timeSinceLastShot >= cooldown && target != null) {
-            target.makeDamage(damage);
+            target.makeDamage(damage, EnemyResist.Hielo);
             currentTarget = target;
             shotTimer = 0.2f;
             timeSinceLastShot = 0f;

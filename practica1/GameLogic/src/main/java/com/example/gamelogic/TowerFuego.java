@@ -75,7 +75,7 @@ public class TowerFuego extends Tower {
 
                 if (dist <= range) {
                     // Daño al enemigo principal
-                    e.makeDamage(damage);
+                    e.makeDamage(damage, EnemyResist.Fuego);
                     currentTarget = e;
                     shotTimer = 0.2f;
                     timeSinceLastShot = 0f;
@@ -93,7 +93,7 @@ public class TowerFuego extends Tower {
                         float distanceToTarget = (float) Math.sqrt(ddx * ddx + ddy * ddy);
 
                         if (distanceToTarget <= areaRadius) {
-                            other.makeDamage(damage);
+                            other.makeDamage(damage, EnemyResist.Fuego);
                         }
                     }
                     this.iAudio.playSound(this.fire, false);

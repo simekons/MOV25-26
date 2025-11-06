@@ -101,8 +101,13 @@ public class Enemy {
     public float getX() {return this.x;}
     public float getY() {return this.y;}
 
-    public void makeDamage(int amount) {
+    public void makeDamage(int amount, EnemyResist resist) {
+        if(resist == type){
+            amount = (amount * 3) / 4;
+        }
+
         this.vida -= Math.max((amount - defensa), 0);
+
         if (this.vida <= 0) {
             this.iAudio.playSound(this.death, false);
             this.isActive = false;
@@ -110,6 +115,9 @@ public class Enemy {
     }
 
     public void setSpeedModifier(float slowFactor) {
+        if(type == EnemyResist.Hielo) {
+            slowFactor /= 2;
+        }
         speedModifier = slowFactor;
     }
 }
