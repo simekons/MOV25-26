@@ -1,14 +1,24 @@
 package com.example.gamelogic;
 
+/*
+ * Maps guarda la información de los niveles.
+ */
 public class Maps {
 
+    // Filas.
     public int rows;
-    public int cols;
-    public String map; // contendrá todas las filas concatenadas
 
+    // Columnas.
+    public int cols;
+
+    // Todas las filas concatenadas.
+    public String map;
+
+    // CONSTRUCTORA
     public Maps() {
     }
 
+    // Nivel 1.
     public static Maps level1() {
         Maps m = new Maps();
         m.rows = 8;

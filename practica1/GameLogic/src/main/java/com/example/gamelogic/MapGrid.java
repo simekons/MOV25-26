@@ -6,24 +6,45 @@ import java.util.List;
 import com.example.engine.IAudio;
 import com.example.engine.IGraphics;
 
+/*
+* MapGrid es la clase que gestiona el tablero de juego.
+* */
 public class MapGrid {
 
+    // Filas.
     private int rows;
+
+    // Columnas.
     private int columns;
 
-    private float cellSize;   // tamaño cuadrado de cada celda
-    private float offsetX;    // margen izquierdo para centrar el grid
-    private float offsetY;    // margen superior para centrar el grid
 
+    // Tamaño cuadrado de cada celda
+    private float cellSize;
+
+    // Margen izquierdo para centrar el grid
+    private float offsetX;
+
+    // Margen superior para centrar el grid
+    private float offsetY;
+
+
+    // Ancho y alto de la pantalla.
     private float screenWidth;
     private float screenHeight;
 
+    // Matriz de celdas.
     private Cell[][] cells;
+
+    // Celda de comienzo.
     private Cell startingPoint;
+
+    // Posiciones de camino.
     private List<float[]> pathPositions = new ArrayList<>();
 
-    private IGraphics iGraphics; // tu motor gráfico o contexto de renderizado
+    // Gráficos.
+    private IGraphics iGraphics;
 
+    // CONSTRUCTORA
     public MapGrid(Maps mapData, float screenWidth, float screenHeight, IGraphics iGraphics) {
         this.rows = mapData.rows;
         this.columns = mapData.cols;
@@ -31,12 +52,12 @@ public class MapGrid {
         this.screenHeight = screenHeight;
         this.iGraphics = iGraphics;
 
-        // tamaño de celda cuadrada
+        // Tamaño de celda cuadrada.
         float idealCellWidth = screenWidth / columns;
         float idealCellHeight = screenHeight / rows;
         this.cellSize = Math.min(idealCellWidth, idealCellHeight);
 
-        // centrar grid
+        // Centrar grid.
         float gridWidth = cellSize * columns;
         float gridHeight = cellSize * rows;
         this.offsetX = (screenWidth - gridWidth) / 2f;
@@ -47,6 +68,19 @@ public class MapGrid {
         createCellsFromMap(mapData.map);
     }
 
+    // RENDERIZADO
+    public void render() {
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < columns; col++) {
+                Cell cell = cells[row][col];
+                if (cell != null) {
+                    cell.render();
+                }
+            }
+        }
+    }
+
+    // Creación de celdas.
     private void createCellsFromMap(String map) {
         for (int row = 0; row < rows; row++) {
             for (int col = 0; col < columns; col++) {
@@ -54,7 +88,8 @@ public class MapGrid {
                 int index = row * columns + col;
                 char c = map.charAt(index);
 
-                boolean path = (c == '#'); // el carácter '#' marca el camino
+                // '#' marca el camino.
+                boolean path = (c == '#');
 
                 float x = offsetX + col * cellSize;
                 float y = offsetY + row * cellSize;
@@ -82,6 +117,7 @@ public class MapGrid {
         buildPathPositions();
     }
 
+    // Creación de camino.
     private void buildPathPositions() {
         if (startingPoint == null) return;
 
@@ -124,46 +160,7 @@ public class MapGrid {
         }
     }
 
-    /**
-     * Dibuja todas las celdas en pantalla.
-     */
-    public void render() {
-        for (int row = 0; row < rows; row++) {
-            for (int col = 0; col < columns; col++) {
-                Cell cell = cells[row][col];
-                if (cell != null) {
-                    cell.render();
-                }
-            }
-        }
-    }
-
-    public void addCell(Cell cell, int row, int column) {
-        if (row >= 0 && row < rows && column >= 0 && column < columns) {
-            cells[row][column] = cell;
-        }
-    }
-
-    public Cell getCell(int row, int column) {
-        if (row >= 0 && row < rows && column >= 0 && column < columns) {
-            return cells[row][column];
-        }
-        return null;
-    }
-
-    public Cell getStartingPoint() { return startingPoint; }
-
-    public int getRows() { return rows; }
-    public int getColumns() { return columns; }
-
-    public List<float[]> getPathPositions() {
-        return pathPositions;
-    }
-
-    public float getCellSize() { return cellSize; }
-    public float getOffsetX() { return offsetX; }
-    public float getOffsetY() { return offsetY; }
-
+    // Colocar una torre
     public Tower placeTowerAt(float x, float y, TowerType type, IGraphics iGraphics, IAudio iAudio) {
         Cell cell = getCellAtPosition(x, y);
 
@@ -180,7 +177,7 @@ public class MapGrid {
         switch (type) {
             case Rayo -> tower = new TowerRayo(iGraphics, iAudio, row, column, size, cost, cell);
             case Fuego -> tower = new TowerFuego(iGraphics, iAudio, row, column, size, cost, cell);
-            case Hielo -> tower = new TowerHielo(iGraphics, iAudio, row, column, size, cost, cell);
+            case Hielo -> tower = new TowerHielo(iGraphics, iAudio,  row, column, size, cost, cell);
             default -> throw new IllegalArgumentException("Tipo de torre no válido");
         }
 
@@ -190,7 +187,37 @@ public class MapGrid {
         return tower;
     }
 
+    // Añadir una celda.
+    public void addCell(Cell cell, int row, int column) {
+        if (row >= 0 && row < rows && column >= 0 && column < columns) {
+            cells[row][column] = cell;
+        }
+    }
 
+    // Mostrar celdas disponibles.
+    public void showAvailableCells(boolean available) {
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < columns; col++) {
+                Cell cell = cells[row][col];
+
+                if (!cell.getPath() && !cell.getTower()) {
+                    cell.setAvailable(available);
+                }
+            }
+        }
+    }
+
+    // --------------------------GETTERS--------------------------
+
+    // Celda en [row][column].
+    public Cell getCell(int row, int column) {
+        if (row >= 0 && row < rows && column >= 0 && column < columns) {
+            return cells[row][column];
+        }
+        return null;
+    }
+
+    // Celda en x, y.
     public Cell getCellAtPosition(float x, float y) {
         for (int row = 0; row < rows; row++) {
             for (int col = 0; col < columns; col++) {
@@ -210,17 +237,28 @@ public class MapGrid {
         return null; // no se tocó ninguna celda
     }
 
+    // Celda inicial.
+    public Cell getStartingPoint() { return startingPoint; }
 
-    public void showAvailableCells(boolean available) {
-        for (int row = 0; row < rows; row++) {
-            for (int col = 0; col < columns; col++) {
-                Cell cell = cells[row][col];
+    // Filas.
+    public int getRows() { return rows; }
 
-                if (!cell.getPath() && !cell.getTower()) {
-                    cell.setAvailable(available);
-                }
-            }
-        }
+    // Column.
+    public int getColumns() { return columns; }
+
+    // Posiciones de camino.
+    public List<float[]> getPathPositions() {
+        return pathPositions;
     }
+
+    // Tamaño de celda.
+    public float getCellSize() { return cellSize; }
+
+    // Márgenes.
+    public float getOffsetX() { return offsetX; }
+    public float getOffsetY() { return offsetY; }
+
+
+
 }
 

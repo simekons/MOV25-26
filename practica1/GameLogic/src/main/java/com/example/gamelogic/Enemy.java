@@ -6,33 +6,60 @@ import com.example.engine.ISound;
 
 import java.util.List;
 
+// Enumerador con las posibles resistencias de un enemigo.
 enum EnemyResist { Nada, Rayo, Hielo, Fuego }
 
+/*
+ * Enemy implementa los enemigos y sus funcionalidades.
+ */
 public class Enemy {
 
+    // Gráficos.
     private IGraphics iGraphics;
 
+    // Audio.
     private IAudio iAudio;
 
+    // Sonido de muerte.
     private ISound death;
 
+    // Color de enemigo.
     private int color;
 
-    private float x;
-    private float y;
+    // Coordenadas.
+    private float x, y;
+
+    // Velocidad.
     private float speed;
+
+    // Tipo de enemigo.
     private EnemyResist type;
+
+    // Vida del enemigo.
     private int vida;
+
+    // Defensa del enemigo.
     private int defensa;
+
+    // Radio (tamaño) del enemigo.
     private float radius;
 
+    // Modificador de velocidad.
     private float speedModifier;
+
+    // Está activo (sí/no).
     private boolean isActive;
+
+    // Llega al fin (sí/no).
     private boolean reachEnd = false;
 
+    // Camino.
     private List<float[]> path;   // Lista de posiciones (centros de celdas)
+
+    // Destino actual.
     private int currentTarget;    // Índice del waypoint actual
 
+    // CONSTRUCTORA
     public Enemy(IGraphics iGraphics, IAudio iAudio, float speed, float radius, boolean isActive, MapGrid map) {
         this.iGraphics = iGraphics;
         this.speed = speed;
@@ -64,12 +91,14 @@ public class Enemy {
         this.death = this.iAudio.newSound("music/death.wav");
     }
 
+    // RENDERIZADO
     public void render() {
         if (!isActive) return;
         this.iGraphics.setColor(color);
         this.iGraphics.fillCircle(x, y, radius);
     }
 
+    // UPDATE
     public void update(float delta) {
         if (!isActive || path.isEmpty() || currentTarget >= path.size()) return;
 
@@ -99,16 +128,7 @@ public class Enemy {
         y += dy * speed * delta * speedModifier;
     }
 
-    public boolean isActive() {
-        return isActive;
-    }
-    public boolean reachedEnd() {
-        return reachEnd;
-    }
-
-    public float getX() {return this.x;}
-    public float getY() {return this.y;}
-
+    // Recibe daño.
     public void makeDamage(int amount, EnemyResist resist) {
         if(resist == type){
             amount = (amount * 3) / 4;
@@ -122,10 +142,27 @@ public class Enemy {
         }
     }
 
+    // Alterador de la velocidad.
     public void setSpeedModifier(float slowFactor) {
         if(type == EnemyResist.Hielo) {
             slowFactor /= 2;
         }
         speedModifier = slowFactor;
     }
+
+    // --------------------------GETTERS--------------------------
+
+    // ¿Está activo?
+    public boolean isActive() { return isActive; }
+
+    // ¿Ha llegado al final?
+    public boolean reachedEnd() { return reachEnd; }
+
+    // Coordenadas.
+    public float getX() {return this.x;}
+    public float getY() {return this.y;}
+
+
+
+
 }
