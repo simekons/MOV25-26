@@ -60,15 +60,16 @@ public class Enemy {
     private int currentTarget;    // Índice del waypoint actual
 
     // CONSTRUCTORA
-    public Enemy(IGraphics iGraphics, IAudio iAudio, float speed, float radius, boolean isActive, MapGrid map) {
+    public Enemy(IGraphics iGraphics, IAudio iAudio, float speed, float radius, boolean isActive, MapGrid map,
+                 int vida, int defensa, EnemyResist type) {
         this.iGraphics = iGraphics;
         this.speed = speed;
         this.radius = radius;
         this.isActive = isActive;
-        this.vida = 30;
-        this.defensa = 0;
+        this.vida = vida;
+        this.defensa = defensa;
         this.speedModifier = 1f;
-        this.type = EnemyResist.Nada;
+        this.type = type;
 
         switch (type){
             case Nada -> color = 0xFF009b3f;

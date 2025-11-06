@@ -20,7 +20,7 @@ public class DesktopGame {
         DesktopEngine desktopEngine = new DesktopEngine(jFrame);
         desktopEngine.setLogicSize(600,400);
 
-        GameScene gameScene = new GameScene(desktopEngine);
+        GameScene gameScene = new GameScene(desktopEngine, 0);
         if(isDebug){
             System.out.println("DEBUG");
         }

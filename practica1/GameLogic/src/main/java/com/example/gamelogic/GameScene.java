@@ -12,6 +12,7 @@ import com.example.engine.ISound;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Iterator;
+import java.util.Random;
 
 public class GameScene implements IScene {
 
@@ -34,9 +35,10 @@ public class GameScene implements IScene {
     private float cooldown = 1.0f;
 
     private float timer = 0.0f;
-    private int enemiesSpawned = 0;   // enemigos spawneados durante la oleada
-    private int enemiesPerWave = 5;   // enemigos por oleada
-    private float waveCooldown = 3.0f; // cooldown oleadas
+    private int enemiesSpawned = 0;
+    private int enemiesPerWave = 5;
+    private float waveCooldown = 3.0f;
+    private float waveRestTimer = 0;
     private boolean spawningWave = true;
 
     private int money = 0;
@@ -62,12 +64,16 @@ public class GameScene implements IScene {
     private ISound click;
     private IFont moneyText;
 
+    private int difficulty;
 
-    public GameScene(IEngine iEngine){
+    private int wave = 0;
+
+
+    public GameScene(IEngine iEngine, int difficulty) {
         this.iEngine = iEngine;
         this.iGraphics = this.iEngine.getGraphics();
         this.iAudio = this.iEngine.getAudio();
-
+        this.difficulty = difficulty;
         loadAssets();
 
         Maps map1 = Maps.level1();
@@ -86,7 +92,7 @@ public class GameScene implements IScene {
         this.towers = new ArrayList<Tower>();
     }
 
-    public void loadAssets(){
+    public void loadAssets() {
         this.tower1img = this.iGraphics.loadImage("sprites/tower1.png");
         this.tower2img = this.iGraphics.loadImage("sprites/tower1.png");
         this.tower3img = this.iGraphics.loadImage("sprites/tower1.png");
@@ -103,15 +109,59 @@ public class GameScene implements IScene {
         moneyText = iGraphics.createFont("fonts/fff.ttf", 15, false, false);
     }
 
-    private void addEnemy(){
-        enemies.add(new Enemy(this.iGraphics, this.iAudio, 40, 5, true, this.mapGrid));
+    private void addEnemy(int wave) {
+        int vida = 30 + (wave * 15);
+        int defensa = 0 + (wave * 2);
+
+        EnemyResist resist = EnemyResist.Nada;
+
+        if (this.wave >= 2) {
+            Random n = new Random();
+            int valor = n.nextInt(3);
+            resist = EnemyResist.values()[valor];
+        }
+
+        enemies.add(new Enemy(this.iGraphics, this.iAudio, 10, 5, true, this.mapGrid, vida, defensa, resist));
+    }
+
+    private void waves() {
+
+        switch (this.difficulty) {
+            case 0:
+                if (this.wave < 3) {
+                    enemiesPerWave = 5 + this.wave;
+                    waveCooldown = 5.0f;
+                } else {
+                    // Victory
+                }
+                break;
+            case 1:
+                if (this.wave < 7) {
+                    enemiesPerWave = 7 + this.wave;
+                    waveCooldown = 4.0f;
+                } else {
+                    // Victory
+                }
+                break;
+            case 2:
+                enemiesPerWave = 10 + this.wave;
+                waveCooldown = 3.0f;
+                break;
+        }
+
+        enemiesSpawned = 0;
+        spawningWave = true;
+        cooldown = 0;
+        timer = 0;
+
+        this.wave++;
     }
 
     @Override
     public void render() {
         // Banda de abajo
         iGraphics.setColor(0xFF808080);
-        iGraphics.fillRectangle(0, 320,600,80);
+        iGraphics.fillRectangle(0, 320, 600, 80);
 
         mapGrid.render();
 
@@ -125,18 +175,17 @@ public class GameScene implements IScene {
             this.sword.render();
             this.bow.render();
             this.clock.render();
-        }
-        else{
+        } else {
             this.tower1.render();
             this.tower2.render();
             this.tower3.render();
         }
 
-        for (Enemy e : this.enemies){
+        for (Enemy e : this.enemies) {
             e.render();
         }
 
-        for(Tower t : this.towers){
+        for (Tower t : this.towers) {
             t.render();
         }
     }
@@ -148,7 +197,7 @@ public class GameScene implements IScene {
 
         if (spawningWave) {
             if (timer > cooldown && enemiesSpawned < enemiesPerWave) {
-                addEnemy();
+                addEnemy(this.wave);
                 enemiesSpawned++;
                 cooldown += 1.0f;
             }
@@ -157,18 +206,22 @@ public class GameScene implements IScene {
                 spawningWave = false;
                 timer = 0;
             }
-        }
-        else {
-            if (timer > waveCooldown) {
-                spawningWave = true;
-                enemiesSpawned = 0;
-                cooldown = timer + 1.0f;
+        } else {
+            if (enemies.isEmpty()) { // no quedan enemigos vivos
+                waveRestTimer += deltaTime; // pequeño tiempo de descanso entre waves
+
+                if (waveRestTimer > waveCooldown) {
+                    waveRestTimer = 0;
+                    waves(); // iniciar siguiente wave
+                }
+            } else {
+                // reset del descanso si todavía quedan enemigos
+                waveRestTimer = 0;
             }
         }
 
-        if (timer > cooldown){
-            addEnemy();
-            cooldown += 1.0f;
+        for (Enemy e : enemies) {
+            e.update(deltaTime);
         }
 
         for (Tower tower : towers) {
