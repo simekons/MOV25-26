@@ -10,16 +10,33 @@ import com.example.engine.ISound;
 
 import java.util.List;
 
+/*
+ * MenuScene es la escena de menú.
+ */
 public class MenuScene implements IScene {
 
+    // Motor.
     private IEngine iEngine;
+
+    // Gráficos
     private IGraphics iGraphics;
+
+    // Audio.
     private IAudio iAudio;
+
+    // Botón de menú.
     private Button menuButton;
+
+    // Fuente de título.
     private IFont titleFont;
+
+    // Sonido de botón.
     private ISound soundButton;
+
+    // Booleano de juego.
     private boolean startGame;
 
+    // CONSTRUCTORA
     public MenuScene(IEngine iEngine){
         this.iEngine = iEngine;
         this.iGraphics = this.iEngine.getGraphics();
@@ -31,6 +48,7 @@ public class MenuScene implements IScene {
         titleFont = iGraphics.createFont("fonts/pixelGotic.ttf", 35, false, false);
     }
 
+    // RENDERIZADO
     @Override
     public void render() {
         iGraphics.setColor(0xff000000);
@@ -39,6 +57,7 @@ public class MenuScene implements IScene {
         menuButton.render();
     }
 
+    // Update.
     @Override
     public void update(float deltaTime) {
         if(startGame){
@@ -47,6 +66,7 @@ public class MenuScene implements IScene {
         }
     }
 
+    // Input.
     @Override
     public void handleInput(List<IInput.TouchEvent> events) {
         for(IInput.TouchEvent e : events)
