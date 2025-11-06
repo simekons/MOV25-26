@@ -4,16 +4,30 @@ import com.example.engine.IFont;
 import com.example.engine.IGraphics;
 import com.example.engine.IImage;
 
+/*
+ * Button implementa la funcionalidad de los botones.
+ */
 public class Button {
 
+    // Gráficos.
     private IGraphics iGraphics;
+
+    // Fuente.
     private IFont iFont;
+
+    // Imagen de botón.
     private IImage iImage;
+
+    // Texto de botón.
     private String text;
+
+    // Coordenadas, ancho y alto.
     private float x, y, width, height;
+
+    // Color.
     private int color;
 
-    // Botón con texto
+    // CONSTRUCTORA (con texto)
     public Button(IGraphics graphics, IFont font, float x, float y, float width, float height, String text, int color)
     {
         iGraphics = graphics;
@@ -26,7 +40,7 @@ public class Button {
         this.color = color;
     }
 
-    // Botón con imagen
+    // CONSTRUCTORA (con imagen)
     public Button(IGraphics graphics, IImage image, float x, float y, float width, float height)
     {
         iGraphics = graphics;
@@ -37,6 +51,7 @@ public class Button {
         this.height = height;
     }
 
+    // RENDERIZADO
     public void render() {
         if (iImage != null)
             iGraphics.drawImage(iImage, (int) x, (int) y, (int) width, (int) height);
@@ -48,6 +63,7 @@ public class Button {
         }
     }
 
+    // Botón pulsado (texto).
     public boolean isTouched(int touchX, int touchY)
     {
         float left = (iImage != null) ? (x - width / 2) : x;
@@ -58,13 +74,14 @@ public class Button {
         return touchX >= left && touchX <= right && touchY >= top && touchY <= bottom;
     }
 
+    // Botón pulsado (imagen).
     public boolean imageIsTouched(int touchX, int touchY)
     {
         return touchX >= (x - width / 2) && touchX <= (x + width / 2) && touchY >= (y - height / 2) && touchY <= (y + height / 2);
     }
 
-    public void setImage(IImage image)
-    {
-        this.iImage = image;
-    }
+    // --------------------------SETTERS--------------------------
+
+    // Imagen de botón.
+    public void setImage(IImage image) { this.iImage = image; }
 }
