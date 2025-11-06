@@ -14,6 +14,8 @@ public class UpgradeButton {
     private int buttonColor, textColor;
     private int cost;
 
+    private boolean active;
+
     public UpgradeButton(IGraphics graphics, IFont font, IImage image,
                          float x, float y, float width, float height,
                          int cost, int buttonColor, int textColor) {
@@ -28,9 +30,12 @@ public class UpgradeButton {
         this.height = height;
         this.buttonColor = buttonColor;
         this.textColor = textColor;
+        this.active = true;
     }
 
     public void render() {
+        if(!active) return;
+
         iGraphics.setColor(buttonColor);
         iGraphics.fillRoundRectangle(x, y, width, height, 5);
 
@@ -76,6 +81,8 @@ public class UpgradeButton {
     }
 
     public boolean isTouched(int touchX, int touchY) {
+        if(!active) return false;
+
         float left = x;
         float top = y;
         float right = x + width;
@@ -99,4 +106,6 @@ public class UpgradeButton {
     public int getCost() {
         return this.cost;
     }
+
+    public void setActive(boolean a) { active = a; }
 }

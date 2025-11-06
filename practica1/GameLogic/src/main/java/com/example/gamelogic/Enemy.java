@@ -41,6 +41,14 @@ public class Enemy {
         this.vida = 30;
         this.defensa = 0;
         this.speedModifier = 1f;
+        this.type = EnemyResist.Nada;
+
+        switch (type){
+            case Nada -> color = 0xFF009b3f;
+            case Rayo -> color = 0xFFFFFF00;
+            case Fuego -> color = 0xFFFF0000;
+            case Hielo -> color = 0xFF0000FF;
+        }
 
         // Obtener la ruta del mapa
         this.path = map.getPathPositions();
@@ -58,7 +66,7 @@ public class Enemy {
 
     public void render() {
         if (!isActive) return;
-        this.iGraphics.setColor(0xFF009b3f);
+        this.iGraphics.setColor(color);
         this.iGraphics.fillCircle(x, y, radius);
     }
 

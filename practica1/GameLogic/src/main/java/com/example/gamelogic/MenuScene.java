@@ -56,7 +56,6 @@ public class MenuScene implements IScene {
                 case TOUCH_UP:
                     if(menuButton.isTouched(e.x, e.y))
                     {
-                        System.out.println("Jugamos");
                         startGame = true;
                     }
                     break;

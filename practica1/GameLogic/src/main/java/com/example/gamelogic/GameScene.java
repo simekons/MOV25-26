@@ -30,6 +30,7 @@ public class GameScene implements IScene {
     private ArrayList<Enemy> enemies;
 
     private ArrayList<Tower> towers;
+    private Tower activeTower;
     private float cooldown = 1.0f;
 
     private float timer = 0.0f;
@@ -198,12 +199,20 @@ public class GameScene implements IScene {
         for (IInput.TouchEvent e : events){
             switch(e.type){
                 case TOUCH_UP:
-                    upgrades = false;
-                    for (Tower tower : towers) {
+                    for (Tower tower : towers)
                         tower.setSelected(false);
+                    for(Tower tower : towers){
                         if (tower.isTouched(e.x, e.y)) {
+                            activeTower = tower;
                             tower.setSelected(true);
+                            List<Integer> active = tower.getActiveUpgrades();
+
+                            sword.setActive(!active.contains(0));
+                            bow.setActive(!active.contains(1));
+                            clock.setActive(!active.contains(2));
+
                             upgrades = true;
+                            return;
                         }
                     }
 
@@ -242,14 +251,15 @@ public class GameScene implements IScene {
                     }
                     else {
                         if (sword.isTouched(e.x, e.y)){
-                            //rr
+                            activeTower.activateUpgrade(0);
                         }
                         if (bow.isTouched(e.x, e.y)){
-                            //rr
+                            activeTower.activateUpgrade(1);
                         }
                         if (clock.isTouched(e.x, e.y)){
-                            //r
+                            activeTower.activateUpgrade(2);
                         }
+                        upgrades = false;
                     }
             }
         }
