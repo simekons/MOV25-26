@@ -6,13 +6,24 @@ import com.example.engine.ISound;
 
 import java.util.List;
 
+/*
+* TowerFuego implementa la torre de fuego.
+*/
 public class TowerFuego extends Tower {
 
-    private final float areaRadius = 30f; // radio del área de efecto
-    private float explosionX = -1, explosionY = -1; // posición de la explosión
+    // Área de efecto.
+    private final float areaRadius = 30f;
 
+    // Posición de la explosión.
+    private float explosionX = -1, explosionY = -1;
+
+    // Audio.
     private IAudio iAudio;
+
+    // Sonido.
     private ISound fire;
+
+    // CONSTRUCTORA
     public TowerFuego(IGraphics iGraphics, IAudio iAudio, int row, int column, float size, int cost, Cell cell) {
         super(iGraphics, row, column, size, cost, cell);
         this.damage = 5;
@@ -24,6 +35,7 @@ public class TowerFuego extends Tower {
         this.fire = this.iAudio.newSound("music/fire.wav");
     }
 
+    // RENDERIZADO
     @Override
     public void render() {
         // Renderiza la torre
@@ -40,7 +52,7 @@ public class TowerFuego extends Tower {
         // Renderiza la línea de disparo
         if (shotTimer > 0f && currentTarget != null) {
             iGraphics.setColor(0xFF0000FF);
-            iGraphics.drawLine(x, y, currentTarget.getX(), currentTarget.getY(), 5);
+            iGraphics.drawLine(x, y, currentTarget.getX(), currentTarget.getY(), 2);
         }
 
         // Renderiza el área de efecto en la posición de la explosión
@@ -50,6 +62,7 @@ public class TowerFuego extends Tower {
         }
     }
 
+    // UPDATE
     @Override
     public void update(float deltaTime, List<Enemy> enemies) {
         timeSinceLastShot += deltaTime;

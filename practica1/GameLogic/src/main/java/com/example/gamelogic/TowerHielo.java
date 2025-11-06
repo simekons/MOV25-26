@@ -9,15 +9,24 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/*
+* TowerHielo implementa la torre de hielo.
+*/
 public class TowerHielo extends Tower {
 
-    private final float slowFactor = 0.5f; // 50% de velocidad
-    private Set<Enemy> slowedEnemies = new HashSet<>(); // enemigos que esta torre está ralentizando
+    // Ralentización.
+    private final float slowFactor = 0.5f;
 
+    // Enemigos ralentizados.
+    private Set<Enemy> slowedEnemies = new HashSet<>();
+
+    // Audio.
     private IAudio iAudio;
 
+    // Sonido.
     private ISound ice;
 
+    // CONSTRUCTORA
     public TowerHielo(IGraphics iGraphics, IAudio iAudio, int row, int column, float size, int cost, Cell cell) {
         super(iGraphics, row, column, size, cost, cell);
         this.damage = 7;
@@ -29,6 +38,7 @@ public class TowerHielo extends Tower {
         this.ice = this.iAudio.newSound("music/ice.wav");
     }
 
+    // RENDERIZADO
     @Override
     public void render() {
         iGraphics.setColor(0xFF88539E);
@@ -42,10 +52,11 @@ public class TowerHielo extends Tower {
 
         if (shotTimer > 0f && currentTarget != null) {
             iGraphics.setColor(0xFF0000FF);
-            iGraphics.drawLine(x, y, currentTarget.getX(), currentTarget.getY(), 5);
+            iGraphics.drawLine(x, y, currentTarget.getX(), currentTarget.getY(), 2);
         }
     }
 
+    // UPDATE
     @Override
     public void update(float deltaTime, List<Enemy> enemies) {
         timeSinceLastShot += deltaTime;

@@ -4,18 +4,34 @@ import com.example.engine.IFont;
 import com.example.engine.IGraphics;
 import com.example.engine.IImage;
 
+/*
+* UpgradeButton implementa los botones de mejora.
+* */
+
 public class UpgradeButton {
 
+    // Gráficos.
     private IGraphics iGraphics;
-    private IFont iFont;
-    private IImage iImage;
-    private String text;
-    private float x, y, width, height;
-    private int buttonColor, textColor;
-    private int cost;
 
+    // Fuente.
+    private IFont iFont;
+
+    // Imagen.
+    private IImage iImage;
+
+    // Texto.
+    private String text;
+
+    // Coordenadas, ancho y alto.
+    private float x, y, width, height;
+
+    // Variables.
+    private int buttonColor, textColor, cost;
+
+    // ¿Está activo? (sí/no).
     private boolean active;
 
+    // CONSTRUCTORA
     public UpgradeButton(IGraphics graphics, IFont font, IImage image,
                          float x, float y, float width, float height,
                          int cost, int buttonColor, int textColor) {
@@ -33,6 +49,7 @@ public class UpgradeButton {
         this.active = true;
     }
 
+    // RENDERIZADO
     public void render() {
         if(!active) return;
 
@@ -80,6 +97,7 @@ public class UpgradeButton {
         }
     }
 
+    // ¿Ha sido presionado? (sí/no).
     public boolean isTouched(int touchX, int touchY) {
         if(!active) return false;
 
@@ -91,21 +109,17 @@ public class UpgradeButton {
         return touchX >= left && touchX <= right && touchY >= top && touchY <= bottom;
     }
 
-    public void setImage(IImage image) {
-        this.iImage = image;
-    }
 
-    public void setText(String text) {
-        this.text = text;
-    }
+    // --------------------------SETTERS--------------------------
 
-    public void setTextColor(int color) {
-        this.textColor = color;
-    }
+    // Activación/desactivación.
+    public void setActive(boolean a) { active = a; }
 
+    // --------------------------GETTERS--------------------------
+
+    // Coste
     public int getCost() {
         return this.cost;
     }
 
-    public void setActive(boolean a) { active = a; }
 }

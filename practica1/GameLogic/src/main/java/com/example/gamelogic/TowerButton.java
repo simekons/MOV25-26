@@ -3,17 +3,34 @@ package com.example.gamelogic;
 import com.example.engine.IFont;
 import com.example.engine.IGraphics;
 
+/*
+* TowerButton implementa los botones de torres.
+ */
+
 public class TowerButton {
 
+    // Gráficos.
     private IGraphics iGraphics;
-    private IFont iFont;
-    private String text;
-    private float x, y, width, height;
-    private int buttonColor, textColor;
-    private int cost;
-    private boolean selected;
-    private TowerType tipo; // 0, 1 o 2
 
+    // Fuente.
+    private IFont iFont;
+
+    // Texto.
+    private String text;
+
+    // Coordenadas, ancho y alto.
+    private float x, y, width, height;
+
+    // Variables.
+    private int buttonColor, textColor, cost;
+
+    // ¿Está seleccionado? (sí/no).
+    private boolean selected;
+
+    // Tipo de torre.
+    private TowerType tipo;
+
+    // CONSTRUCTORA
     public TowerButton(IGraphics graphics, IFont font,
                        float x, float y, float width, float height,
                        int cost, TowerType tipo, int buttonColor, int textColor) {
@@ -31,40 +48,39 @@ public class TowerButton {
         this.selected = false;
     }
 
+    // RENDERIZADO
     public void render() {
         iGraphics.setColor(buttonColor);
         iGraphics.fillRoundRectangle(x, y, width, height, 5);
 
-        // Altura reservada para el texto (25 % del alto total)
+
         float textHeight = height * 0.25f;
         float imageHeight = height - textHeight;
 
-        // --- Margen del 10 % del botón ---
+
         float marginX = width * 0.1f;
         float marginY = imageHeight * 0.1f;
 
-        // Área disponible para el dibujo (según tipo)
+
         float availableWidth = width - (2 * marginX);
         float availableHeight = imageHeight - (2 * marginY);
 
-        // Dibujar torre según el tipo
+
         float drawX = x + (width / 2);
         float drawY = y + (imageHeight / 2);
 
-        // Aquí puedes poner el renderizado que quieras según el tipo
+
         switch (tipo) {
             case Rayo:
-                // Triángulo negro apuntando hacia arriba
-                iGraphics.setColor(0xFF000000); // negro
+                iGraphics.setColor(0xFF000000);
                 float halfBase = availableWidth / 2;
                 float halfHeight = availableHeight / 2;
 
-                // Coordenadas del triángulo
-                float x1 = drawX;                 // vértice superior
+                float x1 = drawX;
                 float y1 = drawY - halfHeight;
-                float x2 = drawX - halfBase;      // base izquierda
+                float x2 = drawX - halfBase;
                 float y2 = drawY + halfHeight;
-                float x3 = drawX + halfBase;      // base derecha
+                float x3 = drawX + halfBase;
                 float y3 = drawY + halfHeight;
 
                 iGraphics.fillTriangle(x1, y1, x2, y2, x3, y3);
@@ -72,14 +88,11 @@ public class TowerButton {
             case Hielo:
                 iGraphics.setColor(0xFF88539E);
 
-                // Hacer el cuadrado del tamaño máximo posible dentro del área disponible
                 float side = Math.min(availableWidth, availableHeight);
 
-                // Calcular la esquina superior izquierda para centrar el cuadrado
                 float squareX = drawX - (side / 2);
                 float squareY = drawY - (side / 2);
 
-                // Dibujar el cuadrado
                 iGraphics.fillRectangle(squareX, squareY, side, side);
                 break;
 
@@ -90,7 +103,7 @@ public class TowerButton {
                 break;
         }
 
-        // Dibujar texto debajo del dibujo
+
         if (text != null && iFont != null) {
             iGraphics.setColor(textColor);
             float textX = x + (width / 2);
@@ -99,6 +112,7 @@ public class TowerButton {
         }
     }
 
+    // ¿Está seleccionado? (sí/no).
     public boolean isTouched(int touchX, int touchY) {
         float left = x;
         float top = y;
@@ -108,32 +122,23 @@ public class TowerButton {
         return touchX >= left && touchX <= right && touchY >= top && touchY <= bottom;
     }
 
-    public void changeButtonColor()
-    {
-        this.selected = !this.selected;
-        if(selected)
-            buttonColor = 0xFF800080;
-        else
-            buttonColor = 0xFFFFFFFF;
-    }
 
-    public void setText(String text) {
-        this.text = text;
-    }
+    // --------------------------SETTERS--------------------------
 
-    public void setTextColor(int color) {
-        this.textColor = color;
-    }
-
+    // Selección / deselección.
     public void setSelected(boolean selected) {
         this.selected = selected;
         buttonColor = this.selected ? 0xFFD3D3D3 : 0xFFFFFFFF;
     }
 
+    // --------------------------GETTERS--------------------------
+
+    // Coste.
     public int getCost() {
         return this.cost;
     }
 
+    // Tipo.
     public TowerType getTipo() {
         return this.tipo;
     }

@@ -6,10 +6,18 @@ import com.example.engine.ISound;
 
 import java.util.List;
 
+/*
+* TowerRayo implementa la torre de rayo.
+* */
 public class TowerRayo extends Tower {
 
+    // Audio.
     private IAudio iAudio;
+
+    // Sonido.
     private ISound thunder;
+
+    // CONSTRUCTORA
     public TowerRayo(IGraphics iGraphics, IAudio iAudio, int row, int column, float size, int cost, Cell cell) {
         super(iGraphics, row, column, size, cost, cell);
         this.damage = 10;
@@ -21,6 +29,7 @@ public class TowerRayo extends Tower {
         this.thunder = this.iAudio.newSound("music/thunder.wav");
     }
 
+    // RENDERIZADo
     @Override
     public void render() {
         float margin = size * 0.01f;
@@ -40,12 +49,12 @@ public class TowerRayo extends Tower {
         if (selected) iGraphics.drawCircle(x, y, range);
         if (shotTimer > 0f && currentTarget != null)
         {
-            iGraphics.setColor(0x47a8dc);
-            iGraphics.drawLine(x, y, currentTarget.getX(), currentTarget.getY(), 5);
-            iGraphics.setColor(0xFF000000);
+            iGraphics.setColor(0xff47a8dc);
+            iGraphics.drawLine(x, y, currentTarget.getX(), currentTarget.getY(), 2);
         }
     }
 
+    // UPDATE
     @Override
     public void update(float deltaTime, List<Enemy> enemies) {
         timeSinceLastShot += deltaTime;
