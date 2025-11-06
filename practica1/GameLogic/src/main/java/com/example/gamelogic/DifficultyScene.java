@@ -69,7 +69,7 @@ public class DifficultyScene implements IScene {
     public void update(float deltaTime) {
         if(startGame){
             //iAudio.playSound(soundButton, false);
-            iEngine.setScenes(new GameScene(iEngine));
+            iEngine.setScenes(new GameScene(iEngine, this.difficulty));
         }
     }
 
