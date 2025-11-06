@@ -41,16 +41,13 @@ public class GameScene implements IScene {
     private float waveRestTimer = 0;
     private boolean spawningWave = true;
 
-    private int money = 0;
+    private int money;
     private int lives = 10;
 
     private TowerType type = null;
     private TowerButton tower1;
     private TowerButton tower2;
     private TowerButton tower3;
-    private IImage tower1img;
-    private IImage tower2img;
-    private IImage tower3img;
     private IImage coinimg;
     private IImage heartimg;
 
@@ -74,11 +71,11 @@ public class GameScene implements IScene {
         this.iGraphics = this.iEngine.getGraphics();
         this.iAudio = this.iEngine.getAudio();
         this.difficulty = difficulty;
+        this.money = 150;
         loadAssets();
 
         Maps map1 = Maps.level1();
         this.mapGrid = new MapGrid(map1, 600, 320, iGraphics);
-        //createCells();
         this.enemies = new ArrayList<Enemy>();
 
         var fontButton = iGraphics.createFont("fonts/fff.ttf", 10, false, false);
@@ -93,10 +90,6 @@ public class GameScene implements IScene {
     }
 
     public void loadAssets() {
-        this.tower1img = this.iGraphics.loadImage("sprites/tower1.png");
-        this.tower2img = this.iGraphics.loadImage("sprites/tower1.png");
-        this.tower3img = this.iGraphics.loadImage("sprites/tower1.png");
-
         this.bow_img = this.iGraphics.loadImage("sprites/bow.png");
         this.sword_img = this.iGraphics.loadImage("sprites/sword.png");
         this.clock_img = this.iGraphics.loadImage("sprites/clock.png");
@@ -188,6 +181,9 @@ public class GameScene implements IScene {
         for (Tower t : this.towers) {
             t.render();
         }
+
+        iGraphics.setColor(0xFF00FF00);
+        iGraphics.drawText(moneyText, "Oleada " + (this.wave + 1), 525, 25);
     }
 
     @Override
@@ -232,7 +228,7 @@ public class GameScene implements IScene {
         while (it.hasNext()) {
             Enemy e = it.next();
             if (!e.isActive()) {
-                if(!e.reachedEnd())
+                if (!e.reachedEnd())
                     money += 10;
                 else
                     lives -= 1;
@@ -249,72 +245,110 @@ public class GameScene implements IScene {
 
     @Override
     public void handleInput(List<IInput.TouchEvent> events) {
-        for (IInput.TouchEvent e : events){
-            switch(e.type){
-                case TOUCH_UP:
-                    for (Tower tower : towers)
-                        tower.setSelected(false);
-                    for(Tower tower : towers){
-                        if (tower.isTouched(e.x, e.y)) {
-                            activeTower = tower;
-                            tower.setSelected(true);
-                            List<Integer> active = tower.getActiveUpgrades();
+        for (IInput.TouchEvent e : events) {
+            if (e.type == IInput.TouchEvent.TouchEventType.TOUCH_UP) {
+                if (handleTowerSelection(e)) return;
 
-                            sword.setActive(!active.contains(0));
-                            bow.setActive(!active.contains(1));
-                            clock.setActive(!active.contains(2));
+                if (!upgrades) {
+                    if (handleTowerPlacement(e)) return;
+                    handleTowerTypeSelection(e);
+                } else {
+                    handleUpgrades(e);
+                }
 
-                            upgrades = true;
-                            return;
-                        }
-                    }
-
-                    if (!upgrades){
-                        if (type != null) {
-                            Tower tower = mapGrid.placeTowerAt(e.x, e.y, type, iGraphics, this.iAudio);
-
-                            if (tower != null) {
-                                towers.add(tower); // lista global de torres en tu juego
-                            }
-                            this.iAudio.playSound(this.click, false);
-                            mapGrid.showAvailableCells(false);
-                            type = null;
-
-                            tower1.setSelected(false);
-                            tower2.setSelected(false);
-                            tower3.setSelected(false);
-                        }
-                        else{
-                            if (tower1.isTouched(e.x, e.y)){
-                                tower1.setSelected(true);
-                                mapGrid.showAvailableCells(true);
-                                type = tower1.getTipo();
-                            }
-                            else if (tower2.isTouched(e.x, e.y)){
-                                tower2.setSelected(true);
-                                mapGrid.showAvailableCells(true);
-                                type = tower2.getTipo();
-                            }
-                            else if (tower3.isTouched(e.x, e.y)){
-                                tower3.setSelected(true);
-                                mapGrid.showAvailableCells(true);
-                                type = tower3.getTipo();
-                            }
-                        }
-                    }
-                    else {
-                        if (sword.isTouched(e.x, e.y)){
-                            activeTower.activateUpgrade(0);
-                        }
-                        if (bow.isTouched(e.x, e.y)){
-                            activeTower.activateUpgrade(1);
-                        }
-                        if (clock.isTouched(e.x, e.y)){
-                            activeTower.activateUpgrade(2);
-                        }
-                        upgrades = false;
-                    }
+                if (!upgrades) deselectAllTowers();
             }
+        }
+    }
+
+    private boolean handleTowerSelection(IInput.TouchEvent e) {
+        for (Tower tower : towers) {
+            if (tower.isTouched(e.x, e.y)) {
+                if(activeTower != null)
+                    activeTower.setSelected(false);
+                activeTower = tower;
+                tower.setSelected(true);
+
+                List<Integer> active = tower.getActiveUpgrades();
+                sword.setActive(!active.contains(0));
+                bow.setActive(!active.contains(1));
+                clock.setActive(!active.contains(2));
+
+                upgrades = true;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean handleTowerPlacement(IInput.TouchEvent e) {
+        if (type == null) return false;
+
+
+        Tower tower = mapGrid.placeTowerAt(e.x, e.y, type, iGraphics, iAudio);
+        if (tower != null) {
+            switch (type){
+                case Rayo -> money -= tower1.getCost();
+                case Hielo -> money -= tower2.getCost();
+                case Fuego -> money -= tower3.getCost();
+            }
+            towers.add(tower);
+        }
+
+        iAudio.playSound(click, false);
+        mapGrid.showAvailableCells(false);
+        type = null;
+
+        tower1.setSelected(false);
+        tower2.setSelected(false);
+        tower3.setSelected(false);
+
+        return true;
+    }
+
+    private void handleTowerTypeSelection(IInput.TouchEvent e) {
+        if (tower1.isTouched(e.x, e.y)) {
+            selectTowerType(tower1);
+        } else if (tower2.isTouched(e.x, e.y)) {
+            selectTowerType(tower2);
+        } else if (tower3.isTouched(e.x, e.y)) {
+            selectTowerType(tower3);
+        }
+    }
+
+    private void selectTowerType(TowerButton towerBtn) {
+        towerBtn.setSelected(true);
+        if(money >= towerBtn.getCost()){
+            mapGrid.showAvailableCells(true);
+            type = towerBtn.getTipo();
+        }
+    }
+
+    private void handleUpgrades(IInput.TouchEvent e) {
+        if (sword.isTouched(e.x, e.y) && canAffordUpgrade(sword)) {
+            applyUpgrade(0, sword);
+        } else if (bow.isTouched(e.x, e.y) && canAffordUpgrade(bow)) {
+            applyUpgrade(1, bow);
+        } else if (clock.isTouched(e.x, e.y) && canAffordUpgrade(clock)) {
+            applyUpgrade(2, clock);
+        } else {
+            upgrades = false;
+        }
+    }
+
+    private boolean canAffordUpgrade(UpgradeButton upgradeBtn) {
+        return money >= upgradeBtn.getCost();
+    }
+
+    private void applyUpgrade(int upgradeId, UpgradeButton upgradeBtn) {
+        activeTower.activateUpgrade(upgradeId);
+        money -= upgradeBtn.getCost();
+        upgrades = false;
+    }
+
+    private void deselectAllTowers() {
+        for (Tower tower : towers) {
+            tower.setSelected(false);
         }
     }
 }
