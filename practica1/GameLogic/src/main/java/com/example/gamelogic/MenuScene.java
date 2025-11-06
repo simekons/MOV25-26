@@ -46,6 +46,8 @@ public class MenuScene implements IScene {
         var fontButton = iGraphics.createFont("fonts/fff.ttf", 15, false, false);
         menuButton = new Button(iGraphics, fontButton, 300,300,100,50, "Play", 0xFF808080);
         titleFont = iGraphics.createFont("fonts/pixelGotic.ttf", 35, false, false);
+
+        this.soundButton = this.iAudio.newSound("music/button.wav");
     }
 
     // RENDERIZADO
@@ -61,7 +63,6 @@ public class MenuScene implements IScene {
     @Override
     public void update(float deltaTime) {
         if(startGame){
-            //iAudio.playSound(soundButton, false);
             iEngine.setScenes(new DifficultyScene(iEngine));
         }
     }
@@ -76,6 +77,7 @@ public class MenuScene implements IScene {
                 case TOUCH_UP:
                     if(menuButton.isTouched(e.x, e.y))
                     {
+                        iAudio.playSound(soundButton, false);
                         startGame = true;
                     }
                     break;
