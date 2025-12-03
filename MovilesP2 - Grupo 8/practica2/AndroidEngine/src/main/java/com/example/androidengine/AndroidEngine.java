@@ -23,6 +23,8 @@ public class AndroidEngine implements IEngine, Runnable {
     private AndroidInput androidInput;
     // Audio en Android.
     private AndroidAudio androidAudio;
+    // Archivo.
+    private AndroidFile androidFile;
     // Actividad principal.
     private Activity activity;
     // Hebra de renderizado.
@@ -40,6 +42,7 @@ public class AndroidEngine implements IEngine, Runnable {
         this.androidInput = new AndroidInput();
         this.androidGraphics = new AndroidGraphics(surfaceView, a);
         this.androidAudio = new AndroidAudio(a);
+        this.androidFile = new AndroidFile(a);
 
         this.surfaceView.setOnTouchListener(this.androidInput);
     }
@@ -144,6 +147,9 @@ public class AndroidEngine implements IEngine, Runnable {
     // Audio de Android.
     @Override
     public IAudio getAudio() { return this.androidAudio; }
+    // Archivos
+    public AndroidFile getFile() { return this.androidFile; }
+
 
     // Escena actual.
     @Override

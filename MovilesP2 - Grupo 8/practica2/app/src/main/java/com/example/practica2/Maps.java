@@ -1,4 +1,4 @@
-package com.example.practica1;
+package com.example.practica2;
 
 /*
  * Maps guarda la información de los niveles.

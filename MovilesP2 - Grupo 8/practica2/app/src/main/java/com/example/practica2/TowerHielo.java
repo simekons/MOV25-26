@@ -1,8 +1,7 @@
-package com.example.practica1;
+package com.example.practica2;
 
 import com.example.engine.IAudio;
 import com.example.engine.IGraphics;
-import com.example.engine.IScene;
 import com.example.engine.ISound;
 
 import java.util.HashSet;
