@@ -1,4 +1,4 @@
-package com.example.gamelogic;
+package com.example.practica1;
 
 import com.example.engine.IFont;
 import com.example.engine.IGraphics;

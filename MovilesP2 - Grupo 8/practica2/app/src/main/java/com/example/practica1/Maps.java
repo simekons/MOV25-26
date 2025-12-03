@@ -1,4 +1,4 @@
-package com.example.gamelogic;
+package com.example.practica1;
 
 /*
  * Maps guarda la información de los niveles.

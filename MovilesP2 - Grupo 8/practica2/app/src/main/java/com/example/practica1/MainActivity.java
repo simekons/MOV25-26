@@ -7,7 +7,6 @@ import android.widget.FrameLayout;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.androidengine.AndroidEngine;
-import com.example.gamelogic.MenuScene;
 
 public class MainActivity extends AppCompatActivity {
 

@@ -1,4 +1,6 @@
-package com.example.gamelogic;
+package com.example.practica1;
+
+import android.graphics.fonts.Font;
 
 import com.example.engine.IAudio;
 import com.example.engine.IEngine;
@@ -47,7 +49,7 @@ public class DifficultyScene implements IScene {
         this.iAudio = this.iEngine.getAudio();
         this.startGame = false;
 
-        var fontButton = iGraphics.createFont("fonts/fff.ttf", 15, false, false);
+        IFont fontButton = iGraphics.createFont("fonts/fff.ttf", 15, false, false);
         shortButton = new Button(iGraphics, fontButton, 300,150,150,50, "Short", 0xFF808080);
         longButton = new Button(iGraphics, fontButton, 300,225,150,50, "Long", 0xFF808080);
         infButton = new Button(iGraphics, fontButton, 300,300,150,50, "Infinity", 0xFF808080);

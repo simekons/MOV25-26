@@ -37,7 +37,6 @@ dependencies {
     implementation project(':AndroidEngine')
     implementation project(':AndroidEngine')
     implementation project(':AndroidEngine')
-    implementation project(':GameLogic')
     implementation project(':Engine')
     testImplementation libs.junit
     androidTestImplementation libs.ext.junit

@@ -1,4 +1,4 @@
-package com.example.gamelogic;
+package com.example.practica1;
 
 import com.example.engine.IAudio;
 import com.example.engine.IGraphics;
@@ -72,10 +72,18 @@ public class Enemy {
         this.type = type;
 
         switch (type){
-            case Nada -> color = 0xFF009b3f;
-            case Rayo -> color = 0xFFFFFF00;
-            case Fuego -> color = 0xFFFF0000;
-            case Hielo -> color = 0xFF0000FF;
+            case Nada:
+                color = 0xFF009b3f;
+                break;
+            case Rayo:
+                color = 0xFFFFFF00;
+                break;
+            case Fuego:
+                color = 0xFFFF0000;
+                break;
+            case Hielo:
+                color = 0xFF0000FF;
+                break;
         }
 
         // Obtener la ruta del mapa

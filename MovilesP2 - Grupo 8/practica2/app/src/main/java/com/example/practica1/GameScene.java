@@ -1,4 +1,4 @@
-package com.example.gamelogic;
+package com.example.practica1;
 
 import com.example.engine.IAudio;
 import com.example.engine.IEngine;
@@ -109,7 +109,7 @@ public class GameScene implements IScene {
         this.mapGrid = new MapGrid(map1, 600, 320, iGraphics);
         this.enemies = new ArrayList<Enemy>();
 
-        var fontButton = iGraphics.createFont("fonts/fff.ttf", 10, false, false);
+        IFont fontButton = iGraphics.createFont("fonts/fff.ttf", 10, false, false);
         this.tower1 = new TowerButton(this.iGraphics, fontButton, 445, 360, 50, 50, 100, TowerType.Rayo, 0xFFFFFFFF, 0xFF000000);
         this.tower2 = new TowerButton(this.iGraphics, fontButton, 505, 360, 50, 50, 150, TowerType.Hielo, 0xFFFFFFFF, 0xFF000000);
         this.tower3 = new TowerButton(this.iGraphics, fontButton, 565, 360, 50, 50, 200, TowerType.Fuego, 0xFFFFFFFF, 0xFF000000);
@@ -337,9 +337,15 @@ public class GameScene implements IScene {
         Tower tower = mapGrid.placeTowerAt(e.x, e.y, type, iGraphics, iAudio);
         if (tower != null) {
             switch (type){
-                case Rayo -> money -= tower1.getCost();
-                case Hielo -> money -= tower2.getCost();
-                case Fuego -> money -= tower3.getCost();
+                case Rayo:
+                    money -= tower1.getCost();
+                    break;
+                case Hielo:
+                    money -= tower2.getCost();
+                    break;
+                case Fuego:
+                    money -= tower3.getCost();
+                    break;
             }
             iAudio.playSound(turret, false);
             towers.add(tower);

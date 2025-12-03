@@ -1,4 +1,4 @@
-package com.example.gamelogic;
+package com.example.practica1;
 
 import com.example.engine.IAudio;
 import com.example.engine.IEngine;
@@ -43,7 +43,7 @@ public class MenuScene implements IScene {
         this.iAudio = this.iEngine.getAudio();
         this.startGame = false;
 
-        var fontButton = iGraphics.createFont("fonts/fff.ttf", 15, false, false);
+        IFont fontButton = iGraphics.createFont("fonts/fff.ttf", 15, false, false);
         menuButton = new Button(iGraphics, fontButton, 300,300,100,50, "Play", 0xFF808080);
         titleFont = iGraphics.createFont("fonts/pixelGotic.ttf", 35, false, false);
 

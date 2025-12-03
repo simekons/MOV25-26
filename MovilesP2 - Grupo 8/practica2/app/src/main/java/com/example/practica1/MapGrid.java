@@ -1,4 +1,4 @@
-package com.example.gamelogic;
+package com.example.practica1;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -175,10 +175,17 @@ public class MapGrid {
         int cost = 100; // ejemplo
 
         switch (type) {
-            case Rayo -> tower = new TowerRayo(iGraphics, iAudio, row, column, size, cost, cell);
-            case Fuego -> tower = new TowerFuego(iGraphics, iAudio, row, column, size, cost, cell);
-            case Hielo -> tower = new TowerHielo(iGraphics, iAudio,  row, column, size, cost, cell);
-            default -> throw new IllegalArgumentException("Tipo de torre no válido");
+            case Rayo:
+                tower = new TowerRayo(iGraphics, iAudio, row, column, size, cost, cell);
+                break;
+            case Fuego:
+                tower = new TowerFuego(iGraphics, iAudio, row, column, size, cost, cell);
+                break;
+            case Hielo:
+                tower = new TowerHielo(iGraphics, iAudio,  row, column, size, cost, cell);
+                break;
+            default:
+                throw new IllegalArgumentException("Tipo de torre no válido");
         }
 
         cell.setTower(true);
