@@ -1,4 +1,4 @@
-package com.example.practica1;
+package com.example.practica2;
 
 import com.example.engine.IAudio;
 import com.example.engine.IGraphics;

@@ -11,6 +11,9 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import android.content.res.AssetManager;
+
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
