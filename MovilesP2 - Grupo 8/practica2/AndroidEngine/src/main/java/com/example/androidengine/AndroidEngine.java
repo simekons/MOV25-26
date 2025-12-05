@@ -1,6 +1,7 @@
 package com.example.androidengine;
 
 import android.app.Activity;
+import android.view.Surface;
 import android.view.SurfaceView;
 
 import com.example.engine.IAudio;
@@ -13,16 +14,20 @@ import java.util.List;
 
 import kotlin.jvm.Volatile;
 
-public class AndroidEngine implements IEngine, Runnable {
+public class AndroidEngine implements Runnable {
 
     // SurfaceView.
     private SurfaceView surfaceView;
+
+    private static AndroidEngine _instance;
     // Gráficos en Android.
     private AndroidGraphics androidGraphics;
     // Input en Android.
     private AndroidInput androidInput;
     // Audio en Android.
     private AndroidAudio androidAudio;
+    // Archivo.
+    private AndroidFile androidFile;
     // Actividad principal.
     private Activity activity;
     // Hebra de renderizado.
@@ -33,6 +38,13 @@ public class AndroidEngine implements IEngine, Runnable {
     @Volatile
     private boolean running = false;
 
+
+    public static AndroidEngine Instance(SurfaceView sw, Activity a){
+        if (_instance == null){
+            _instance = new AndroidEngine(sw, a);
+        }
+        return _instance;
+    }
     public AndroidEngine(SurfaceView surfaceView, Activity a)
     {
         activity = a;
@@ -40,6 +52,7 @@ public class AndroidEngine implements IEngine, Runnable {
         this.androidInput = new AndroidInput();
         this.androidGraphics = new AndroidGraphics(surfaceView, a);
         this.androidAudio = new AndroidAudio(a);
+        this.androidFile = new AndroidFile(a);
 
         this.surfaceView.setOnTouchListener(this.androidInput);
     }
@@ -138,18 +151,20 @@ public class AndroidEngine implements IEngine, Runnable {
         }
     }
 
+    // Método para crear el hash
+    public static native String createHash(String data);
+
+    public static AndroidEngine get_instance() { return _instance;}
     // Gráficos de Android.
-    @Override
-    public IGraphics getGraphics() { return this.androidGraphics; }
+    public AndroidGraphics getGraphics() { return this.androidGraphics; }
     // Audio de Android.
-    @Override
-    public IAudio getAudio() { return this.androidAudio; }
+    public AndroidAudio getAudio() { return this.androidAudio; }
+
+    public AndroidFile getFile() { return this.androidFile; }
 
     // Escena actual.
-    @Override
     public void setScenes(IScene scene) { this.scene = scene; }
 
-    @Override
     public void setLogicSize(float x, float y) {
         androidGraphics.setLogicSize(x,y);
     }

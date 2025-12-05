@@ -89,7 +89,7 @@ public class FinalScene implements IScene {
                     }
                     if(menuButton.isTouched(e.x, e.y))
                     {
-                        this.iEngine.setScenes(new MenuScene(this.iEngine));
+                        this.iEngine.setScenes(new MenuScene());
                     }
                     break;
                 default:

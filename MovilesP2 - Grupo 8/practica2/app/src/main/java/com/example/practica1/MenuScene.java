@@ -25,7 +25,13 @@ public class MenuScene implements IScene {
     private IAudio iAudio;
 
     // Botón de menú.
-    private Button menuButton;
+    private Button playButton;
+
+    // Botón de aventura.
+    private Button adventureButton;
+
+    // Botón de tienda.
+    private Button shopButton;
 
     // Fuente de título.
     private IFont titleFont;
@@ -36,16 +42,25 @@ public class MenuScene implements IScene {
     // Booleano de juego.
     private boolean startGame;
 
+    // Booleano de aventura.
+    private boolean adventure = false;
+
+    // Booleano de tienda.
+    private boolean shop = false;
+
     // CONSTRUCTORA
-    public MenuScene(IEngine iEngine){
+    public MenuScene(){
         this.iEngine = iEngine;
         this.iGraphics = this.iEngine.getGraphics();
         this.iAudio = this.iEngine.getAudio();
         this.startGame = false;
 
-        IFont fontButton = iGraphics.createFont("fonts/fff.ttf", 15, false, false);
-        menuButton = new Button(iGraphics, fontButton, 300,300,100,50, "Play", 0xFF808080);
-        titleFont = iGraphics.createFont("fonts/pixelGotic.ttf", 35, false, false);
+        IFont fontButton = iGraphics.createFont("fonts/fff.ttf", 20, false, false);
+        playButton = new Button(iGraphics, fontButton, 225,200,125,50, "Jugar", 0xFF808080);
+        adventureButton = new Button(iGraphics, fontButton, 375 ,200,125,50, "Aventura", 0xFF808080);
+        shopButton = new Button(iGraphics, fontButton, 225,275,125,50, "Tienda", 0xff9CE4F5);
+
+        titleFont = iGraphics.createFont("fonts/pixelGotic.ttf", 30, false, false);
 
         this.soundButton = this.iAudio.newSound("music/button.wav");
     }
@@ -54,9 +69,11 @@ public class MenuScene implements IScene {
     @Override
     public void render() {
         iGraphics.setColor(0xff000000);
-        iGraphics.drawText(titleFont, "TOWER", 300, 100);
-        iGraphics.drawText(titleFont, "DEFENSE", 300, 200);
-        menuButton.render();
+        iGraphics.drawText(titleFont, "TOWER", 300, 75);
+        iGraphics.drawText(titleFont, "DEFENSE", 300, 150);
+        playButton.render();
+        adventureButton.render();
+        shopButton.render();
     }
 
     // Update.
@@ -64,6 +81,12 @@ public class MenuScene implements IScene {
     public void update(float deltaTime) {
         if(startGame){
             iEngine.setScenes(new DifficultyScene(iEngine));
+        }
+        else if (shop){
+
+        }
+        else if (adventure){
+
         }
     }
 
@@ -75,10 +98,16 @@ public class MenuScene implements IScene {
             switch (e.type)
             {
                 case TOUCH_UP:
-                    if(menuButton.isTouched(e.x, e.y))
+                    if(playButton.isTouched(e.x, e.y))
                     {
                         iAudio.playSound(soundButton, false);
                         startGame = true;
+                    }
+                    if(adventureButton.isTouched(e.x, e.y)){
+                        adventure = true;
+                    }
+                    if(shopButton.isTouched(e.x, e.y)){
+                        shop = true;
                     }
                     break;
 

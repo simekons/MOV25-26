@@ -9,5 +9,7 @@ public interface IEngine
     // Setter de las escenas
     void setScenes(IScene scene);
 
+    IFile getFile();
+
     void setLogicSize(float x, float y);
 }

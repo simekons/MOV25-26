@@ -19,10 +19,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         SurfaceView surfaceView = new SurfaceView(this);
         FrameLayout frameLayout = new FrameLayout(this);
+        androidEngine = AndroidEngine.Instance(surfaceView,this);
         setContentView(surfaceView);
-        androidEngine = new AndroidEngine(surfaceView,this);
         androidEngine.setLogicSize(600,400);
-        MenuScene menuScene = new MenuScene(androidEngine);
+        MenuScene menuScene = new MenuScene();
         androidEngine.setScenes(menuScene);
     }
 
