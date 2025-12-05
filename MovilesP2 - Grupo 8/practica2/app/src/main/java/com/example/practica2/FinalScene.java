@@ -1,5 +1,6 @@
 package com.example.practica2;
 
+import com.example.androidengine.AndroidEngine;
 import com.example.engine.IAudio;
 import com.example.engine.IEngine;
 import com.example.engine.IFont;
@@ -16,7 +17,7 @@ import java.util.List;
 public class FinalScene implements IScene {
 
     // Motor.
-    private IEngine iEngine;
+    private AndroidEngine iEngine;
 
     // Gráficos
     private IGraphics iGraphics;
@@ -43,8 +44,8 @@ public class FinalScene implements IScene {
     private boolean win;
 
     // CONSTRUCTORA
-    public FinalScene(IEngine iEngine, int difficulty, boolean win) {
-        this.iEngine = iEngine;
+    public FinalScene(int difficulty, boolean win) {
+        this.iEngine = AndroidEngine.get_instance();
         this.iGraphics = iEngine.getGraphics();
         this.iAudio = iEngine.getAudio();
 
@@ -85,7 +86,7 @@ public class FinalScene implements IScene {
                 case TOUCH_UP:
                     if(playAgainButton.isTouched(e.x, e.y))
                     {
-                        this.iEngine.setScenes(new GameScene(this.iEngine, this.difficulty));
+                        this.iEngine.setScenes(new GameScene(this.difficulty));
                     }
                     if(menuButton.isTouched(e.x, e.y))
                     {

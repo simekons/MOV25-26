@@ -1,5 +1,6 @@
 package com.example.practica2;
 
+import com.example.androidengine.AndroidEngine;
 import com.example.engine.IAudio;
 import com.example.engine.IEngine;
 import com.example.engine.IFont;
@@ -20,7 +21,7 @@ import java.util.Random;
 public class GameScene implements IScene {
 
     // Engine.
-    private IEngine iEngine;
+    private AndroidEngine iEngine;
 
     // Graphics.
     private IGraphics iGraphics;
@@ -97,8 +98,8 @@ public class GameScene implements IScene {
     private int wave = 0;
 
     // CONSTRUCTORA
-    public GameScene(IEngine iEngine, int difficulty) {
-        this.iEngine = iEngine;
+    public GameScene(int difficulty) {
+        this.iEngine = AndroidEngine.get_instance();
         this.iGraphics = this.iEngine.getGraphics();
         this.iAudio = this.iEngine.getAudio();
         this.difficulty = difficulty;
@@ -230,7 +231,7 @@ public class GameScene implements IScene {
         enemies.removeIf(e -> !e.isActive());
 
         if (lives == 0){
-            iEngine.setScenes(new FinalScene(this.iEngine, this.difficulty, false));
+            iEngine.setScenes(new FinalScene(this.difficulty, false));
         }
     }
 
@@ -284,7 +285,7 @@ public class GameScene implements IScene {
                     enemiesPerWave = 5 + this.wave;
                     waveCooldown = 5.0f;
                 } else {
-                    this.iEngine.setScenes(new FinalScene(this.iEngine, this.difficulty, true));
+                    this.iEngine.setScenes(new FinalScene(this.difficulty, true));
                 }
                 break;
             case 1:
@@ -292,7 +293,7 @@ public class GameScene implements IScene {
                     enemiesPerWave = 7 + this.wave;
                     waveCooldown = 4.0f;
                 } else {
-                    this.iEngine.setScenes(new FinalScene(this.iEngine, this.difficulty, true));
+                    this.iEngine.setScenes(new FinalScene(this.difficulty, true));
                 }
                 break;
             case 2:

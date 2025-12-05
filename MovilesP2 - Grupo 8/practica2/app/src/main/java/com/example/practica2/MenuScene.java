@@ -1,5 +1,6 @@
 package com.example.practica2;
 
+import com.example.androidengine.AndroidEngine;
 import com.example.engine.IAudio;
 import com.example.engine.IEngine;
 import com.example.engine.IFont;
@@ -16,7 +17,7 @@ import java.util.List;
 public class MenuScene implements IScene {
 
     // Motor.
-    private IEngine iEngine;
+    private AndroidEngine iEngine;
 
     // Gráficos
     private IGraphics iGraphics;
@@ -50,7 +51,7 @@ public class MenuScene implements IScene {
 
     // CONSTRUCTORA
     public MenuScene(){
-        this.iEngine = iEngine;
+        this.iEngine = AndroidEngine.get_instance();
         this.iGraphics = this.iEngine.getGraphics();
         this.iAudio = this.iEngine.getAudio();
         this.startGame = false;
@@ -80,7 +81,7 @@ public class MenuScene implements IScene {
     @Override
     public void update(float deltaTime) {
         if(startGame){
-            iEngine.setScenes(new DifficultyScene(iEngine));
+            iEngine.setScenes(new DifficultyScene());
         }
         else if (shop){
 

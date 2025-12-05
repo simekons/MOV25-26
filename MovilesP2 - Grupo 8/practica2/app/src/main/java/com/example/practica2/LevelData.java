@@ -1,4 +1,4 @@
-package com.example.practica1;
+package com.example.practica2;
 
 import java.util.List;
 

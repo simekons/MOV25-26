@@ -1,5 +1,6 @@
 package com.example.practica2;
 
+import com.example.androidengine.AndroidEngine;
 import com.example.engine.IAudio;
 import com.example.engine.IEngine;
 import com.example.engine.IFont;
@@ -16,7 +17,7 @@ import java.util.List;
 public class DifficultyScene implements IScene {
 
     // Motor.
-    private IEngine iEngine;
+    private AndroidEngine iEngine;
 
     // Gráficos
     private IGraphics iGraphics;
@@ -41,8 +42,8 @@ public class DifficultyScene implements IScene {
     private int difficulty;
 
     // CONSTRUCTORA
-    public DifficultyScene(IEngine iEngine){
-        this.iEngine = iEngine;
+    public DifficultyScene(){
+        this.iEngine = AndroidEngine.get_instance();
         this.iGraphics = this.iEngine.getGraphics();
         this.iAudio = this.iEngine.getAudio();
         this.startGame = false;
@@ -71,7 +72,7 @@ public class DifficultyScene implements IScene {
     public void update(float deltaTime) {
         if(startGame){
             iAudio.playSound(soundButton, false);
-            iEngine.setScenes(new GameScene(iEngine, this.difficulty));
+            iEngine.setScenes(new GameScene(this.difficulty));
         }
     }
 
