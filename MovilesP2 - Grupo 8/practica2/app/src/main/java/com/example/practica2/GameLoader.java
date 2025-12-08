@@ -104,17 +104,17 @@ public class GameLoader {
         try {
             path = "gameData.json";
             JSONObject jsonObject = file.loadDataWithHash(path);
-            int coins = jsonObject.optInt("coins", 0);
-            DiamondManager.setCoins(coins);
+            int diamonds = jsonObject.optInt("diamonds", 0);
+            DiamondManager.setDiamonds(diamonds);
 
-            if(Theme.getCurrentTheme() == null)
+            /*if(Theme.getCurrentTheme() == null)
             {
                 loadThemes();
                 setThemes();
-            }
+            }*/
 
-            int theme = jsonObject.optInt("currentTheme", 0);
-            Theme.setCurrentTheme(Theme.getTheme(theme));
+            //int theme = jsonObject.optInt("currentTheme", 0);
+            //Theme.setCurrentTheme(Theme.getTheme(theme));
         } catch (Exception e) {
 
         }
@@ -288,13 +288,13 @@ public class GameLoader {
 
         }
     }
-    // Guarda número de monedas
-    public void saveCoins(int coins)
+    // Guarda número de diamantes
+    public void saveDiamonds(int diamonds)
     {
         try {
             path = "gameData.json";
             JSONObject jsonObject = file.loadDataWithHash(path);
-            jsonObject.put("coins", coins);
+            jsonObject.put("diamonds", diamonds);
             file.saveDataWithHash(path, jsonObject);
         } catch (Exception e) {
 

@@ -93,7 +93,7 @@ public class MenuScene implements IScene {
 
         }
         else if (adventure){
-
+            iEngine.setScenes(new AdventureScene());
         }
     }
 

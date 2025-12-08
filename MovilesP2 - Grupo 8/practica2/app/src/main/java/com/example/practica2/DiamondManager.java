@@ -3,19 +3,19 @@ package com.example.practica2;
 public class DiamondManager {
 
     // Número de monedas
-    private static int coins = 0;
+    private static int diamonds = 0;
     // Número de monedas por nivel
-    private static int coinsPerLevel = 10;
+    private static int diamondsPerLevel = 10;
 
     // Añade una cantidad de monedas
-    public static void addCoins(int coinAmount)
+    public static void addDiamonds(int diamondAmount)
     {
-        coins += coinAmount;
+        diamonds += diamondAmount;
     }
 
-    public static void setCoins(int coins) { DiamondManager.coins = coins; }
+    public static void setDiamonds(int diamonds) { DiamondManager.diamonds = diamonds; }
 
-    public static int getCoins() { return coins; }
-    public static int getCoinsPerLevel() { return coinsPerLevel; }
+    public static int getDiamonds() { return diamonds; }
+    public static int getDiamondsPerLevel() { return diamondsPerLevel; }
 
 }

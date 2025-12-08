@@ -2,6 +2,7 @@ package com.example.practica2;
 
 import com.example.androidengine.AndroidAds;
 import com.example.androidengine.AndroidEngine;
+import com.example.androidengine.AndroidFile;
 import com.example.engine.IAudio;
 import com.example.engine.IEngine;
 import com.example.engine.IFont;
@@ -26,6 +27,9 @@ public class FinalScene implements IScene {
     // Audio.
     private IAudio iAudio;
 
+    // Archivos
+    private AndroidFile androidFile;
+
     // Ads
     private AndroidAds androidAds;
 
@@ -43,9 +47,11 @@ public class FinalScene implements IScene {
     // Sonido de botón.
     private ISound soundButton;
 
+    private GameLoader gameLoader;
+
     // Dificultad previa.
     private int difficulty;
-    private int test = 0;
+    private int diamondsPerLevel;
 
     private boolean win;
     private boolean adWatched = false;
@@ -55,10 +61,14 @@ public class FinalScene implements IScene {
         this.iEngine = AndroidEngine.get_instance();
         this.iGraphics = iEngine.getGraphics();
         this.iAudio = iEngine.getAudio();
+        this.androidFile = iEngine.getFile();
         this.androidAds = iEngine.getAds();
+
+        gameLoader = new GameLoader(this.androidFile);
 
         this.difficulty = difficulty;
         this.win = win;
+        this.diamondsPerLevel = DiamondManager.getDiamondsPerLevel();
 
         this.fontButton = iGraphics.createFont("fonts/fff.ttf", 15, false, false);
         this.titleFont = iGraphics.createFont("fonts/pixelGotic.ttf", 35, false, false);
@@ -109,9 +119,9 @@ public class FinalScene implements IScene {
                     {
                         if(!adWatched)
                         {
-                            androidAds.showRewardedAd(() -> test += 1);
-                            //CoinManager.addCoins(coinsPerLevel);
-                            //gameLoader.saveCoins(CoinManager.getCoins());
+                            androidAds.showRewardedAd(() -> diamondsPerLevel *= 2);
+                            DiamondManager.addDiamonds(diamondsPerLevel);
+                            gameLoader.saveDiamonds(DiamondManager.getDiamonds());
                             adWatched = true;
                         }
                     }

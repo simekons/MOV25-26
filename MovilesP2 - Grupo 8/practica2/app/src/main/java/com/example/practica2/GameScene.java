@@ -1,6 +1,7 @@
 package com.example.practica2;
 
 import com.example.androidengine.AndroidEngine;
+import com.example.androidengine.AndroidFile;
 import com.example.engine.IAudio;
 import com.example.engine.IEngine;
 import com.example.engine.IFont;
@@ -28,6 +29,8 @@ public class GameScene implements IScene {
 
     // Audio.
     private IAudio iAudio;
+
+    private AndroidFile androidFile;
 
     // Mapa de juego.
     private MapGrid mapGrid;
@@ -91,6 +94,8 @@ public class GameScene implements IScene {
     // Fuente.
     private IFont moneyText;
 
+    private GameLoader gameLoader;
+
     // Dificultad.
     private int difficulty;
 
@@ -102,10 +107,13 @@ public class GameScene implements IScene {
         this.iEngine = AndroidEngine.get_instance();
         this.iGraphics = this.iEngine.getGraphics();
         this.iAudio = this.iEngine.getAudio();
+        this.androidFile = this.iEngine.getFile();
         this.iEngine.getAds().setBannerVisible(false);
         this.difficulty = difficulty;
         this.money = 150;
         loadAssets();
+
+        gameLoader = new GameLoader(this.androidFile);
 
         Maps map1 = Maps.level1();
         this.mapGrid = new MapGrid(map1, 600, 320, iGraphics);
@@ -286,6 +294,8 @@ public class GameScene implements IScene {
                     enemiesPerWave = 5 + this.wave;
                     waveCooldown = 5.0f;
                 } else {
+                    DiamondManager.addDiamonds(DiamondManager.getDiamondsPerLevel());
+                    gameLoader.saveDiamonds(DiamondManager.getDiamonds());
                     this.iEngine.setScenes(new FinalScene(this.difficulty, true));
                 }
                 break;
@@ -294,6 +304,8 @@ public class GameScene implements IScene {
                     enemiesPerWave = 7 + this.wave;
                     waveCooldown = 4.0f;
                 } else {
+                    DiamondManager.addDiamonds(DiamondManager.getDiamondsPerLevel());
+                    gameLoader.saveDiamonds(DiamondManager.getDiamonds());
                     this.iEngine.setScenes(new FinalScene(this.difficulty, true));
                 }
                 break;

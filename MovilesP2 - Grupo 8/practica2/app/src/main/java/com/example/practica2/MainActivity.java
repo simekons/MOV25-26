@@ -34,10 +34,10 @@ public class MainActivity extends AppCompatActivity {
 
         androidAds.loadRewardedAd("ca-app-pub-3940256099942544/5224354917");
 
-        /*FinalScene finalScene = new FinalScene(0, true);
-        androidEngine.setScenes(finalScene);*/
-        MenuScene menuScene = new MenuScene();
-        androidEngine.setScenes(menuScene);
+        FinalScene finalScene = new FinalScene(0, true);
+        androidEngine.setScenes(finalScene);
+        /*MenuScene menuScene = new MenuScene();
+        androidEngine.setScenes(menuScene);*/
     }
 
     // Método que delega la gestión de la reanudación al motor.
@@ -51,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        androidEngine.showNotification("Vuelve", "Vuelve a jugar, ¡obtendrás recompensas!",R.drawable.ic_launcher_foreground,getPackageName());
         androidEngine.onPause();
     }
 

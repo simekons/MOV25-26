@@ -46,6 +46,7 @@ public class AdventureScene implements IScene {
     private boolean isScrolling;
 
     private boolean isNewGame;
+    private boolean created = false;
 
     private AndroidImage lockImage;
 
@@ -63,6 +64,7 @@ public class AdventureScene implements IScene {
         this.engine = AndroidEngine.get_instance();
         this.graphics = this.engine.getGraphics();
         this.audio = this.engine.getAudio();
+        this.engine.getAds().setBannerVisible(false);
 
         loadAssets();
 

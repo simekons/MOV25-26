@@ -1,8 +1,16 @@
 package com.example.androidengine;
 
 import android.app.Activity;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.content.Context;
+import android.os.Build;
 import android.view.Surface;
 import android.view.SurfaceView;
+
+import androidx.work.Data;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
 
 import com.example.engine.IAudio;
 import com.example.engine.IEngine;
@@ -11,6 +19,7 @@ import com.example.engine.IInput;
 import com.example.engine.IScene;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import kotlin.jvm.Volatile;
 
@@ -39,6 +48,7 @@ public class AndroidEngine implements Runnable {
     // Booleano de ejecución.
     @Volatile
     private boolean running = false;
+    private static String channelId = "Notification";
 
 
     public static AndroidEngine Instance(SurfaceView sw, Activity a){
@@ -58,6 +68,32 @@ public class AndroidEngine implements Runnable {
         this.androidAds = new AndroidAds(a);
 
         this.surfaceView.setOnTouchListener(this.androidInput);
+    }
+
+    public void showNotification(String title, String desc, int icon, String mainName){
+
+        if (Build.VERSION. SDK_INT >= Build.VERSION_CODES. O) {
+            CharSequence name = "notification";
+            String description = "description";
+            int importance = NotificationManager. IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(channelId, name, importance) ;
+            channel.setDescription(description) ;
+            NotificationManager notificationManager = (NotificationManager) activity.getBaseContext().getSystemService(Context.NOTIFICATION_SERVICE);//NotificationManagerCompat.from(getApplicationContext());
+            notificationManager.createNotificationChannel(channel) ;
+        }
+
+        OneTimeWorkRequest notificationWork = new OneTimeWorkRequest.Builder(AndroidWorker.class)
+                .setInputData(new Data.Builder()
+                        .putString("title", title)
+                        .putString("description", desc)
+                        .putInt("notifications_icon", icon)
+                        .putString("notifications_channel_id", channelId)
+                        .putString("class",mainName)
+                        .build())
+                .setInitialDelay(5, TimeUnit.SECONDS)
+                .build();
+
+        WorkManager.getInstance(this.activity.getBaseContext()).enqueue(notificationWork);
     }
 
     // Método con el bucle principal.
