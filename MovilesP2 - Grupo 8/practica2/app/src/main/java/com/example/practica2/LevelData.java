@@ -4,31 +4,38 @@ import java.util.List;
 
 public class LevelData {
 
-    private List<Integer> bubblesToLaunch;
-    private List<Integer> bubblesInBoard;
+    private List<String> waveTypes;
+    private List<Integer> waveAmounts;
 
-    private int numRows;
+    private int reward;
+    private List<String> road;
+    private String levelBackground;
+
     private int world;
     private int level;
     private int score;
 
-    // Información del nivel (burbujas a lanzar, burbujas en el tablero, número de filas, puntuación, mundo y nivel)
-    public LevelData(List<Integer> bubblesToLaunch, int numRows, List<Integer> bubblesInBoard, int score, int world, int level)
+    public LevelData(List<String> waveTypes, List<Integer> waveAmounts, int reward, List<String> road,  String levelBackground, int score, int world,  int level)
     {
-        this.bubblesToLaunch = bubblesToLaunch;
-        this.numRows = numRows;
-        this.bubblesInBoard = bubblesInBoard;
+        this.waveTypes = waveTypes;
+        this.waveAmounts = waveAmounts;
+        this.reward = reward;
+        this.road = road;
+        this.levelBackground = levelBackground;
         this.score = score;
         this.world = world;
-
-        this.level = (5 * (this.world - 1)) + level;
+        this.level = level;
     }
 
-    public List<Integer> getBubblesToLaunch() { return bubblesToLaunch; }
-    public List<Integer> getBubblesInBoard() { return bubblesInBoard; }
-    public int getNumRows() { return numRows; }
+    public List<String> getWaveTypes() { return waveTypes; }
+    public List<Integer> getWaveAmounts() { return waveAmounts; }
+
+    public int getReward() { return reward; }
+    public List<String> getRoad() { return road; }
+    public String getLevelBackground() { return levelBackground; }
+
     public int getScore() { return score; }
-    public int getLevel() { return level; }
     public int getWorld() { return world; }
+    public int getLevel() { return level; }
 
 }

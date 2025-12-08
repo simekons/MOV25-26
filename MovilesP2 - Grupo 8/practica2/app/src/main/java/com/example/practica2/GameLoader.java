@@ -21,7 +21,7 @@ public class GameLoader {
 
     private static String path;
 
-    private int colorUnlocked, colorLocked;
+    private int colorUnlocked, colorLocked, colorPassed;
 
     // Constructora de la clase
     public GameLoader(AndroidFile iFile)
@@ -67,6 +67,7 @@ public class GameLoader {
             String path = "levels/" + world + "/style.json";
             JSONObject jsonObject = readJSONFromAssets(path);
 
+            colorUnlocked = (int) Long.parseLong(jsonObject.getString("colorPassed").substring(2), 16);
             colorUnlocked = (int) Long.parseLong(jsonObject.getString("colorUnlocked").substring(2), 16);
             colorLocked = (int) Long.parseLong(jsonObject.getString("colorLocked").substring(2), 16);
         }
@@ -122,7 +123,7 @@ public class GameLoader {
     // Carga nivel del almacenamiento interno
     public LevelData loadLevelFromFiles(int _world, int _level)
     {
-        String level = "level_" + _world + "_0" + _level;
+        String level = "level_" + _world + "_" + _level;
         String path = level + ".json";
 
         JSONObject jsonObject = file.loadDataWithHash(path);
@@ -181,19 +182,19 @@ public class GameLoader {
         }
     }
 
-    // Guarda progreso del nivel (burbujas a lanzar, burbujas en tablero, número de filas y puntuación)
+    // Guarda progreso del nivel
     public void saveLevel(List<Integer> bubblesToLaunch, int nRows, List<Integer> bubblesInBoard, int score, String levelPath) {
         try{
 
             path = levelPath;
             JSONObject levelJson = new JSONObject();
-            JSONArray bubblesToLaunchArray = new JSONArray(bubblesToLaunch);
-            JSONArray bubblesInBoardArray = new JSONArray(bubblesInBoard);
+            //JSONArray bubblesToLaunchArray = new JSONArray(bubblesToLaunch);
+            //JSONArray bubblesInBoardArray = new JSONArray(bubblesInBoard);
 
-            levelJson.put("bubblesToLaunch", bubblesToLaunchArray);
-            levelJson.put("numRows", nRows);
-            levelJson.put("bubblesInBoard", bubblesInBoardArray);
-            levelJson.put("score", score);
+            //levelJson.put("bubblesToLaunch", bubblesToLaunchArray);
+            //levelJson.put("numRows", nRows);
+            //levelJson.put("bubblesInBoard", bubblesInBoardArray);
+            //levelJson.put("score", score);
 
             file.saveDataWithHash(path, levelJson);
 
@@ -317,25 +318,47 @@ public class GameLoader {
     public LevelData levelInfo(JSONObject jsonObject, int _world, int _level, boolean isFromFiles)
     {
         try{
-            JSONArray bubblesToLaunchArray = jsonObject.getJSONArray("bubblesToLaunch");
-            List<Integer> bubblesToLaunch = new ArrayList<>();
-            for (int i = 0; i < bubblesToLaunchArray.length(); i++) {
-                bubblesToLaunch.add(bubblesToLaunchArray.getInt(i));
+            JSONArray wavesJson = jsonObject.getJSONArray("waves");
+
+            List<String> waveTypes = new ArrayList<>();
+            List<Integer> waveAmounts = new ArrayList<>();
+
+            for (int i = 0; i < wavesJson.length(); i++) {
+                JSONObject waveObj = wavesJson.getJSONObject(i);
+
+                if (waveObj.has("goblin")) {
+                    waveTypes.add("goblin");
+                    waveAmounts.add(waveObj.getInt("goblin"));
+                } else if (waveObj.has("orc")) {
+                    waveTypes.add("orc");
+                    waveAmounts.add(waveObj.getInt("orc"));
+                }
             }
 
-            int numRows = jsonObject.getInt("numRows");
+            int reward = jsonObject.getInt("reward");
 
-            JSONArray bubblesInBoardArray = jsonObject.getJSONArray("bubblesInBoard");
-            List<Integer> bubblesInBoard = new ArrayList<>();
-            for (int i = 0; i < bubblesInBoardArray.length(); i++) {
-                bubblesInBoard.add(bubblesInBoardArray.getInt(i));
+            JSONArray roadJson = jsonObject.getJSONArray("road");
+            List<String> road = new ArrayList<>();
+            for (int i = 0; i < roadJson.length(); i++) {
+                road.add(roadJson.getString(i));
             }
+
+            String levelBackground = jsonObject.getString("levelBackground");
 
             int score = 0;
-            if(isFromFiles)
+            if (isFromFiles && jsonObject.has("score"))
                 score = jsonObject.getInt("score");
 
-            return new LevelData(bubblesToLaunch, numRows, bubblesInBoard, score, _world, _level);
+            return new LevelData(
+                    waveTypes,
+                    waveAmounts,
+                    reward,
+                    road,
+                    levelBackground,
+                    score,
+                    _world,
+                    _level
+            );
         } catch (Exception e)
         {
             return null;
