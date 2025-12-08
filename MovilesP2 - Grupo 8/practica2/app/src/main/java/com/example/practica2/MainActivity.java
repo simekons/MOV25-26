@@ -6,7 +6,9 @@ import android.widget.FrameLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.androidengine.AndroidAds;
 import com.example.androidengine.AndroidEngine;
+import com.google.android.gms.ads.AdView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -17,11 +19,23 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        SurfaceView surfaceView = new SurfaceView(this);
+        setContentView(R.layout.activity_main);
+
+        // SurfaceView
+        SurfaceView surfaceView = findViewById(R.id.surfaceView);
         FrameLayout frameLayout = new FrameLayout(this);
         androidEngine = AndroidEngine.Instance(surfaceView,this);
-        setContentView(surfaceView);
         androidEngine.setLogicSize(600,400);
+
+        // AdView
+        AndroidAds androidAds = androidEngine.getAds();
+        AdView adView = findViewById(R.id.adView);
+        androidAds.loadBannerAd(adView.getId());
+
+        androidAds.loadRewardedAd("ca-app-pub-3940256099942544/5224354917");
+
+        /*FinalScene finalScene = new FinalScene(0, true);
+        androidEngine.setScenes(finalScene);*/
         MenuScene menuScene = new MenuScene();
         androidEngine.setScenes(menuScene);
     }

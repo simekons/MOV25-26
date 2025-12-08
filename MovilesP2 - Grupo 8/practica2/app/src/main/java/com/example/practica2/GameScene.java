@@ -102,6 +102,7 @@ public class GameScene implements IScene {
         this.iEngine = AndroidEngine.get_instance();
         this.iGraphics = this.iEngine.getGraphics();
         this.iAudio = this.iEngine.getAudio();
+        this.iEngine.getAds().setBannerVisible(false);
         this.difficulty = difficulty;
         this.money = 150;
         loadAssets();

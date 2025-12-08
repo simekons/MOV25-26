@@ -36,6 +36,8 @@ dependencies {
     implementation libs.constraintlayout
     implementation project(':AndroidEngine')
     implementation project(':Engine')
+    implementation "androidx.work:work-runtime:2.8.1"
+    implementation 'com.google.android.gms:play-services-ads:23.6.0'
     testImplementation libs.junit
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espresso.core

@@ -1,5 +1,6 @@
 package com.example.practica2;
 
+import com.example.androidengine.AndroidAds;
 import com.example.androidengine.AndroidEngine;
 import com.example.engine.IAudio;
 import com.example.engine.IEngine;
@@ -25,9 +26,13 @@ public class FinalScene implements IScene {
     // Audio.
     private IAudio iAudio;
 
+    // Ads
+    private AndroidAds androidAds;
+
     // Botones de menú.
     private Button playAgainButton;
     private Button menuButton;
+    private Button adButton;
 
     // Fuente de título.
     private IFont titleFont;
@@ -40,14 +45,17 @@ public class FinalScene implements IScene {
 
     // Dificultad previa.
     private int difficulty;
+    private int test = 0;
 
     private boolean win;
+    private boolean adWatched = false;
 
     // CONSTRUCTORA
     public FinalScene(int difficulty, boolean win) {
         this.iEngine = AndroidEngine.get_instance();
         this.iGraphics = iEngine.getGraphics();
         this.iAudio = iEngine.getAudio();
+        this.androidAds = iEngine.getAds();
 
         this.difficulty = difficulty;
         this.win = win;
@@ -55,6 +63,7 @@ public class FinalScene implements IScene {
         this.fontButton = iGraphics.createFont("fonts/fff.ttf", 15, false, false);
         this.titleFont = iGraphics.createFont("fonts/pixelGotic.ttf", 35, false, false);
 
+        this.adButton = new Button(this.iGraphics, this.fontButton, 300,150,150,50, "Anuncio", 0xFF808080);
         this.playAgainButton = new Button(this.iGraphics, this.fontButton, 300,225,150,50, "Volver a jugar", 0xFF808080);
         this.menuButton = new Button(this.iGraphics, this.fontButton, 300,300,150,50, "Menu", 0xFF808080);
 
@@ -68,6 +77,10 @@ public class FinalScene implements IScene {
         String mensaje = "";
         mensaje = (win == true) ? "VICTORIA" : "DERROTA";
         iGraphics.drawText(titleFont, mensaje, 300, 100);
+        if(win)
+            if(!adWatched)
+                adButton.render();
+
         playAgainButton.render();
         menuButton.render();
     }
@@ -91,6 +104,16 @@ public class FinalScene implements IScene {
                     if(menuButton.isTouched(e.x, e.y))
                     {
                         this.iEngine.setScenes(new MenuScene());
+                    }
+                    if(adButton.isTouched(e.x, e.y))
+                    {
+                        if(!adWatched)
+                        {
+                            androidAds.showRewardedAd(() -> test += 1);
+                            //CoinManager.addCoins(coinsPerLevel);
+                            //gameLoader.saveCoins(CoinManager.getCoins());
+                            adWatched = true;
+                        }
                     }
                     break;
                 default:

@@ -28,6 +28,8 @@ public class AndroidEngine implements Runnable {
     private AndroidAudio androidAudio;
     // Archivo.
     private AndroidFile androidFile;
+    // Ads
+    private AndroidAds androidAds;
     // Actividad principal.
     private Activity activity;
     // Hebra de renderizado.
@@ -53,6 +55,7 @@ public class AndroidEngine implements Runnable {
         this.androidGraphics = new AndroidGraphics(surfaceView, a);
         this.androidAudio = new AndroidAudio(a);
         this.androidFile = new AndroidFile(a);
+        this.androidAds = new AndroidAds(a);
 
         this.surfaceView.setOnTouchListener(this.androidInput);
     }
@@ -159,9 +162,10 @@ public class AndroidEngine implements Runnable {
     public AndroidGraphics getGraphics() { return this.androidGraphics; }
     // Audio de Android.
     public AndroidAudio getAudio() { return this.androidAudio; }
-
+    // Archivos
     public AndroidFile getFile() { return this.androidFile; }
-
+    // Anuncios
+    public AndroidAds getAds() { return this.androidAds; }
     // Escena actual.
     public void setScenes(IScene scene) { this.scene = scene; }
 

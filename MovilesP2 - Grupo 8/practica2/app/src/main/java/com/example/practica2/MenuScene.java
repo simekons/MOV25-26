@@ -1,5 +1,6 @@
 package com.example.practica2;
 
+import com.example.androidengine.AndroidAds;
 import com.example.androidengine.AndroidEngine;
 import com.example.engine.IAudio;
 import com.example.engine.IEngine;
@@ -8,6 +9,7 @@ import com.example.engine.IGraphics;
 import com.example.engine.IInput;
 import com.example.engine.IScene;
 import com.example.engine.ISound;
+import com.google.android.gms.ads.AdView;
 
 import java.util.List;
 
@@ -24,6 +26,9 @@ public class MenuScene implements IScene {
 
     // Audio.
     private IAudio iAudio;
+
+    // Ads
+    private AndroidAds androidAds;
 
     // Botón de menú.
     private Button playButton;
@@ -54,6 +59,7 @@ public class MenuScene implements IScene {
         this.iEngine = AndroidEngine.get_instance();
         this.iGraphics = this.iEngine.getGraphics();
         this.iAudio = this.iEngine.getAudio();
+        this.iEngine.getAds().setBannerVisible(true);
         this.startGame = false;
 
         IFont fontButton = iGraphics.createFont("fonts/fff.ttf", 20, false, false);
