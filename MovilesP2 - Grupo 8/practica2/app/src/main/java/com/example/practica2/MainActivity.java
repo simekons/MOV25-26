@@ -34,6 +34,9 @@ public class MainActivity extends AppCompatActivity {
 
         androidAds.loadRewardedAd("ca-app-pub-3940256099942544/5224354917");
 
+        GameLoader gameLoader = new GameLoader(androidEngine.getFile());
+        gameLoader.loadGenericData();
+
         FinalScene finalScene = new FinalScene(0, true);
         androidEngine.setScenes(finalScene);
         /*MenuScene menuScene = new MenuScene();

@@ -190,6 +190,11 @@ public class AndroidEngine implements Runnable {
         }
     }
 
+    // Carga de la librería nativa
+    static {
+        System.loadLibrary("AndroidEngine");
+    }
+
     // Método para crear el hash
     public static native String createHash(String data);
 
