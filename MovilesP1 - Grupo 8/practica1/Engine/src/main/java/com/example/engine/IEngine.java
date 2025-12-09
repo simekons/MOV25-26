@@ -8,6 +8,4 @@ public interface IEngine
     IAudio getAudio();
     // Setter de las escenas
     void setScenes(IScene scene);
-
-    void setLogicSize(float x, float y);
 }

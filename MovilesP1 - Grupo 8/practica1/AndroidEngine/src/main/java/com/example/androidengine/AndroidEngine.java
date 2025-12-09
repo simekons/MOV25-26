@@ -148,9 +148,4 @@ public class AndroidEngine implements IEngine, Runnable {
     // Escena actual.
     @Override
     public void setScenes(IScene scene) { this.scene = scene; }
-
-    @Override
-    public void setLogicSize(float x, float y) {
-        androidGraphics.setLogicSize(x,y);
-    }
 }

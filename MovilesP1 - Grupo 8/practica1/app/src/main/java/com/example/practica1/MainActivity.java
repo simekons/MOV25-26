@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
         FrameLayout frameLayout = new FrameLayout(this);
         setContentView(surfaceView);
         androidEngine = new AndroidEngine(surfaceView,this);
-        androidEngine.setLogicSize(600,400);
+        androidEngine.getGraphics().setLogicSize(600,400);
         MenuScene menuScene = new MenuScene(androidEngine);
         androidEngine.setScenes(menuScene);
     }

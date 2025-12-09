@@ -10,6 +10,7 @@ import java.awt.FontFormatException;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.Insets;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferStrategy;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -85,7 +86,7 @@ public class DesktopGraphics implements IGraphics
     {
         this.graphics2D = (Graphics2D) this.bufferStrategy.getDrawGraphics();
         this.graphics2D.setPaintMode();
-        this.graphics2D.getTransform();
+
         this.clear(0xffffffff);
 
         this.calculateTransform();
@@ -130,9 +131,15 @@ public class DesktopGraphics implements IGraphics
 
     // Método que limpia la pantalla.
     @Override
-    public void clear(int color) {
-        this.graphics2D.setColor(new Color(color));
-        this.graphics2D.fillRect(0, 0, jFrame.getWidth(), jFrame.getHeight());
+    public void clear(int color)
+    {
+        AffineTransform oldTransform = graphics2D.getTransform();
+        graphics2D.setTransform(new AffineTransform());
+
+        graphics2D.setColor(new Color(color));
+        graphics2D.fillRect(0, 0, jFrame.getWidth(), jFrame.getHeight());
+
+        graphics2D.setTransform(oldTransform);
     }
 
     // Método que carga una imagen.

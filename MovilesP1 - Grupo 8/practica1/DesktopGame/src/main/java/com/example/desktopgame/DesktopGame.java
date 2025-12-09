@@ -18,7 +18,7 @@ public class DesktopGame {
         jFrame.setSize(1200, 800);
         // Crea el motor.
         DesktopEngine desktopEngine = new DesktopEngine(jFrame);
-        desktopEngine.setLogicSize(600,400);
+        desktopEngine.getGraphics().setLogicSize(600,400);
 
         GameScene gameScene = new GameScene(desktopEngine, 0);
         if(isDebug){
