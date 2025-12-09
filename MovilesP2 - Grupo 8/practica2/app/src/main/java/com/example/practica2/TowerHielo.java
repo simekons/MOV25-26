@@ -19,11 +19,6 @@ public class TowerHielo extends Tower {
     // Enemigos ralentizados.
     private Set<Enemy> slowedEnemies = new HashSet<>();
 
-    // Audio.
-    private IAudio iAudio;
-
-    // Sonido.
-    private ISound ice;
 
     // CONSTRUCTORA
     public TowerHielo(IGraphics iGraphics, IAudio iAudio, int row, int column, float size, int cost, Cell cell) {
@@ -31,10 +26,6 @@ public class TowerHielo extends Tower {
         this.damage = 7;
         this.range = 60;
         this.cooldown = 3f;
-
-        this.iAudio = iAudio;
-
-        this.ice = this.iAudio.newSound("music/ice.wav");
     }
 
     // RENDERIZADO
@@ -48,25 +39,11 @@ public class TowerHielo extends Tower {
             iGraphics.setColor(0xFF000000);
             iGraphics.drawCircle(x, y, range);
         }
-
-        if (shotTimer > 0f && currentTarget != null) {
-            iGraphics.setColor(0xFF0000FF);
-            iGraphics.drawLine(x, y, currentTarget.getX(), currentTarget.getY(), 2);
-        }
     }
 
     // UPDATE
     @Override
     public void update(float deltaTime, List<Enemy> enemies) {
-        timeSinceLastShot += deltaTime;
-
-        if (shotTimer > 0f) {
-            shotTimer -= deltaTime;
-            if (shotTimer < 0f) {
-                shotTimer = 0f;
-                currentTarget = null;
-            }
-        }
 
         Enemy target = null;
 
@@ -101,15 +78,6 @@ public class TowerHielo extends Tower {
                 slowedEnemies.add(e);
                 if (target == null) target = e;
             }
-        }
-
-        // Disparo al primer enemigo dentro del rango
-        if (timeSinceLastShot >= cooldown && target != null) {
-            target.makeDamage(damage, EnemyResist.Hielo);
-            currentTarget = target;
-            shotTimer = 0.2f;
-            timeSinceLastShot = 0f;
-            this.iAudio.playSound(this.ice, false);
         }
     }
 }

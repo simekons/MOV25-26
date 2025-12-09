@@ -204,8 +204,4 @@ public class AndroidEngine implements Runnable {
     public AndroidAds getAds() { return this.androidAds; }
     // Escena actual.
     public void setScenes(IScene scene) { this.scene = scene; }
-
-    public void setLogicSize(float x, float y) {
-        androidGraphics.setLogicSize(x,y);
-    }
 }

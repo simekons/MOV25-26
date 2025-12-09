@@ -10,6 +10,4 @@ public interface IEngine
     void setScenes(IScene scene);
 
     IFile getFile();
-
-    void setLogicSize(float x, float y);
 }

@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
         SurfaceView surfaceView = findViewById(R.id.surfaceView);
         FrameLayout frameLayout = new FrameLayout(this);
         androidEngine = AndroidEngine.Instance(surfaceView,this);
-        androidEngine.setLogicSize(600,400);
+        androidEngine.getGraphics().setLogicSize(600,400);
 
         // AdView
         AndroidAds androidAds = androidEngine.getAds();

@@ -49,14 +49,8 @@ public class TowerFuego extends Tower {
             iGraphics.drawCircle(x, y, range);
         }
 
-        // Renderiza la línea de disparo
-        if (shotTimer > 0f && currentTarget != null) {
-            iGraphics.setColor(0xFF0000FF);
-            iGraphics.drawLine(x, y, currentTarget.getX(), currentTarget.getY(), 2);
-        }
-
         // Renderiza el área de efecto en la posición de la explosión
-        if (shotTimer > 0f && explosionX >= 0 && explosionY >= 0) {
+        if (shotTimer > 0f && explosionX >= 0 && explosionY >= 0 && currentTarget != null) {
             iGraphics.setColor(0x88FF0000); // rojo semitransparente
             iGraphics.drawCircle(explosionX, explosionY, areaRadius);
         }
