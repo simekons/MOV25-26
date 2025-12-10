@@ -102,7 +102,30 @@ public class GameScene implements IScene {
     // Oleada.
     private int wave = 0;
 
+    private LevelData levelData;
+
     // CONSTRUCTORA
+    public GameScene(LevelData levelData){
+        this.iEngine = AndroidEngine.get_instance();
+        this.iGraphics = this.iEngine.getGraphics();
+        this.iAudio = this.iEngine.getAudio();
+        this.androidFile = this.iEngine.getFile();
+
+        loadAssets();
+
+        this.gameLoader = new GameLoader(this.androidFile);
+
+        // Se instancia el levelData
+        this.levelData = levelData;
+
+        if (this.levelData != null){
+            //this.level = this.levelData.getLevel();
+            //this.score = this.levelData.getScore();
+        }
+
+        //this.exitButton
+    }
+
     public GameScene(int difficulty) {
         this.iEngine = AndroidEngine.get_instance();
         this.iGraphics = this.iEngine.getGraphics();

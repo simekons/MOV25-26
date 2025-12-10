@@ -98,6 +98,7 @@ public class GameLoader {
         }
     }
 
+    // !!!!!!
     // Carga datos generales del almacenamiento interno (monedas y theme guardado)
     public void loadGenericData()
     {
@@ -132,6 +133,7 @@ public class GameLoader {
         return levelInfo(jsonObject, _world, _level, true);
     }
 
+    // !!!!!
     // Carga estado de los niveles del almacenamiento interno
     public ArrayList<AdventureScene.LevelState> loadLevelStates()
     {
@@ -141,6 +143,7 @@ public class GameLoader {
         return levelStates;
     }
 
+    // !!!!!
     // Carga estado de los items de la tienda del almacenamiento interno
     public ArrayList<Boolean> loadItemsState()
     {
@@ -150,6 +153,8 @@ public class GameLoader {
         return itemsState;
     }
 
+
+    // !!!!!
     // Carga si los items de personalización de la escena de juego están seleccionados
     public ArrayList<Boolean> loadFruitItems()
     {
@@ -166,6 +171,8 @@ public class GameLoader {
         }
     }
 
+
+    // !!!!!
     // Carga si los items de la tienda están seleccionados
     public ArrayList<Boolean> loadSelectedItems()
     {
@@ -182,6 +189,8 @@ public class GameLoader {
         }
     }
 
+
+    // !!!!!
     // Guarda progreso del nivel
     public void saveLevel(List<Integer> bubblesToLaunch, int nRows, List<Integer> bubblesInBoard, int score, String levelPath) {
         try{
@@ -203,6 +212,8 @@ public class GameLoader {
         }
     }
 
+
+    // !!!!!
     // Guarda estado de los niveles (bloqueados, desbloqueados sin hacer, desbloqueados hechos)
     public void saveLevelsState(ArrayList<AdventureScene.LevelState> levelStates) {
         try{
@@ -233,6 +244,8 @@ public class GameLoader {
         }
     }
 
+
+    // !!!!!
     // Guarda estado de los items de la tienda (bloqueados o desbloqueados)
     public void saveItemsState(ArrayList<Boolean> itemsState)
     {
@@ -255,6 +268,7 @@ public class GameLoader {
         }
     }
 
+    // !!!!!
     // Guarda si los items de personalización de la escena de juego están seleccionados o no
     public void saveFruitItems(ArrayList<ShopItem> fruitItems)
     {
@@ -272,6 +286,7 @@ public class GameLoader {
         }
     }
 
+    // !!!!!
     // Guarda si los items de la tienda están seleccionados o no
     public void saveSelectedItems(ArrayList<Boolean> selectedItems)
     {
@@ -288,6 +303,8 @@ public class GameLoader {
 
         }
     }
+
+    // !!!!!
     // Guarda número de diamantes
     public void saveDiamonds(int diamonds)
     {
@@ -301,6 +318,7 @@ public class GameLoader {
         }
     }
 
+    // !!!!!
     // Guarda theme actual del juego
     public void saveTheme(int theme)
     {
@@ -390,6 +408,7 @@ public class GameLoader {
         }
     }
 
+    // !!!!!
     // Devuelve el estado de los items de la tienda
     public ArrayList<Boolean> itemsStateInfo(JSONObject jsonObject)
     {

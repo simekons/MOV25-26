@@ -107,7 +107,7 @@ public class AndroidGraphics implements IGraphics
 
     // Método que carga una imagen.
     @Override
-    public IImage loadImage(String path) {
+    public AndroidImage loadImage(String path) {
         Bitmap bitmap = null;
         try
         {
@@ -241,7 +241,7 @@ public class AndroidGraphics implements IGraphics
 
     // Método que crea una fuente.
     @Override
-    public IFont createFont(String fontFile, int size, boolean bold, boolean italic) {
+    public AndroidFont createFont(String fontFile, int size, boolean bold, boolean italic) {
 
         Typeface typeface = Typeface.createFromAsset(assetManager, fontFile);
         return new AndroidFont(typeface, size, bold, italic);

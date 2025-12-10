@@ -24,7 +24,7 @@ public class AndroidAudio implements IAudio
     }
 
     @Override
-    public ISound newSound(String file) {
+    public AndroidSound newSound(String file) {
         AndroidSound sound = new AndroidSound(file, assetManager, soundPool);
         return sound;
     }

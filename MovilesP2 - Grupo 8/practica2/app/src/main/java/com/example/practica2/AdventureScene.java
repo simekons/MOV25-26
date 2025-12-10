@@ -6,6 +6,8 @@ import com.example.androidengine.AndroidFile;
 import com.example.androidengine.AndroidFont;
 import com.example.androidengine.AndroidGraphics;
 import com.example.androidengine.AndroidImage;
+import com.example.androidengine.AndroidInput;
+import com.example.androidengine.AndroidSound;
 import com.example.engine.IInput;
 import com.example.engine.IScene;
 
@@ -45,7 +47,7 @@ public class AdventureScene implements IScene {
     private int minScrollOffset;
     private boolean isScrolling;
 
-    private boolean isNewGame;
+    private boolean isNewGame = true;
     private boolean created = false;
 
     private AndroidImage lockImage;
@@ -53,6 +55,11 @@ public class AdventureScene implements IScene {
     private AndroidFont scoreFont;
 
     private GameLoader gameLoader;
+
+    private Button exitButton;
+    private AndroidImage exitImage;
+
+    private AndroidSound clickButton;
 
     public enum LevelState {
         LOCKED,
@@ -72,6 +79,12 @@ public class AdventureScene implements IScene {
         levelStates = new ArrayList<>();
 
         this.gameLoader = new GameLoader(this.file);
+
+        this.exitButton = new Button(this.graphics, this.exitImage, 25, 25, 50, 50);
+
+        buttonsVariables();
+
+        this.clickButton = this.audio.newSound("music/button.wav");
     }
 
     public void buttonsVariables()
@@ -111,8 +124,8 @@ public class AdventureScene implements IScene {
                     // Ignora los archivos "style.json"
                     if(!Objects.equals(levels[i], "style.json"))
                     {
-                        int x = offsetX + (buttonIndex % 3) * separationBetweenButtons;
-                        if (buttonIndex % 3 == 0 && buttonIndex != 0) y += separationBetweenButtons;
+                        int x = offsetX + (buttonIndex % 5) * separationBetweenButtons;
+                        if (buttonIndex % 5 == 0 && buttonIndex != 0) y += separationBetweenButtons;
                         // Si el juego no tiene progreso, crea los botones por defecto
                         if(isNewGame)
                         {
@@ -121,7 +134,7 @@ public class AdventureScene implements IScene {
                             {
                                 levelButtons.add(new LevelButton(
                                         this.graphics, scoreFont, x, y, buttonDimension, buttonDimension,
-                                        String.valueOf(buttonIndex + 1), 0xfffef3a5, 0xff000000,
+                                        String.valueOf(buttonIndex + 1), 0xff0b6623, 0xff000000,
                                         LevelState.UNLOCKED_INCOMPLETE, j + 1, buttonIndex));
                             }
                             // El resto estarán bloqueados
@@ -129,7 +142,7 @@ public class AdventureScene implements IScene {
                             {
                                 levelButtons.add(new LevelButton(
                                         this.graphics, lockImage, x, y, buttonDimension, buttonDimension,
-                                        0xfffef3a5, LevelState.LOCKED, j + 1, buttonIndex));
+                                        0xff88A536, LevelState.LOCKED, j + 1, buttonIndex));
                             }
                             levelStates.add(levelButtons.get(buttonIndex).getLevelState());
                         }
@@ -161,12 +174,31 @@ public class AdventureScene implements IScene {
         }
     }
     private void loadAssets(){
-
+        this.exitImage = this.graphics.loadImage("sprites/bow.png");
+        this.scoreFont = this.graphics.createFont("fonts/pixelGotic.ttf", 30, false, false);
+        this.lockImage = this.graphics.loadImage("sprites/lock.png");
     }
 
     @Override
     public void render() {
 
+        this.exitButton.render();
+        this.graphics.setColor(0xff000000);
+        this.graphics.drawText(this.scoreFont, "Adventure", 300, 40);
+
+        if (!this.created){
+            loadLevelStates();
+            createLevelsButtons();
+            setStyleLevelButtons();
+            this.created = true;
+        }
+
+
+        for(LevelButton lb : this.levelButtons){
+            if (lb.getY() > 60 && lb.getY() < 600){
+                lb.render();
+            }
+        }
     }
 
     @Override
@@ -176,6 +208,71 @@ public class AdventureScene implements IScene {
 
     @Override
     public void handleInput(List<IInput.TouchEvent> events) {
+        for(AndroidInput.TouchEvent e : events)
+        {
+            switch (e.type)
+            {
+                // Activa scroll
+                case TOUCH_DOWN:
+                    lastTouchY = e.y;
+                    isScrolling = true;
+                    break;
+                // Desactiva scroll y detecta si un botón de un nivel ha sido pulsado
+                case TOUCH_UP:
+                    lastTouchY = -1;
+                    isScrolling = false;
+                    if(exitButton.imageIsTouched(e.x, e.y))
+                    {
+                        this.audio.playSound(clickButton, false);
+                        this.engine.setScenes(new MenuScene());
+                    }
+                    handleLevelButtons(e);
+                    break;
+                // Ocurre scroll
+                case TOUCH_MOVE:
+                    if (isScrolling) {
+                        int deltaY = lastTouchY - e.y;
+                        lastTouchY = e.y;
+
+                        scrollOffset += deltaY;
+                        scrollOffset = Math.max(minScrollOffset, Math.min(maxScrollOffset, scrollOffset));
+
+                        for (LevelButton lb : levelButtons) {
+                            lb.setY(lb.getOriginalY() - scrollOffset);
+                        }
+                    }
+                    break;
+            }
+        }
+    }
+
+    public void handleLevelButtons(AndroidInput.TouchEvent e)
+    {
+        for (LevelButton lb : levelButtons) {
+            if (lb.isTouched(e.x, e.y) && lb.getLevelState() == LevelState.UNLOCKED_INCOMPLETE) {
+                this.audio.playSound(clickButton, false);
+
+                int world = lb.getWorld();
+                int level = lb.getLevel();
+                // Carga los niveles del almacenamiento por si el nivel está guardado
+                LevelData levelData = gameLoader.loadLevelFromFiles(world, level);
+                // Si el nivel no está guardado, lo carga de los assets
+                if(levelData == null)
+                    levelData = gameLoader.loadLevelFromAssets(world, level);
+
+                // Lanza la partida con los datos cargados
+                if (levelData != null) {
+                    this.engine.setScenes(new GameScene(levelData));
+                }
+            }
+        }
+    }
+
+    private void loadLevelStates(){
+
+    }
+
+    private void setStyleLevelButtons(){
 
     }
 }
