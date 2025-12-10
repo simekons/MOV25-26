@@ -59,9 +59,9 @@ public class LevelButton
     public void render()
     {
         graphics.setColor(color);
-        graphics.fillRectangle(x, y, width + x, height + y);
+        graphics.fillRectangle(x, y, width, height);
         graphics.setColor(0xff000000);
-        graphics.drawRect(x, y, width + x, height + y);
+        graphics.drawRect(x, y, width, height);
         if (image != null)
             graphics.drawImage(image, (int) (x + (width) / 2), (int) (y + (height) / 2), (int) (width) / 2, (int) (height) / 2);
         else {

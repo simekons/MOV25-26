@@ -38,8 +38,8 @@ public class MainActivity extends AppCompatActivity {
         gameLoader.loadGenericData();
 
         FinalScene finalScene = new FinalScene(0, true);
-        //AdventureScene adventureScene = new AdventureScene();
-        androidEngine.setScenes(finalScene);
+        AdventureScene adventureScene = new AdventureScene();
+        androidEngine.setScenes(adventureScene);
         /*MenuScene menuScene = new MenuScene();
         androidEngine.setScenes(menuScene);*/
     }
