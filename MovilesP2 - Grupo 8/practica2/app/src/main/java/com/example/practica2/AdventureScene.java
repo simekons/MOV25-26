@@ -11,6 +11,8 @@ import com.example.androidengine.AndroidSound;
 import com.example.engine.IInput;
 import com.example.engine.IScene;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -30,7 +32,7 @@ public class AdventureScene implements IScene {
     private AndroidFile file;
     private ArrayList<LevelButton> levelButtons;
 
-    private ArrayList<LevelState> levelStates;
+    private static ArrayList<LevelState> levelStates;
 
     //variables botones
     private int levelsNumber;
@@ -176,11 +178,11 @@ public class AdventureScene implements IScene {
                             if (state == LevelState.LOCKED || state == null) {
                                 levelButtons.add(new LevelButton(
                                         this.graphics, lockImage, x, currentY, buttonDimension, buttonDimension,
-                                        0xfffef3a5, LevelState.LOCKED, j + 1, buttonIndex));
+                                        0xff88A536, LevelState.LOCKED, j + 1, buttonIndex));
                             } else {
                                 levelButtons.add(new LevelButton(
                                         this.graphics, scoreFont, x, currentY, buttonDimension, buttonDimension,
-                                        String.valueOf(buttonIndex + 1), 0xfffef3a5, 0xff000000,
+                                        String.valueOf(buttonIndex + 1), 0xff116D3A, 0xff000000,
                                         LevelState.UNLOCKED_INCOMPLETE, j + 1, buttonIndex));
                             }
                         }
@@ -196,7 +198,7 @@ public class AdventureScene implements IScene {
             gameLoader.saveLevelsState(levelStates);
         } catch (Exception e)
         {
-
+            e.printStackTrace();
         }
     }
     private void loadAssets(){
@@ -278,6 +280,41 @@ public class AdventureScene implements IScene {
         }
     }
 
+    public void loadLevelStates() {
+        try {
+            JSONObject json = this.file.loadDataWithHash("levelsState.json");
+
+            if (json.length() == 0) {
+                isNewGame = true;
+                return;
+            }
+
+            isNewGame = false;
+
+            levelStates.clear();
+
+            for (int i = 1; i <= levelsNumber; i++) {
+                String key = "level" + i;
+                String value = json.optString(key, "Locked");
+                switch (value) {
+                    case "UnlockedIncomplete":
+                        levelStates.add(LevelState.UNLOCKED_INCOMPLETE);
+                        break;
+                    case "UnlockedCompleted":
+                        levelStates.add(LevelState.UNLOCKED_COMPLETED);
+                        break;
+                    default:
+                        levelStates.add(LevelState.LOCKED);
+                        break;
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            isNewGame = true;
+        }
+    }
+
     public void handleLevelButtons(AndroidInput.TouchEvent e)
     {
         for (LevelButton lb : levelButtons) {
@@ -300,11 +337,11 @@ public class AdventureScene implements IScene {
         }
     }
 
-    private void loadLevelStates(){
-
-    }
-
     private void setStyleLevelButtons(){
 
     }
+
+    public static ArrayList<LevelState> getLevelStates() { return levelStates; }
+
+    public static void setLevelState(int i, LevelState levelState) { levelStates.set(i, levelState); }
 }

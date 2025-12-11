@@ -37,6 +37,9 @@ public class GameScene implements IScene {
     // Mapa de juego.
     private MapGrid mapGrid;
 
+    private static int level;
+
+
     // ¿Está por mejorar? (sí/no)
     private boolean upgrades = false;
 
@@ -115,7 +118,9 @@ public class GameScene implements IScene {
 
         // Se instancia el levelData
         this.levelData = levelData;
-
+        if (this.levelData != null){
+            this.level = this.levelData.getLevel();
+        }
         Maps map = new Maps(this.levelData);
         this.mapGrid = new MapGrid(map, 600, 320, graphics);
     }
@@ -304,7 +309,7 @@ public class GameScene implements IScene {
     private void addEnemy(int wave) {
         int vida = 30 + (wave * 15);
         int defensa = 0 + (wave * 2);
-        int speed = 20;
+        int speed = 50;
         EnemyResist resist = EnemyResist.Nada;
 
         if (this.wave >= 2) {
@@ -344,6 +349,11 @@ public class GameScene implements IScene {
                 } else {
                     DiamondManager.addDiamonds(DiamondManager.getDiamondsPerLevel());
                     gameLoader.saveDiamonds(DiamondManager.getDiamonds());
+                    AdventureScene adventureScene = new AdventureScene();
+                    adventureScene.loadLevelStates();
+                    adventureScene.setLevelState(this.level - 1, AdventureScene.LevelState.UNLOCKED_COMPLETED);
+                    adventureScene.setLevelState(level, AdventureScene.LevelState.UNLOCKED_INCOMPLETE);
+                    gameLoader.saveLevelsState(adventureScene.getLevelStates());
                     this.iEngine.setScenes(new FinalScene(this.difficulty, true));
                 }
                 break;

@@ -257,7 +257,6 @@ public class GameLoader {
     }
 
 
-    // !!!!!
     // Guarda estado de los niveles (bloqueados, desbloqueados sin hacer, desbloqueados hechos)
     public void saveLevelsState(ArrayList<AdventureScene.LevelState> levelStates) {
         try{
@@ -284,7 +283,7 @@ public class GameLoader {
             file.saveDataWithHash(path, levelStateJson);
 
         }catch (Exception e) {
-
+            e.printStackTrace();
         }
     }
 
