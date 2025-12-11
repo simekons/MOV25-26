@@ -1,8 +1,9 @@
 package com.example.practica2;
 
-import com.example.engine.IAudio;
-import com.example.engine.IGraphics;
-import com.example.engine.ISound;
+import com.example.androidengine.AndroidAudio;
+import com.example.androidengine.AndroidGraphics;
+import com.example.androidengine.AndroidImage;
+import com.example.androidengine.AndroidSound;
 
 import java.util.List;
 
@@ -15,13 +16,15 @@ enum EnemyResist { Nada, Rayo, Hielo, Fuego }
 public class Enemy {
 
     // Gráficos.
-    private IGraphics iGraphics;
+    private AndroidGraphics graphics;
 
     // Audio.
-    private IAudio iAudio;
+    private AndroidAudio iAudio;
 
     // Sonido de muerte.
-    private ISound death;
+    private AndroidSound death;
+
+    private AndroidImage image;
 
     // Color de enemigo.
     private int color;
@@ -60,9 +63,10 @@ public class Enemy {
     private int currentTarget;    // Índice del waypoint actual
 
     // CONSTRUCTORA
-    public Enemy(IGraphics iGraphics, IAudio iAudio, float speed, float radius, boolean isActive, MapGrid map,
+    public Enemy(AndroidGraphics graphics, AndroidAudio audio, AndroidImage image, float speed, float radius, boolean isActive, MapGrid map,
                  int vida, int defensa, EnemyResist type) {
-        this.iGraphics = iGraphics;
+        this.graphics = graphics;
+        this.image = image;
         this.speed = speed;
         this.radius = radius;
         this.isActive = isActive;
@@ -95,7 +99,7 @@ public class Enemy {
             this.y = path.get(0)[1];
         }
 
-        this.iAudio = iAudio;
+        this.iAudio = audio;
 
         this.death = this.iAudio.newSound("music/death.wav");
     }
@@ -103,8 +107,14 @@ public class Enemy {
     // RENDERIZADO
     public void render() {
         if (!isActive) return;
-        this.iGraphics.setColor(color);
-        this.iGraphics.fillCircle(x, y, radius);
+
+        if (this.image != null){
+            this.graphics.drawImage(this.image, (int)x, (int)y, 20, 20);
+        }
+        else{
+            this.graphics.setColor(color);
+            this.graphics.fillCircle(x, y, radius);
+        }
     }
 
     // UPDATE

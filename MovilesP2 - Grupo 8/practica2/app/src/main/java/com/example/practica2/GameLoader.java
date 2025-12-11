@@ -5,6 +5,7 @@ import com.example.androidengine.AndroidFile;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.sql.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +20,10 @@ public class GameLoader {
     private ArrayList<Boolean> fruitItems;
     private ArrayList<Boolean> selectedItems;
 
+    private ArrayList<String> waveTypes;
+
+    private ArrayList<Integer> waveAmounts;
+
     private static String path;
 
     private int colorUnlocked, colorLocked, colorPassed;
@@ -28,8 +33,8 @@ public class GameLoader {
     {
         this.file = iFile;
         levelStates = new ArrayList<>();
-        itemsState = new ArrayList<>();
-        fruitItems = new ArrayList<>();
+        waveAmounts = new ArrayList<>();
+        waveTypes = new ArrayList<>();
         selectedItems = new ArrayList<>();
         themes = new ArrayList<>();
     }
@@ -57,7 +62,46 @@ public class GameLoader {
         String path = "levels/" + world + "/" + level + ".json";
 
         JSONObject jsonObject = readJSONFromAssets(path);
-        return levelInfo(jsonObject, _world, _level, false);
+
+        if (jsonObject == null) return null;
+
+        try{
+            // Las oleadas.
+            JSONArray wave = jsonObject.getJSONArray("waves");
+
+            for (int i = 0; i < wave.length(); i++){
+                JSONObject waveObj = wave.getJSONObject(i);
+
+                String enemyType = waveObj.keys().next();
+
+                int amount = waveObj.getInt(enemyType);
+
+                this.waveTypes.add(enemyType);
+                this.waveAmounts.add(amount);
+            }
+
+            // La recompensa.
+            int reward = jsonObject.getInt("reward");
+
+            JSONArray roadJson = jsonObject.getJSONArray("road");
+
+            // El camino.
+            ArrayList<String> road = new ArrayList<>();
+
+            for (int i = 0; i < roadJson.length(); i++){
+                road.add(roadJson.getString(i));
+            }
+
+            // El fondo.
+            String background = jsonObject.getString("levelBackground");
+
+            return new LevelData(waveTypes, waveAmounts, reward, road, background, 0, _world, _level);
+
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
     }
 
     // Carga estilo de los botones de los niveles
@@ -338,8 +382,8 @@ public class GameLoader {
         try{
             JSONArray wavesJson = jsonObject.getJSONArray("waves");
 
-            List<String> waveTypes = new ArrayList<>();
-            List<Integer> waveAmounts = new ArrayList<>();
+            ArrayList<String> waveTypes = new ArrayList<>();
+            ArrayList<Integer> waveAmounts = new ArrayList<>();
 
             for (int i = 0; i < wavesJson.length(); i++) {
                 JSONObject waveObj = wavesJson.getJSONObject(i);
@@ -356,7 +400,7 @@ public class GameLoader {
             int reward = jsonObject.getInt("reward");
 
             JSONArray roadJson = jsonObject.getJSONArray("road");
-            List<String> road = new ArrayList<>();
+            ArrayList<String> road = new ArrayList<>();
             for (int i = 0; i < roadJson.length(); i++) {
                 road.add(roadJson.getString(i));
             }

@@ -1,9 +1,11 @@
 package com.example.practica2;
 
+import com.example.androidengine.AndroidAudio;
 import com.example.androidengine.AndroidEngine;
 import com.example.androidengine.AndroidFile;
+import com.example.androidengine.AndroidGraphics;
+import com.example.androidengine.AndroidImage;
 import com.example.engine.IAudio;
-import com.example.engine.IEngine;
 import com.example.engine.IFont;
 import com.example.engine.IGraphics;
 import com.example.engine.IImage;
@@ -25,10 +27,10 @@ public class GameScene implements IScene {
     private AndroidEngine iEngine;
 
     // Graphics.
-    private IGraphics iGraphics;
+    private AndroidGraphics graphics;
 
     // Audio.
-    private IAudio iAudio;
+    private AndroidAudio audio;
 
     private AndroidFile androidFile;
 
@@ -40,6 +42,9 @@ public class GameScene implements IScene {
 
     // Array de enemigos.
     private ArrayList<Enemy> enemies;
+
+    private AndroidImage goblin;
+    private AndroidImage orc;
 
     // Array de torres.
     private ArrayList<Tower> towers;
@@ -106,83 +111,82 @@ public class GameScene implements IScene {
 
     // CONSTRUCTORA
     public GameScene(LevelData levelData){
-        this.iEngine = AndroidEngine.get_instance();
-        this.iGraphics = this.iEngine.getGraphics();
-        this.iAudio = this.iEngine.getAudio();
-        this.androidFile = this.iEngine.getFile();
-
-        loadAssets();
-
-        this.gameLoader = new GameLoader(this.androidFile);
+        init();
 
         // Se instancia el levelData
         this.levelData = levelData;
 
-        if (this.levelData != null){
-            //this.level = this.levelData.getLevel();
-            //this.score = this.levelData.getScore();
-        }
-
-        //this.exitButton
+        Maps map = new Maps(this.levelData);
+        this.mapGrid = new MapGrid(map, 600, 320, graphics);
     }
 
     public GameScene(int difficulty) {
-        this.iEngine = AndroidEngine.get_instance();
-        this.iGraphics = this.iEngine.getGraphics();
-        this.iAudio = this.iEngine.getAudio();
-        this.androidFile = this.iEngine.getFile();
-        this.iEngine.getAds().setBannerVisible(false);
+        init();
+
         this.difficulty = difficulty;
+
+        Maps map = new Maps();
+        this.mapGrid = new MapGrid(map, 600, 320, graphics);
+
+    }
+
+    private void init(){
+        this.iEngine = AndroidEngine.get_instance();
+        this.graphics = this.iEngine.getGraphics();
+        this.audio = this.iEngine.getAudio();
+        this.androidFile = this.iEngine.getFile();
+        this.gameLoader = new GameLoader(this.androidFile);
+
+        this.iEngine.getAds().setBannerVisible(false);
         this.money = 150;
+
         loadAssets();
 
-        gameLoader = new GameLoader(this.androidFile);
+        this.enemies = new ArrayList<>();
 
-        Maps map1 = Maps.level1();
-        this.mapGrid = new MapGrid(map1, 600, 320, iGraphics);
-        this.enemies = new ArrayList<Enemy>();
+        IFont fontButton = graphics.createFont("fonts/fff.ttf", 10, false, false);
+        this.tower1 = new TowerButton(this.graphics, fontButton, 445, 360, 50, 50, 100, TowerType.Rayo, 0xFFFFFFFF, 0xFF000000);
+        this.tower2 = new TowerButton(this.graphics, fontButton, 505, 360, 50, 50, 150, TowerType.Hielo, 0xFFFFFFFF, 0xFF000000);
+        this.tower3 = new TowerButton(this.graphics, fontButton, 565, 360, 50, 50, 200, TowerType.Fuego, 0xFFFFFFFF, 0xFF000000);
 
-        IFont fontButton = iGraphics.createFont("fonts/fff.ttf", 10, false, false);
-        this.tower1 = new TowerButton(this.iGraphics, fontButton, 445, 360, 50, 50, 100, TowerType.Rayo, 0xFFFFFFFF, 0xFF000000);
-        this.tower2 = new TowerButton(this.iGraphics, fontButton, 505, 360, 50, 50, 150, TowerType.Hielo, 0xFFFFFFFF, 0xFF000000);
-        this.tower3 = new TowerButton(this.iGraphics, fontButton, 565, 360, 50, 50, 200, TowerType.Fuego, 0xFFFFFFFF, 0xFF000000);
-
-        this.sword = new UpgradeButton(this.iGraphics, fontButton, this.sword_img, 445, 360, 50, 50, 75, 0xFFFFFFFF, 0xFF000000);
-        this.bow = new UpgradeButton(this.iGraphics, fontButton, this.bow_img, 505, 360, 50, 50, 75, 0xFFFFFFFF, 0xFF000000);
-        this.clock = new UpgradeButton(this.iGraphics, fontButton, this.clock_img, 565, 360, 50, 50, 100, 0xFFFFFFFF, 0xFF000000);
+        this.sword = new UpgradeButton(this.graphics, fontButton, this.sword_img, 445, 360, 50, 50, 75, 0xFFFFFFFF, 0xFF000000);
+        this.bow = new UpgradeButton(this.graphics, fontButton, this.bow_img, 505, 360, 50, 50, 75, 0xFFFFFFFF, 0xFF000000);
+        this.clock = new UpgradeButton(this.graphics, fontButton, this.clock_img, 565, 360, 50, 50, 100, 0xFFFFFFFF, 0xFF000000);
         this.towers = new ArrayList<Tower>();
     }
 
     // Carga de recursos.
     public void loadAssets() {
-        this.bow_img = this.iGraphics.loadImage("sprites/bow.png");
-        this.sword_img = this.iGraphics.loadImage("sprites/sword.png");
-        this.clock_img = this.iGraphics.loadImage("sprites/clock.png");
+        this.goblin = (AndroidImage) this.graphics.loadImage("sprites/goblin.png");
+        this.orc = (AndroidImage) this.graphics.loadImage("sprites/orc.png");
+        this.bow_img = this.graphics.loadImage("sprites/bow.png");
+        this.sword_img = this.graphics.loadImage("sprites/sword.png");
+        this.clock_img = this.graphics.loadImage("sprites/clock.png");
 
-        this.coinimg = this.iGraphics.loadImage("sprites/coin.png");
-        this.heartimg = this.iGraphics.loadImage("sprites/heart.png");
+        this.coinimg = this.graphics.loadImage("sprites/coin.png");
+        this.heartimg = this.graphics.loadImage("sprites/heart.png");
 
-        this.turret = this.iAudio.newSound("music/turret.wav");
+        this.turret = this.audio.newSound("music/turret.wav");
 
-        this.upgrade = this.iAudio.newSound("music/upgrade.wav");
+        this.upgrade = this.audio.newSound("music/upgrade.wav");
 
-        moneyText = iGraphics.createFont("fonts/fff.ttf", 15, false, false);
+        moneyText = graphics.createFont("fonts/fff.ttf", 15, false, false);
     }
 
     // RENDERIZADO
     @Override
     public void render() {
         // Banda de abajo
-        iGraphics.setColor(0xFF808080);
-        iGraphics.fillRectangle(0, 320, 600, 80);
+        graphics.setColor(0xFF808080);
+        graphics.fillRectangle(0, 320, 600, 80);
 
         mapGrid.render();
 
-        iGraphics.setColor(0xFF000000);
-        iGraphics.drawImage(coinimg, 15, 380, 30, 30);
-        iGraphics.drawText(moneyText, String.valueOf(money), 50, 390);
-        iGraphics.drawImage(heartimg, 18, 340, 30, 30);
-        iGraphics.drawText(moneyText, String.valueOf(lives), 50, 350);
+        graphics.setColor(0xFF000000);
+        graphics.drawImage(coinimg, 15, 380, 30, 30);
+        graphics.drawText(moneyText, String.valueOf(money), 50, 390);
+        graphics.drawImage(heartimg, 18, 340, 30, 30);
+        graphics.drawText(moneyText, String.valueOf(lives), 50, 350);
 
         if (upgrades) {
             this.sword.render();
@@ -202,8 +206,8 @@ public class GameScene implements IScene {
             t.render();
         }
 
-        iGraphics.setColor(0xFF00FF00);
-        iGraphics.drawText(moneyText, "Oleada " + (this.wave + 1), 525, 25);
+        graphics.setColor(0xFF00FF00);
+        graphics.drawText(moneyText, "Oleada " + (this.wave + 1), 525, 25);
     }
 
     // UPDATE
@@ -212,6 +216,12 @@ public class GameScene implements IScene {
 
         timer += deltaTime;
 
+
+        if (this.levelData != null){
+            enemiesPerWave = this.levelData.getWaveAmounts().get(this.wave);
+        }
+
+        // Enemigos de la primera oleada.
         if (spawningWave) {
             if (timer > cooldown && enemiesSpawned < enemiesPerWave) {
                 addEnemy(this.wave);
@@ -252,8 +262,12 @@ public class GameScene implements IScene {
         while (it.hasNext()) {
             Enemy e = it.next();
             if (!e.isActive()) {
-                if (!e.reachedEnd())
-                    money += 50;
+                if (!e.reachedEnd()){
+                    if (this.levelData != null)
+                        money+=this.levelData.getReward();
+                    else
+                        money+= 50;
+                }
                 else
                     lives -= 1;
                 it.remove();
@@ -305,7 +319,18 @@ public class GameScene implements IScene {
             }
         }
 
-        enemies.add(new Enemy(this.iGraphics, this.iAudio, speed, 5, true, this.mapGrid, vida, defensa, resist));
+        AndroidImage enemyImage = null;
+        switch(this.wave){
+            case 0: case 2:
+                enemyImage = this.goblin;
+                break;
+            case 1:
+                enemyImage = this.orc;
+                break;
+            default:
+                break;
+        }
+        this.enemies.add(new Enemy(this.graphics, this.audio, enemyImage, speed, 5, true, this.mapGrid, vida, defensa, resist));
     }
 
     // Gestor de oleadas.
@@ -371,7 +396,7 @@ public class GameScene implements IScene {
         if (type == null) return false;
 
 
-        Tower tower = mapGrid.placeTowerAt(e.x, e.y, type, iGraphics, iAudio);
+        Tower tower = mapGrid.placeTowerAt(e.x, e.y, type, graphics, audio);
         if (tower != null) {
             switch (type){
                 case Rayo:
@@ -384,7 +409,7 @@ public class GameScene implements IScene {
                     money -= tower3.getCost();
                     break;
             }
-            iAudio.playSound(turret, false);
+            audio.playSound(turret, false);
             towers.add(tower);
         }
         mapGrid.showAvailableCells(false);
@@ -421,17 +446,17 @@ public class GameScene implements IScene {
     private void handleUpgrades(IInput.TouchEvent e) {
         if (sword.isTouched(e.x, e.y)) {
             if(canAffordUpgrade(sword)){
-                this.iAudio.playSound(this.upgrade, false);
+                this.audio.playSound(this.upgrade, false);
                 applyUpgrade(0, sword);
             }
         } else if (bow.isTouched(e.x, e.y)) {
             if(canAffordUpgrade(bow)){
-                this.iAudio.playSound(this.upgrade, false);
+                this.audio.playSound(this.upgrade, false);
                 applyUpgrade(1, bow);
             }
         } else if (clock.isTouched(e.x, e.y)) {
             if(canAffordUpgrade(clock)){
-                this.iAudio.playSound(this.upgrade, false);
+                this.audio.playSound(this.upgrade, false);
                 applyUpgrade(2, clock);
             }
         } else {

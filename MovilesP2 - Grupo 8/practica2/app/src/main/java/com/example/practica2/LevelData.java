@@ -1,21 +1,22 @@
 package com.example.practica2;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class LevelData {
 
-    private List<String> waveTypes;
-    private List<Integer> waveAmounts;
+    private ArrayList<String> waveTypes;
+    private ArrayList<Integer> waveAmounts;
 
     private int reward;
-    private List<String> road;
+    private ArrayList<String> road;
     private String levelBackground;
 
     private int world;
     private int level;
     private int score;
 
-    public LevelData(List<String> waveTypes, List<Integer> waveAmounts, int reward, List<String> road,  String levelBackground, int score, int world,  int level)
+    public LevelData(ArrayList<String> waveTypes, ArrayList<Integer> waveAmounts, int reward, ArrayList<String> road,  String levelBackground, int score, int world,  int level)
     {
         this.waveTypes = waveTypes;
         this.waveAmounts = waveAmounts;
@@ -27,11 +28,11 @@ public class LevelData {
         this.level = level;
     }
 
-    public List<String> getWaveTypes() { return waveTypes; }
-    public List<Integer> getWaveAmounts() { return waveAmounts; }
+    public ArrayList<String> getWaveTypes() { return waveTypes; }
+    public ArrayList<Integer> getWaveAmounts() { return waveAmounts; }
 
     public int getReward() { return reward; }
-    public List<String> getRoad() { return road; }
+    public ArrayList<String> getRoad() { return road; }
     public String getLevelBackground() { return levelBackground; }
 
     public int getScore() { return score; }

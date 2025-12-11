@@ -3,6 +3,8 @@ package com.example.practica2;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.example.androidengine.AndroidGraphics;
+import com.example.androidengine.AndroidImage;
 import com.example.engine.IAudio;
 import com.example.engine.IGraphics;
 
@@ -11,6 +13,9 @@ import com.example.engine.IGraphics;
 * */
 public class MapGrid {
 
+    private AndroidGraphics graphics;
+
+    private AndroidImage backgroundImage;
     // Filas.
     private int rows;
 
@@ -42,15 +47,14 @@ public class MapGrid {
     private List<float[]> pathPositions = new ArrayList<>();
 
     // Gráficos.
-    private IGraphics iGraphics;
 
     // CONSTRUCTORA
-    public MapGrid(Maps mapData, float screenWidth, float screenHeight, IGraphics iGraphics) {
-        this.rows = mapData.rows;
-        this.columns = mapData.cols;
+    public MapGrid(Maps mapData, float screenWidth, float screenHeight, AndroidGraphics graphics) {
+        this.rows = mapData.getRows();
+        this.columns = mapData.getCols();
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
-        this.iGraphics = iGraphics;
+        this.graphics = graphics;
 
         // Tamaño de celda cuadrada.
         float idealCellWidth = screenWidth / columns;
@@ -65,11 +69,14 @@ public class MapGrid {
 
         this.cells = new Cell[rows][columns];
 
-        createCellsFromMap(mapData.map);
+        this.backgroundImage = this.graphics.loadImage(mapData.getBackground());
+        createCellsFromMap(mapData.getMap());
     }
 
     // RENDERIZADO
     public void render() {
+        this.graphics.drawImage(this.backgroundImage, (int)startingPoint.getX() + (int)this.screenWidth / 2 , 0, (int)this.screenWidth, (int)this.screenHeight);
+        this.graphics.drawImage(this.backgroundImage, (int)startingPoint.getX() + (int)this.screenWidth / 2 , (int)this.screenHeight, (int)this.screenWidth, (int)this.screenHeight);
         for (int row = 0; row < rows; row++) {
             for (int col = 0; col < columns; col++) {
                 Cell cell = cells[row][col];
@@ -95,7 +102,7 @@ public class MapGrid {
                 float y = offsetY + row * cellSize;
 
                 Cell cell = new Cell(
-                        iGraphics,
+                        graphics,
                         x,
                         y,
                         cellSize,

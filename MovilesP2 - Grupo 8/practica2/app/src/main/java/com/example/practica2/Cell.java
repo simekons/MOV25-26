@@ -1,5 +1,7 @@
 package com.example.practica2;
 
+import com.example.androidengine.AndroidGraphics;
+import com.example.androidengine.AndroidImage;
 import com.example.engine.IGraphics;
 
 /*
@@ -7,7 +9,9 @@ import com.example.engine.IGraphics;
  */
 public class Cell {
     // Gráficos.
-    private IGraphics iGraphics;
+    private AndroidGraphics graphics;
+
+    private AndroidImage cellImage;
 
     // Color.
     private int color;
@@ -31,8 +35,8 @@ public class Cell {
     private boolean available;
 
     // CONSTRUCTORA
-    public Cell(IGraphics iGraphics, float x, float y, float size, int color, int row, int col, boolean path){
-        this.iGraphics = iGraphics;
+    public Cell(AndroidGraphics graphics, float x, float y, float size, int color, int row, int col, boolean path){
+        this.graphics = graphics;
         this.color = color;
         this.row = row;
         this.column = col;
@@ -48,19 +52,19 @@ public class Cell {
     public void render() {
         // Si es camino, se dibuja llena.
         if (this.path) {
-            iGraphics.setColor(0xff653c10); // color del camino (amarillo)
-            iGraphics.fillRectangle(x, y, size, size);
+            graphics.setColor(0xff653c10); // color del camino (amarillo)
+            graphics.fillRectangle(x, y, size, size);
         }
         else {
             // Luego, el borde.
             if (this.available) {
-                iGraphics.setColor(0xff00AA00); // Borde verde si está disponible.
+                graphics.setColor(0xff00AA00); // Borde verde si está disponible.
             } else {
-                iGraphics.setColor(0xff808080); // Borde gris si no lo está.
+                graphics.setColor(0xff808080); // Borde gris si no lo está.
             }
 
             // Dibuja solo el borde.
-            iGraphics.drawRect(x, y, size, size);
+            graphics.drawRect(x, y, size, size);
         }
     }
 
