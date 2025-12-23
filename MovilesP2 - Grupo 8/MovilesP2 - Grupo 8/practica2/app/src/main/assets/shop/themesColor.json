@@ -1,0 +1,22 @@
+{
+  "item0": {
+    "buttonColor": "0xfffae105",
+    "backgroundColor":  "0xffffffff"
+  },
+  "item1": {
+    "buttonColor": "0xffeb0a2d",
+    "backgroundColor": "0xfff596a5"
+  },
+  "item2": {
+    "buttonColor": "0xfffae105",
+    "backgroundColor": "0xfff0e69e"
+  },
+  "item3": {
+    "buttonColor": "0xff1fcc2d",
+    "backgroundColor": "0xffa0d9a5"
+  },
+  "item4": {
+    "buttonColor": "0xff1060e0",
+    "backgroundColor": "0xffa2c1f2"
+  }
+}

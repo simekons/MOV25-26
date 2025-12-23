@@ -62,9 +62,46 @@ public class GameLoader {
         String path = "levels/" + world + "/" + level + ".json";
 
         JSONObject jsonObject = readJSONFromAssets(path);
+
         if (jsonObject == null) return null;
 
-        return levelInfo(jsonObject, _world, _level, false);
+        try{
+            // Las oleadas.
+            JSONArray wave = jsonObject.getJSONArray("waves");
+
+            for (int i = 0; i < wave.length(); i++){
+                JSONObject waveObj = wave.getJSONObject(i);
+
+                String enemyType = waveObj.keys().next();
+
+                int amount = waveObj.getInt(enemyType);
+
+                this.waveTypes.add(enemyType);
+                this.waveAmounts.add(amount);
+            }
+
+            // La recompensa.
+            int reward = jsonObject.getInt("reward");
+
+            JSONArray roadJson = jsonObject.getJSONArray("road");
+
+            // El camino.
+            ArrayList<String> road = new ArrayList<>();
+
+            for (int i = 0; i < roadJson.length(); i++){
+                road.add(roadJson.getString(i));
+            }
+
+            // El fondo.
+            String background = jsonObject.getString("levelBackground");
+
+            return new LevelData(waveTypes, waveAmounts, reward, road, background, 0, _world, _level);
+
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
     }
 
     // Carga estilo de los botones de los niveles
@@ -199,8 +236,24 @@ public class GameLoader {
 
     // !!!!!
     // Guarda progreso del nivel
-    public void saveLevel(){
+    public void saveLevel(List<Integer> bubblesToLaunch, int nRows, List<Integer> bubblesInBoard, int score, String levelPath) {
+        try{
 
+            path = levelPath;
+            JSONObject levelJson = new JSONObject();
+            //JSONArray bubblesToLaunchArray = new JSONArray(bubblesToLaunch);
+            //JSONArray bubblesInBoardArray = new JSONArray(bubblesInBoard);
+
+            //levelJson.put("bubblesToLaunch", bubblesToLaunchArray);
+            //levelJson.put("numRows", nRows);
+            //levelJson.put("bubblesInBoard", bubblesInBoardArray);
+            //levelJson.put("score", score);
+
+            file.saveDataWithHash(path, levelJson);
+
+        }catch (Exception e) {
+
+        }
     }
 
 

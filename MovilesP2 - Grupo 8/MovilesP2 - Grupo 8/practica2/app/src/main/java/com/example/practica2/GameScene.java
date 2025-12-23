@@ -181,16 +181,16 @@ public class GameScene implements IScene {
     // RENDERIZADO
     @Override
     public void render() {
+        // Banda de abajo
+        graphics.setColor(0xFF808080);
+        graphics.fillRectangle(0, 320, 600, 80);
 
         mapGrid.render();
 
-        // Banda de abajo
-        graphics.setColor(0xFFAAAAAA);
-        graphics.fillRectangle(0, 320, 600, 80);
-        graphics.setColor(0xff000000);
-        graphics.drawImage(coinimg, 15, 390, 40, 30);
-        graphics.drawText(moneyText, String.valueOf(money), 50, 380);
-        graphics.drawImage(heartimg, 18, 350, 30, 30);
+        graphics.setColor(0xFF000000);
+        graphics.drawImage(coinimg, 15, 380, 30, 30);
+        graphics.drawText(moneyText, String.valueOf(money), 50, 390);
+        graphics.drawImage(heartimg, 18, 340, 30, 30);
         graphics.drawText(moneyText, String.valueOf(lives), 50, 350);
 
         if (upgrades) {
