@@ -27,6 +27,8 @@ public class Button {
     // Color.
     private int color;
 
+    private boolean isShopItem = false;
+
     // CONSTRUCTORA (con texto)
     public Button(IGraphics graphics, IFont font, float x, float y, float width, float height, String text, int color)
     {
@@ -51,10 +53,25 @@ public class Button {
         this.height = height;
     }
 
+    public Button(IGraphics graphics, IImage image, float x, float y, float width, float height, Boolean isItem)
+    {
+        iGraphics = graphics;
+        iImage = image;
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+        this.isShopItem = isItem;
+    }
+
     // RENDERIZADO
     public void render() {
         if (iImage != null)
             iGraphics.drawImage(iImage, (int) x, (int) y, (int) width, (int) height);
+        else if(isShopItem)
+        {
+            iGraphics.drawRect(x, y, width, height);
+        }
         else {
             iGraphics.setColor(color);
             iGraphics.fillRoundRectangle(x, y, width, height, 5);
@@ -80,6 +97,11 @@ public class Button {
         return touchX >= (x - width / 2) && touchX <= (x + width / 2) && touchY >= (y - height / 2) && touchY <= (y + height / 2);
     }
 
+    // --------------------------GETTERS--------------------------
+    public float getX() { return this.x; }
+    public float getY() { return this.y; }
+    public float getWidth() { return width; }
+    public float getHeight() { return height; }
     // --------------------------SETTERS--------------------------
 
     // Imagen de botón.

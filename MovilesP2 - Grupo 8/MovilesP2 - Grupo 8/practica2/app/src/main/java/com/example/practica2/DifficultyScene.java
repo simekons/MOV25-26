@@ -25,6 +25,8 @@ public class DifficultyScene implements IScene {
     // Audio.
     private IAudio iAudio;
 
+    private GameLoader gameLoader;
+
     // Botones de menú.
     private Button shortButton;
     private Button longButton;
@@ -42,11 +44,13 @@ public class DifficultyScene implements IScene {
     private int difficulty;
 
     // CONSTRUCTORA
-    public DifficultyScene(){
+    public DifficultyScene(GameLoader gameLoader){
         this.iEngine = AndroidEngine.get_instance();
         this.iGraphics = this.iEngine.getGraphics();
         this.iAudio = this.iEngine.getAudio();
         this.startGame = false;
+
+        this.gameLoader = gameLoader;
 
         IFont fontButton = iGraphics.createFont("fonts/fff.ttf", 15, false, false);
         shortButton = new Button(iGraphics, fontButton, 300,150,150,50, "Short", 0xFF808080);
@@ -72,7 +76,7 @@ public class DifficultyScene implements IScene {
     public void update(float deltaTime) {
         if(startGame){
             iAudio.playSound(soundButton, false);
-            iEngine.setScenes(new GameScene(this.difficulty));
+            iEngine.setScenes(new GameScene(gameLoader, this.difficulty));
         }
     }
 

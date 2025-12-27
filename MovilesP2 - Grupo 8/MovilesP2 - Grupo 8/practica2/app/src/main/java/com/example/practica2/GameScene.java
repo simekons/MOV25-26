@@ -113,8 +113,8 @@ public class GameScene implements IScene {
     private LevelData levelData;
 
     // CONSTRUCTORA
-    public GameScene(LevelData levelData){
-        init();
+    public GameScene(LevelData levelData, GameLoader gameLoader){
+        init(gameLoader);
 
         // Se instancia el levelData
         this.levelData = levelData;
@@ -125,8 +125,8 @@ public class GameScene implements IScene {
         this.mapGrid = new MapGrid(map, 600, 320, graphics);
     }
 
-    public GameScene(int difficulty) {
-        init();
+    public GameScene(GameLoader gameLoader, int difficulty) {
+        init(gameLoader);
 
         this.difficulty = difficulty;
 
@@ -135,12 +135,12 @@ public class GameScene implements IScene {
 
     }
 
-    private void init(){
+    private void init(GameLoader gameLoader){
         this.iEngine = AndroidEngine.get_instance();
         this.graphics = this.iEngine.getGraphics();
         this.audio = this.iEngine.getAudio();
         this.androidFile = this.iEngine.getFile();
-        this.gameLoader = new GameLoader(this.androidFile);
+        this.gameLoader = gameLoader;
 
         this.iEngine.getAds().setBannerVisible(false);
         this.money = 150;
@@ -282,7 +282,7 @@ public class GameScene implements IScene {
         enemies.removeIf(e -> !e.isActive());
 
         if (lives == 0){
-            iEngine.setScenes(new FinalScene(this.difficulty, false));
+            iEngine.setScenes(new FinalScene(gameLoader, this.difficulty, false));
         }
     }
 
@@ -349,12 +349,12 @@ public class GameScene implements IScene {
                 } else {
                     DiamondManager.addDiamonds(DiamondManager.getDiamondsPerLevel());
                     gameLoader.saveDiamonds(DiamondManager.getDiamonds());
-                    AdventureScene adventureScene = new AdventureScene();
+                    AdventureScene adventureScene = new AdventureScene(gameLoader);
                     adventureScene.loadLevelStates();
                     adventureScene.setLevelState(this.level - 1, AdventureScene.LevelState.UNLOCKED_COMPLETED);
                     adventureScene.setLevelState(level, AdventureScene.LevelState.UNLOCKED_INCOMPLETE);
                     gameLoader.saveLevelsState(adventureScene.getLevelStates());
-                    this.iEngine.setScenes(new FinalScene(this.difficulty, true));
+                    this.iEngine.setScenes(new FinalScene(gameLoader, this.difficulty, true));
                 }
                 break;
             case 1:
@@ -364,7 +364,7 @@ public class GameScene implements IScene {
                 } else {
                     DiamondManager.addDiamonds(DiamondManager.getDiamondsPerLevel());
                     gameLoader.saveDiamonds(DiamondManager.getDiamonds());
-                    this.iEngine.setScenes(new FinalScene(this.difficulty, true));
+                    this.iEngine.setScenes(new FinalScene(gameLoader, this.difficulty, true));
                 }
                 break;
             case 2:

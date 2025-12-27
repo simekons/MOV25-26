@@ -16,11 +16,16 @@ public class GameLoader {
 
     private AndroidFile file;
 
+    private ShopManager shopManager;
+    private ShopCatalog shopCatalog;
+    private PlayerShopState playerShopState;
+
     private ArrayList<AdventureScene.LevelState> levelStates;
     private static ArrayList<Theme> themes;
     private ArrayList<Boolean> itemsState;
     private ArrayList<Boolean> fruitItems;
     private ArrayList<Boolean> selectedItems;
+    private ArrayList<ShopItemData> shopItems;
 
     private ArrayList<String> waveTypes;
 
@@ -34,15 +39,26 @@ public class GameLoader {
     public GameLoader(AndroidFile iFile)
     {
         this.file = iFile;
+
+        String[] files = this.file.listFiles("levels/world1");
+        for (String f : files) {
+            Log.e("ASSETS", f);
+        }
+
         levelStates = new ArrayList<>();
         waveAmounts = new ArrayList<>();
         waveTypes = new ArrayList<>();
         selectedItems = new ArrayList<>();
         themes = new ArrayList<>();
-        String[] files = this.file.listFiles("levels/world1");
-        for (String f : files) {
-            Log.e("ASSETS", f);
-        }
+        shopItems = new ArrayList<>();
+
+        loadData();
+    }
+
+    private void loadData()
+    {
+        loadGenericData();
+        loadShop();
     }
 
     // Lee archivo json de las carpetas del proyecto (ej: assets)
@@ -90,30 +106,49 @@ public class GameLoader {
         }
     }
 
-    // Carga estilo de los colores de los themes de la tienda (color de fondo y color secundario)
-    public void loadThemes()
+    private void loadShop()
     {
+        this.shopItems = loadShopItems();
+        this.shopCatalog = new ShopCatalog(shopItems);
+
+        this.playerShopState = loadPlayerShopState();
+
+        this.shopManager = new ShopManager(shopCatalog, playerShopState);
+    }
+
+    // Carga items de la tienda
+    public ArrayList<ShopItemData> loadShopItems()
+    {
+        ArrayList<ShopItemData> items = new ArrayList<>();
+
         try{
-            JSONObject jsonObject = readJSONFromAssets("shop/themesColor.json");
+            JSONObject root = readJSONFromAssets("shop/shopItems.json");
+            JSONArray jsonItems = root.getJSONArray("items");
 
-            themes.clear();
+            for (int i = 0; i < jsonItems.length(); i++) {
+                JSONObject obj = jsonItems.getJSONObject(i);
 
-            for (int i = 0; i <= jsonObject.length(); i++) {
-                JSONObject item = jsonObject.getJSONObject("item" + i);
+                String id = obj.getString("id");
+                ShopItemData.ShopItemType type = ShopItemData.ShopItemType.valueOf(obj.getString("type"));
+                int cost = obj.getInt("cost");
+                String description = obj.getString("description");
+                String image = obj.getString("image");
+                int color = obj.getInt("color");
 
-                int buttonColor = (int) Long.parseLong(item.getString("buttonColor").substring(2), 16);
-                int backgroundColor = (int) Long.parseLong(item.getString("backgroundColor").substring(2), 16);
-
-                themes.add(new Theme(buttonColor, backgroundColor));
+                items.add(new ShopItemData(
+                        id, type, cost, description, image, color
+                ));
             }
         }
         catch (Exception e) {
 
         }
+
+        return items;
     }
 
     // !!!!!!
-    // Carga datos generales del almacenamiento interno (monedas y theme guardado)
+    // Carga datos generales del almacenamiento interno (diamantes y theme guardado)
     public void loadGenericData()
     {
         try {
@@ -157,14 +192,27 @@ public class GameLoader {
         return levelStates;
     }
 
-    // !!!!!
-    // Carga estado de los items de la tienda del almacenamiento interno
-    public ArrayList<Boolean> loadItemsState()
-    {
-        JSONObject jsonObject = file.loadDataWithHash("itemsState.json");
-        itemsState.clear();
-        itemsState = itemsStateInfo(jsonObject);
-        return itemsState;
+    // Carga estado de los items de la tienda
+    public PlayerShopState loadPlayerShopState() {
+        PlayerShopState state = new PlayerShopState();
+
+        try {
+            JSONObject json = file.loadDataWithHash("player_shop.json");
+
+
+            JSONArray purchased = json.getJSONArray("purchased");
+            for (int i = 0; i < purchased.length(); i++) {
+                state.purchase(purchased.getString(i));
+            }
+
+            state.selectTower(json.optString("selectedTower", null));
+            state.selectSkin(json.optString("selectedSkin", null));
+
+        } catch (Exception e) {
+
+        }
+
+        return state;
     }
 
 
@@ -242,43 +290,21 @@ public class GameLoader {
     }
 
 
-    // !!!!!
-    // Guarda estado de los items de la tienda (bloqueados o desbloqueados)
-    public void saveItemsState(ArrayList<Boolean> itemsState)
-    {
-        try{
-            path = "itemsState.json";
-            JSONObject itemsStateJson = new JSONObject();
+    // Guarda estado de los items de la tienda
+    public void savePlayerShopState(PlayerShopState state) {
+        try {
+            path = "player_shop.json";
+            JSONObject json = new JSONObject();
 
-            for (int i = 1; i < itemsState.size() + 1; i++)
-            {
-                if(itemsState.get(i - 1))
-                    itemsStateJson.put("item" + i, "Locked");
-                else
-                    itemsStateJson.put("item" + i, "Unlocked");
-            }
+            JSONArray purchased = new JSONArray(state.getPurchasedItems());
+            json.put("purchased", purchased);
 
-            file.saveDataWithHash(path, itemsStateJson);
+            json.put("selectedTower", state.getSelectedTowerId());
+            json.put("selectedSkin", state.getSelectedSkinId());
 
-        }catch (Exception e) {
+            file.saveDataWithHash(path, json);
 
-        }
-    }
-
-    // !!!!!
-    // Guarda si los items de personalización de la escena de juego están seleccionados o no
-    public void saveFruitItems(ArrayList<ShopItem> fruitItems)
-    {
-        try{
-            path = "fruitItems.json";
-            JSONObject fruitItemsJson = new JSONObject();
-
-            for (int i = 1; i < fruitItems.size() + 1; i++)
-                fruitItemsJson.put("item" + i, fruitItems.get(i - 1).isSelected());
-
-            file.saveDataWithHash(path, fruitItemsJson);
-
-        }catch (Exception e) {
+        } catch (Exception e) {
 
         }
     }
@@ -424,6 +450,10 @@ public class GameLoader {
         }
 
     }
+
+    public ShopCatalog getShopCatalog() { return this.shopCatalog; }
+    public PlayerShopState getPlayerShopState() { return this.playerShopState; }
+    public ShopManager getShopManager() { return shopManager; }
 
     public static String getPath() { return path; }
     public int getColorUnlocked() { return colorUnlocked; }

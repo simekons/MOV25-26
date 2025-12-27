@@ -1,0 +1,52 @@
+{
+  "items": [
+    {
+      "id": "tower1",
+      "type": "TOWER",
+      "cost": 100,
+      "description": "AAA",
+      "image": "sprites/heart.png",
+      "color": 16777215
+    },
+    {
+      "id": "tower2",
+      "type": "TOWER",
+      "cost": 150,
+      "description": "BBB",
+      "image": "sprites/heart.png",
+      "color": 16711680
+    },
+    {
+      "id": "tower3",
+      "type": "TOWER",
+      "cost": 200,
+      "description": "CCC",
+      "image": "sprites/heart.png",
+      "color": 16711680
+    },
+    {
+      "id": "skin1",
+      "type": "SKIN",
+      "cost": 100,
+      "description": "DDD",
+      "image": "sprites/heart.png",
+      "color": 16766720
+    },
+    {
+      "id": "skin2",
+      "type": "SKIN",
+      "cost": 150,
+      "description": "EEE",
+      "image": "sprites/heart.png",
+      "color": 16766720
+    },
+    {
+      "id": "skin3",
+      "type": "SKIN",
+      "cost": 200,
+      "description": "FFF",
+      "image": "sprites/heart.png",
+      "color": 16766720
+    }
+  ]
+}

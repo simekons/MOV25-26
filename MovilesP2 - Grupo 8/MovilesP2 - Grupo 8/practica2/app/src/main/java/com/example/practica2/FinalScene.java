@@ -57,14 +57,14 @@ public class FinalScene implements IScene {
     private boolean adWatched = false;
 
     // CONSTRUCTORA
-    public FinalScene(int difficulty, boolean win) {
+    public FinalScene(GameLoader gameLoader, int difficulty, boolean win) {
         this.iEngine = AndroidEngine.get_instance();
         this.iGraphics = iEngine.getGraphics();
         this.iAudio = iEngine.getAudio();
         this.androidFile = iEngine.getFile();
         this.androidAds = iEngine.getAds();
 
-        gameLoader = new GameLoader(this.androidFile);
+        this.gameLoader = gameLoader;
 
         this.difficulty = difficulty;
         this.win = win;
@@ -109,11 +109,11 @@ public class FinalScene implements IScene {
                 case TOUCH_UP:
                     if(playAgainButton.isTouched(e.x, e.y))
                     {
-                        this.iEngine.setScenes(new GameScene(this.difficulty));
+                        this.iEngine.setScenes(new GameScene(gameLoader, this.difficulty));
                     }
                     if(menuButton.isTouched(e.x, e.y))
                     {
-                        this.iEngine.setScenes(new MenuScene());
+                        this.iEngine.setScenes(new MenuScene(gameLoader));
                     }
                     if(adButton.isTouched(e.x, e.y))
                     {

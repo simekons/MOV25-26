@@ -45,6 +45,7 @@ public class AndroidFont implements IFont
     @Override
     public boolean isBold() { return this.bold; }
 
+    public void setSize(int size) {this.size = size; }
     // El estilo de la fuente.
     public void setStyle(int style) { this.typeface = Typeface.create(typeface, style); }
 }

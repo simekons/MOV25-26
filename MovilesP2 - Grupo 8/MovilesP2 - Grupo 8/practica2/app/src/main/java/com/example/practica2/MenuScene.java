@@ -45,6 +45,8 @@ public class MenuScene implements IScene {
     // Sonido de botón.
     private ISound soundButton;
 
+    private GameLoader gameLoader;
+
     // Booleano de juego.
     private boolean startGame;
 
@@ -55,12 +57,13 @@ public class MenuScene implements IScene {
     private boolean shop = false;
 
     // CONSTRUCTORA
-    public MenuScene(){
+    public MenuScene(GameLoader gameLoader){
         this.iEngine = AndroidEngine.get_instance();
         this.iGraphics = this.iEngine.getGraphics();
         this.iAudio = this.iEngine.getAudio();
         this.iEngine.getAds().setBannerVisible(true);
         this.startGame = false;
+        this.gameLoader = gameLoader;
 
         IFont fontButton = iGraphics.createFont("fonts/fff.ttf", 20, false, false);
         playButton = new Button(iGraphics, fontButton, 225,200,125,50, "Jugar", 0xFF808080);
@@ -87,13 +90,13 @@ public class MenuScene implements IScene {
     @Override
     public void update(float deltaTime) {
         if(startGame){
-            iEngine.setScenes(new DifficultyScene());
+            iEngine.setScenes(new DifficultyScene(gameLoader));
         }
         else if (shop){
-            
+            iEngine.setScenes(new ShopScene(gameLoader));
         }
         else if (adventure){
-            iEngine.setScenes(new AdventureScene());
+            iEngine.setScenes(new AdventureScene(gameLoader));
         }
     }
 
@@ -122,6 +125,5 @@ public class MenuScene implements IScene {
                     break;
             }
         }
-
     }
 }

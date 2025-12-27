@@ -72,7 +72,7 @@ public class AdventureScene implements IScene {
         UNLOCKED_COMPLETED,
     }
 
-    public AdventureScene(){
+    public AdventureScene(GameLoader gameLoader){
         this.engine = AndroidEngine.get_instance();
         this.graphics = this.engine.getGraphics();
         this.audio = this.engine.getAudio();
@@ -84,7 +84,7 @@ public class AdventureScene implements IScene {
         levelButtons = new ArrayList<>();
         levelStates = new ArrayList<>();
 
-        this.gameLoader = new GameLoader(this.file);
+        this.gameLoader = gameLoader;
 
         this.exitButton = new Button(this.graphics, this.exitImage, 25, 25, 50, 50);
 
@@ -258,7 +258,7 @@ public class AdventureScene implements IScene {
                     if(exitButton.imageIsTouched(e.x, e.y))
                     {
                         this.audio.playSound(clickButton, false);
-                        this.engine.setScenes(new MenuScene());
+                        this.engine.setScenes(new MenuScene(gameLoader));
                     }
                     handleLevelButtons(e);
                     break;
@@ -331,7 +331,7 @@ public class AdventureScene implements IScene {
 
                 // Lanza la partida con los datos cargados
                 if (levelData != null) {
-                    this.engine.setScenes(new GameScene(levelData));
+                    this.engine.setScenes(new GameScene(levelData, gameLoader));
                 }
             }
         }

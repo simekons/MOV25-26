@@ -12,6 +12,7 @@ public class DiamondManager {
     {
         diamonds += diamondAmount;
     }
+    public static void subtractDiamonds(int diamondAmount) { diamonds -= diamondAmount; }
 
     public static void setDiamonds(int diamonds) { DiamondManager.diamonds = diamonds; }
 
