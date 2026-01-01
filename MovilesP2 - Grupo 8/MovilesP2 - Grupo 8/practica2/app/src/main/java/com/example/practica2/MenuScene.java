@@ -65,10 +65,10 @@ public class MenuScene implements IScene {
         this.startGame = false;
         this.gameLoader = gameLoader;
 
-        IFont fontButton = iGraphics.createFont("fonts/fff.ttf", 20, false, false);
-        playButton = new Button(iGraphics, fontButton, 225,200,125,50, "Jugar", 0xFF808080);
-        adventureButton = new Button(iGraphics, fontButton, 375 ,200,125,50, "Aventura", 0xFF808080);
-        shopButton = new Button(iGraphics, fontButton, 225,275,125,50, "Tienda", 0xff9CE4F5);
+        IFont fontButton = iGraphics.createFont("fonts/pixellari.ttf", 30, false, false);
+        playButton = new Button(iGraphics, fontButton, 225,200,125,50, "Jugar", this.gameLoader.getButtonColor());
+        adventureButton = new Button(iGraphics, fontButton, 375 ,200,125,50, "Aventura", this.gameLoader.getButtonColor());
+        shopButton = new Button(iGraphics, fontButton, 225,275,125,50, "Tienda", this.gameLoader.getButtonColor2());
 
         titleFont = iGraphics.createFont("fonts/pixelGotic.ttf", 30, false, false);
 
@@ -78,6 +78,8 @@ public class MenuScene implements IScene {
     // RENDERIZADO
     @Override
     public void render() {
+        iGraphics.clear(gameLoader.getBackgroundColor());
+
         iGraphics.setColor(0xff000000);
         iGraphics.drawText(titleFont, "TOWER", 300, 75);
         iGraphics.drawText(titleFont, "DEFENSE", 300, 150);

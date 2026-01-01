@@ -6,7 +6,9 @@
       "cost": 100,
       "description": "AAA",
       "image": "sprites/heart.png",
-      "color": 16777215
+      "backgroundColor": "0",
+      "buttonColor": "0",
+      "buttonColor2": "0"
     },
     {
       "id": "tower2",
@@ -14,7 +16,9 @@
       "cost": 150,
       "description": "BBB",
       "image": "sprites/heart.png",
-      "color": 16711680
+      "backgroundColor": "0",
+      "buttonColor": "0",
+      "buttonColor2": "0"
     },
     {
       "id": "tower3",
@@ -22,7 +26,9 @@
       "cost": 200,
       "description": "CCC",
       "image": "sprites/heart.png",
-      "color": 16711680
+      "backgroundColor": "0",
+      "buttonColor": "0",
+      "buttonColor2": "0"
     },
     {
       "id": "skin1",
@@ -30,7 +36,9 @@
       "cost": 100,
       "description": "DDD",
       "image": "sprites/heart.png",
-      "color": 16766720
+      "backgroundColor": "0xfff596a5",
+      "buttonColor": "0xffeb0a2d",
+      "buttonColor2": "0xfffcccd4"
     },
     {
       "id": "skin2",
@@ -38,7 +46,9 @@
       "cost": 150,
       "description": "EEE",
       "image": "sprites/heart.png",
-      "color": 16766720
+      "backgroundColor": "0xfff0e69e",
+      "buttonColor": "0xfffae105",
+      "buttonColor2": "0xfffff9c9"
     },
     {
       "id": "skin3",
@@ -46,7 +56,9 @@
       "cost": 200,
       "description": "FFF",
       "image": "sprites/heart.png",
-      "color": 16766720
+      "backgroundColor": "0xffa0d9a5",
+      "buttonColor": "0xff1fcc2d",
+      "buttonColor2": "0xffcef5d1"
     }
   ]
 }

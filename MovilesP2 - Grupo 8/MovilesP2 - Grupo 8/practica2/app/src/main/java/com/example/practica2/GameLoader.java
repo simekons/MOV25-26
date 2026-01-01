@@ -34,6 +34,7 @@ public class GameLoader {
     private static String path;
 
     private int colorUnlocked, colorLocked, colorPassed;
+    private int backgroundColor, buttonColor, buttonColor2;
 
     // Constructora de la clase
     public GameLoader(AndroidFile iFile)
@@ -133,10 +134,12 @@ public class GameLoader {
                 int cost = obj.getInt("cost");
                 String description = obj.getString("description");
                 String image = obj.getString("image");
-                int color = obj.getInt("color");
+                int backgroundColor = parseColor(obj, "backgroundColor");
+                int buttonColor = parseColor(obj, "buttonColor");
+                int buttonColor2 = parseColor(obj, "buttonColor2");
 
                 items.add(new ShopItemData(
-                        id, type, cost, description, image, color
+                        id, type, cost, description, image, backgroundColor, buttonColor, buttonColor2
                 ));
             }
         }
@@ -156,6 +159,14 @@ public class GameLoader {
             JSONObject jsonObject = file.loadDataWithHash(path);
             int diamonds = jsonObject.optInt("diamonds", 0);
             DiamondManager.setDiamonds(diamonds);
+            this.backgroundColor = jsonObject.optInt("backgroundColor", 0);
+            this.buttonColor = jsonObject.optInt("buttonColor", 0);
+            this.buttonColor2 = jsonObject.optInt("buttonColor2", 0);
+
+            /*if(backgroundColor == 0)
+                backgroundColor = 0xffffffff;
+            if(buttonColor == 0)
+                buttonColor = 0xff808080;*/
 
             /*if(Theme.getCurrentTheme() == null)
             {
@@ -343,12 +354,14 @@ public class GameLoader {
 
     // !!!!!
     // Guarda theme actual del juego
-    public void saveTheme(int theme)
+    public void saveTheme(int backgroundColor, int buttonColor, int buttonColor2)
     {
         try {
             path = "gameData.json";
             JSONObject jsonObject = file.loadDataWithHash(path);
-            jsonObject.put("currentTheme", theme);
+            jsonObject.put("backgroundColor", backgroundColor);
+            jsonObject.put("buttonColor", buttonColor);
+            jsonObject.put("buttonColor2", buttonColor2);
             file.saveDataWithHash(path, jsonObject);
         } catch (Exception e) {
 
@@ -451,14 +464,45 @@ public class GameLoader {
 
     }
 
-    public ShopCatalog getShopCatalog() { return this.shopCatalog; }
-    public PlayerShopState getPlayerShopState() { return this.playerShopState; }
+    private int parseColor(JSONObject obj, String key) {
+        String value = obj.optString(key, "0");
+
+        if (value.equals("0"))
+            return 0;
+
+        return (int) Long.parseLong(value.substring(2), 16);
+    }
+
+    public int getBackgroundColor()
+    {
+        if(shopManager.getSelectedSkin() != null)
+            return shopManager.getSelectedSkin().getBackgroundColor();
+        else
+            return 0xffffffff;
+    }
+
+    public int getButtonColor()
+    {
+        if(shopManager.getSelectedSkin() != null)
+            return shopManager.getSelectedSkin().getButtonColor();
+        else
+            return 0xff808080;
+    }
+
+    public int getButtonColor2()
+    {
+        if(shopManager.getSelectedSkin() != null)
+            return shopManager.getSelectedSkin().getButtonColor2();
+        else
+            return 0xff9ce4f5;
+    }
+
+
     public ShopManager getShopManager() { return shopManager; }
 
     public static String getPath() { return path; }
-    public int getColorUnlocked() { return colorUnlocked; }
-    public int getColorLocked() { return colorLocked; }
 
-    public void setThemes() {Theme.setThemes(themes);}
+
+    //public void setThemes() {Theme.setThemes(themes);}
 
 }

@@ -157,21 +157,25 @@ public class ShopScene implements IScene {
                     }
                     if (checkButtons(towerButtons, e)) return;
                     if (checkButtons(skinButtons, e)) return;
-                    if (infoPanel.getActionButton().isTouched(e.x, e.y)) {
-
-                        if (!shopManager.isPurchased(selectedItemId)) {
-                            shopManager.buyItem(selectedItemId);
-                            gameLoader.savePlayerShopState(shopManager.getPlayerShopState());
-                            gameLoader.saveDiamonds(DiamondManager.getDiamonds());
+                    if(infoPanel.getActionButton() != null)
+                    {
+                        if (infoPanel.getActionButton().isTouched(e.x, e.y)) {
+                            if (!shopManager.isPurchased(selectedItemId)) {
+                                shopManager.buyItem(selectedItemId);
+                                gameLoader.savePlayerShopState(shopManager.getPlayerShopState());
+                                gameLoader.saveDiamonds(DiamondManager.getDiamonds());
+                                gameLoader.saveTheme(shopManager.getSelectedSkin().getBackgroundColor(), shopManager.getSelectedSkin().getButtonColor(), shopManager.getSelectedSkin().getButtonColor2());
+                            }
+                            else if (!shopManager.isSelected(selectedItemId)) {
+                                shopManager.selectItem(selectedItemId);
+                                gameLoader.savePlayerShopState(shopManager.getPlayerShopState());
+                                gameLoader.saveTheme(shopManager.getSelectedSkin().getBackgroundColor(), shopManager.getSelectedSkin().getButtonColor(), shopManager.getSelectedSkin().getButtonColor2());
+                            }
+                            infoPanel.setItem(
+                                    shopManager.getShopCatalog().getItem(selectedItemId),
+                                    shopManager
+                            );
                         }
-                        else if (!shopManager.isSelected(selectedItemId)) {
-                            shopManager.selectItem(selectedItemId);
-                        }
-
-                        infoPanel.setItem(
-                                shopManager.getShopCatalog().getItem(selectedItemId),
-                                shopManager
-                        );
                     }
                     break;
                 default:

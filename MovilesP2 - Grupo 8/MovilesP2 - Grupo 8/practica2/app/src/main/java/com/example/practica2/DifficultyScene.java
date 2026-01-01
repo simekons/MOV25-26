@@ -52,7 +52,7 @@ public class DifficultyScene implements IScene {
 
         this.gameLoader = gameLoader;
 
-        IFont fontButton = iGraphics.createFont("fonts/fff.ttf", 15, false, false);
+        IFont fontButton = iGraphics.createFont("fonts/pixellari.ttf", 25, false, false);
         shortButton = new Button(iGraphics, fontButton, 300,150,150,50, "Short", 0xFF808080);
         longButton = new Button(iGraphics, fontButton, 300,225,150,50, "Long", 0xFF808080);
         infButton = new Button(iGraphics, fontButton, 300,300,150,50, "Infinity", 0xFF808080);

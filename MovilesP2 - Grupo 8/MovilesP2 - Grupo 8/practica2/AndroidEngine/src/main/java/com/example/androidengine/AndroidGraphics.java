@@ -103,7 +103,7 @@ public class AndroidGraphics implements IGraphics
 
     // Método que limpia la escena.
     @Override
-    public void clear(int color) {}
+    public void clear(int color) { this.canvas.drawColor(color); }
 
     // Método que carga una imagen.
     @Override
