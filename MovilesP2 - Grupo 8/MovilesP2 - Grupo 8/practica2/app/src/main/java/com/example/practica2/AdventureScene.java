@@ -66,6 +66,13 @@ public class AdventureScene implements IScene {
 
     private String worldName;
 
+    private Button leftArrow;
+
+    private Button rightArrow;
+
+    private int currentWorld;
+
+    private int totalWorlds;
     public enum LevelState {
         LOCKED,
         UNLOCKED_INCOMPLETE,
@@ -83,10 +90,14 @@ public class AdventureScene implements IScene {
 
         levelButtons = new ArrayList<>();
         levelStates = new ArrayList<>();
+        this.totalWorlds = 2;
+        this.currentWorld= 0;
 
         this.gameLoader = gameLoader;
 
         this.exitButton = new Button(this.graphics, this.exitImage, 25, 25, 50, 50);
+        leftArrow = new Button(graphics, this.exitImage, 50, 300, 50, 50);
+        rightArrow = new Button(graphics, this.exitImage, 500, 300, 50, 50);
 
         buttonsVariables();
 
@@ -108,99 +119,48 @@ public class AdventureScene implements IScene {
         this.scrollSpeed = 10;
         this.isScrolling = false;
     }
-    public void createLevelsButtons()
-    {
+    public void createLevelsButtons() {
         levelButtons.clear();
-        int y = offsetY;
-        int x;
+
+        int x, y;
         int separationX = buttonDimension + 20;
-        try
-        {
-            // Almacena los archivos que se encuentran dentro de "levels" (carpetas de los mundos)
-            String[] worlds = engine.getFile().listFiles("levels");
-            int buttonIndex = 0;
+        int separationY = buttonDimension + 20;
 
-            // Recorre las carpetas de los mundos
-            for(int j = 0; j < worlds.length; j++)
-            {
-                switch(j){ // temporal, no va
-                    case 0:
-                        this.worldName = "Mundo 1 - Bosque";
-                        break;
-                    default:
-                        break;
-                }
-                // Almacena los niveles que se encuentran en ese mundo
-                String[] levels = engine.getFile().listFiles("levels/" + worlds[j]);
+        int levelsPerWorld = 14;
+        int baseIndex = currentWorld * levelsPerWorld;
 
-                int columnIndex = 0;
-                int rowStartY = y;
-                // Recorre todos los niveles
-                for(int i = 0; i < levels.length; i++)
-                {
-                    // Ignora los archivos "style.json"
-                    if(!Objects.equals(levels[i], "style.json"))
-                    {
-                        // x = 100 + 130
-                        x = offsetX + ((i%5) * separationX);
-                        int currentY = rowStartY;
+        // ruta del style.json de cada mundo
+        this.gameLoader.loadStyle(currentWorld);
+        for (int i = 0; i < levelsPerWorld; i++) {
+            int col = i % 5;
+            int row = i / 5;
 
-                        // x = 100, 100 + 110 * i
-                        if (columnIndex == 5){
-                            columnIndex = 0;
-                            rowStartY += separationBetweenButtons;
-                            currentY = rowStartY;
-                        }
-                        // Si el juego no tiene progreso, crea los botones por defecto
-                        if(isNewGame)
-                        {
-                            // El primer botón estará desbloqueado y sin completar
-                            if(buttonIndex == 0)
-                            {
-                                levelButtons.add(new LevelButton(
-                                        this.graphics, scoreFont, x, currentY, buttonDimension, buttonDimension,
-                                        String.valueOf(buttonIndex + 1), 0xff116D3A, 0xff000000,
-                                        LevelState.UNLOCKED_INCOMPLETE, j + 1, buttonIndex));
-                            }
-                            // El resto estarán bloqueados
-                            else
-                            {
-                                levelButtons.add(new LevelButton(
-                                        this.graphics, lockImage, x, currentY, buttonDimension, buttonDimension,
-                                        0xff88A536, LevelState.LOCKED, j + 1, buttonIndex));
-                            }
-                            levelStates.add(levelButtons.get(buttonIndex).getLevelState());
-                        }
-                        // Si el juego tiene progreso, carga el estado de los botones guardado en el almacenamiento interno
-                        else
-                        {
-                            LevelState state = levelStates.get(buttonIndex); // Estado del nivel
-                            if (state == LevelState.LOCKED || state == null) {
-                                levelButtons.add(new LevelButton(
-                                        this.graphics, lockImage, x, currentY, buttonDimension, buttonDimension,
-                                        0xff88A536, LevelState.LOCKED, j + 1, buttonIndex));
-                            } else {
-                                levelButtons.add(new LevelButton(
-                                        this.graphics, scoreFont, x, currentY, buttonDimension, buttonDimension,
-                                        String.valueOf(buttonIndex + 1), 0xff116D3A, 0xff000000,
-                                        LevelState.UNLOCKED_INCOMPLETE, j + 1, buttonIndex));
-                            }
-                        }
-                        columnIndex++;
+            x = offsetX + col * separationX;
+            y = offsetY + row * separationY;
 
-                        buttonIndex++;
+            LevelState state = levelStates.get(i);
 
-                    }
-                }
-                y = rowStartY + separationBetweenButtons;
+            if (state == LevelState.LOCKED) {
+                levelButtons.add(new LevelButton(
+                        graphics, lockImage, x, y,
+                        buttonDimension, buttonDimension,
+                        this.gameLoader.get_locked(), LevelState.LOCKED,
+                        currentWorld + 1, i
+                ));
+            } else {
+                levelButtons.add(new LevelButton(
+                        graphics, scoreFont, x, y,
+                        buttonDimension, buttonDimension,
+                        String.valueOf(i + 1),
+                        this.gameLoader.get_unlocked(), 0xff000000,
+                        state,
+                        currentWorld + 1, i
+                ));
             }
-            maxScrollOffset = Math.max(0, (y + separationBetweenButtons) - 600);
-            gameLoader.saveLevelsState(levelStates);
-        } catch (Exception e)
-        {
-            e.printStackTrace();
         }
     }
+
+
     private void loadAssets(){
         this.exitImage = this.graphics.loadImage("sprites/bow.png");
         this.scoreFont = this.graphics.createFont("fonts/pixelGotic.ttf", 30, false, false);
@@ -216,23 +176,34 @@ public class AdventureScene implements IScene {
         //this.graphics.drawText(this.scoreFont, "Adventure", 300, 40);
 
         if (!this.created){
-            loadLevelStates();
-            createLevelsButtons();
-            setStyleLevelButtons();
+            loadLevelStatesForCurrentWorld(this.currentWorld);
             this.created = true;
         }
 
-        this.graphics.setColor(0xff116D3A);
+        switch(currentWorld){
+            case 0:
+                this.graphics.setColor(0xff116D3A);
+                break;
+            case 1:
+                this.graphics.setColor(0xffffdd77);
+                break;
+        }
         this.graphics.fillRectangle(100, 5, 400, 60);
-        this.graphics.setColor(0xff000000);
-        this.graphics.drawText(this.worldFont, this.worldName, 300, 50);
-
 
         for(LevelButton lb : this.levelButtons){
             if (lb.getY() > 60 && lb.getY() < 600){
                 lb.render();
             }
         }
+
+        leftArrow.render();
+        rightArrow.render();
+
+        String[] worldNames = {
+                "Mundo 1 - Bosque",
+                "Mundo 2 - Desierto"
+        };
+        graphics.drawText(worldFont, worldNames[currentWorld], 300, 50);
     }
 
     @Override
@@ -260,6 +231,19 @@ public class AdventureScene implements IScene {
                         this.audio.playSound(clickButton, false);
                         this.engine.setScenes(new MenuScene(gameLoader));
                     }
+                    if (leftArrow.isTouched(e.x, e.y)) {
+                        if (currentWorld > 0) {
+                            currentWorld--;
+                            loadLevelStatesForCurrentWorld(this.currentWorld);
+                        }
+                    }
+
+                    if (rightArrow.isTouched(e.x, e.y)) {
+                        if (currentWorld < 2 - 1) {
+                            currentWorld++;
+                            loadLevelStatesForCurrentWorld(this.currentWorld);
+                        }
+                    }
                     handleLevelButtons(e);
                     break;
                 // Ocurre scroll
@@ -280,40 +264,51 @@ public class AdventureScene implements IScene {
         }
     }
 
-    public void loadLevelStates() {
-        try {
-            JSONObject json = this.file.loadDataWithHash("levelsState.json");
+    /*
+    public void completeLevel(int world, int levelIndexInWorld) {
 
-            if (json.length() == 0) {
-                isNewGame = true;
-                return;
+        int levelsPerWorld = 14;
+        int globalIndex = world * levelsPerWorld + levelIndexInWorld;
+
+        ArrayList<LevelState> globalStates = gameLoader.loadLevelStates();
+
+        // Completa el nivel actual
+        globalStates.set(globalIndex, LevelState.UNLOCKED_COMPLETED);
+
+        // Desbloquea el siguiente nivel global
+        if (globalIndex + 1 < globalStates.size()) {
+            if (globalStates.get(globalIndex + 1) == LevelState.LOCKED) {
+                globalStates.set(globalIndex + 1, LevelState.UNLOCKED_INCOMPLETE);
             }
-
-            isNewGame = false;
-
-            levelStates.clear();
-
-            for (int i = 1; i <= levelsNumber; i++) {
-                String key = "level" + i;
-                String value = json.optString(key, "Locked");
-                switch (value) {
-                    case "UnlockedIncomplete":
-                        levelStates.add(LevelState.UNLOCKED_INCOMPLETE);
-                        break;
-                    case "UnlockedCompleted":
-                        levelStates.add(LevelState.UNLOCKED_COMPLETED);
-                        break;
-                    default:
-                        levelStates.add(LevelState.LOCKED);
-                        break;
-                }
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            isNewGame = true;
         }
+
+        // Recarga el mundo actual en pantalla
+        loadLevelStatesForCurrentWorld(currentWorld);
+        createLevelsButtons();
     }
+
+*/
+    public void loadLevelStatesForCurrentWorld(int world) {
+        int levelsPerWorld = 14;
+
+        // Cargar todos los estados globales desde GameLoader
+        ArrayList<LevelState> globalLevelStates = gameLoader.loadLevelStates();
+
+        levelStates.clear();
+
+        int baseIndex = world * levelsPerWorld; // solo este mundo
+        for (int i = 0; i < levelsPerWorld; i++) {
+            int globalIndex = baseIndex + i;
+            if (globalIndex < globalLevelStates.size()) {
+                levelStates.add(globalLevelStates.get(globalIndex));
+            } else {
+                levelStates.add(LevelState.LOCKED);
+            }
+        }
+        createLevelsButtons();
+        setStyleLevelButtons();
+    }
+
 
     public void handleLevelButtons(AndroidInput.TouchEvent e)
     {

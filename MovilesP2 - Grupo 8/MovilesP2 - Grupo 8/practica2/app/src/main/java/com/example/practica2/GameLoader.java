@@ -92,10 +92,10 @@ public class GameLoader {
     }
 
     // Carga estilo de los botones de los niveles
-    public void loadStyle(String world)
+    public void loadStyle(int world)
     {
         try{
-            String path = "levels/" + world + "/style.json";
+            String path = "levels/world" + (world + 1) + "/style.json";
             JSONObject jsonObject = readJSONFromAssets(path);
 
             colorUnlocked = (int) Long.parseLong(jsonObject.getString("colorPassed").substring(2), 16);
@@ -106,6 +106,9 @@ public class GameLoader {
 
         }
     }
+
+    public int get_unlocked() { return colorUnlocked; }
+    public int get_locked() { return colorLocked; }
 
     private void loadShop()
     {
@@ -195,13 +198,49 @@ public class GameLoader {
 
     // !!!!!
     // Carga estado de los niveles del almacenamiento interno
-    public ArrayList<AdventureScene.LevelState> loadLevelStates()
-    {
-        JSONObject jsonObject = file.loadDataWithHash("levelsState.json");
+    public ArrayList<AdventureScene.LevelState> loadLevelStates() {
+
+        JSONObject json = file.loadDataWithHash("levelsState.json");
+
         levelStates.clear();
-        levelStates = levelStatesInfo(jsonObject);
+
+        int totalWorlds = 2;
+        int levelsPerWorld = 14;
+        int totalLevels = totalWorlds * levelsPerWorld;
+
+        if (json == null || json.length() == 0) {
+
+            for (int i = 0; i < totalLevels; i++) {
+                if (i == 0)
+                    levelStates.add(AdventureScene.LevelState.UNLOCKED_INCOMPLETE);
+                else
+                    levelStates.add(AdventureScene.LevelState.LOCKED);
+            }
+
+            saveLevelsState(levelStates);
+            return levelStates;
+        }
+
+        for (int i = 0; i < totalLevels; i++) {
+            String key = "level_" + i;
+            String value = json.optString(key, "Locked");
+
+            switch (value) {
+                case "UnlockedIncomplete":
+                    levelStates.add(AdventureScene.LevelState.UNLOCKED_INCOMPLETE);
+                    break;
+                case "UnlockedCompleted":
+                    levelStates.add(AdventureScene.LevelState.UNLOCKED_COMPLETED);
+                    break;
+                default:
+                    levelStates.add(AdventureScene.LevelState.LOCKED);
+            }
+        }
+
         return levelStates;
     }
+
+
 
     // Carga estado de los items de la tienda
     public PlayerShopState loadPlayerShopState() {
@@ -271,34 +310,21 @@ public class GameLoader {
 
 
     // Guarda estado de los niveles (bloqueados, desbloqueados sin hacer, desbloqueados hechos)
-    public void saveLevelsState(ArrayList<AdventureScene.LevelState> levelStates) {
-        try{
-            path = "levelsState.json";
-            JSONObject levelStateJson = new JSONObject();
-            for (int i = 1; i < levelStates.size() + 1; i++)
-            {
-                String state = "";
-                switch (levelStates.get(i - 1))
-                {
-                    case LOCKED:
-                        state = "Locked";
-                        break;
-                    case UNLOCKED_INCOMPLETE:
-                        state = "UnlockedIncomplete";
-                        break;
-                    case UNLOCKED_COMPLETED:
-                        state = "UnlockedCompleted";
-                        break;
-                }
-                levelStateJson.put("level" + i, state);
+    public void saveLevelsState(ArrayList<AdventureScene.LevelState> states) {
+        JSONObject json = new JSONObject();
+
+        try {
+            for (int i = 0; i < states.size(); i++) {
+                json.put("level_" + i, states.get(i).name());
             }
-
-            file.saveDataWithHash(path, levelStateJson);
-
-        }catch (Exception e) {
+        }
+        catch(Exception e){
             e.printStackTrace();
         }
+
+        file.saveDataWithHash("levelsState.json", json);
     }
+
 
 
     // Guarda estado de los items de la tienda
@@ -414,31 +440,6 @@ public class GameLoader {
                     _level
             );
         } catch (Exception e)
-        {
-            return null;
-        }
-    }
-
-    // Devuelve el estado de los niveles del modo aventura
-    public ArrayList<AdventureScene.LevelState> levelStatesInfo(JSONObject jsonObject) {
-        try{
-            for (int i = 1; jsonObject.has("level" + i); i++) {
-                String state = jsonObject.getString("level" + i);
-                switch (state)
-                {
-                    case "Locked":
-                        levelStates.add(AdventureScene.LevelState.LOCKED);
-                        break;
-                    case "UnlockedIncomplete":
-                        levelStates.add(AdventureScene.LevelState.UNLOCKED_INCOMPLETE);
-                        break;
-                    case "UnlockedCompleted":
-                        levelStates.add(AdventureScene.LevelState.UNLOCKED_COMPLETED);
-                        break;
-                }
-            }
-            return levelStates;
-        }catch (Exception e)
         {
             return null;
         }

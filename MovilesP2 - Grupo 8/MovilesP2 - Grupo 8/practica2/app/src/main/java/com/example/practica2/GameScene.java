@@ -143,7 +143,7 @@ public class GameScene implements IScene {
         this.gameLoader = gameLoader;
 
         this.iEngine.getAds().setBannerVisible(false);
-        this.money = 150;
+        this.money = 1500;
 
         loadAssets();
 
@@ -182,10 +182,11 @@ public class GameScene implements IScene {
     @Override
     public void render() {
         // Banda de abajo
-        graphics.setColor(0xFF808080);
-        graphics.fillRectangle(0, 320, 600, 80);
 
         mapGrid.render();
+
+        graphics.setColor(0xFFC0C0C0);
+        graphics.fillRectangle(0, 320, 600, 80);
 
         graphics.setColor(0xFF000000);
         graphics.drawImage(coinimg, 15, 380, 30, 30);
@@ -211,7 +212,7 @@ public class GameScene implements IScene {
             t.render();
         }
 
-        graphics.setColor(0xFF00FF00);
+        graphics.setColor(0xFF000000);
         graphics.drawText(moneyText, "Oleada " + (this.wave + 1), 525, 25);
     }
 
@@ -338,6 +339,31 @@ public class GameScene implements IScene {
         this.enemies.add(new Enemy(this.graphics, this.audio, enemyImage, speed, 5, true, this.mapGrid, vida, defensa, resist));
     }
 
+    private void completeLevel() {
+        if (levelData == null) return;
+
+        int world = levelData.getWorld();
+        int lvlIndex = levelData.getLevel() - 1;
+        int levelsPerWorld = 14;
+
+        ArrayList<AdventureScene.LevelState> globalLevelStates = gameLoader.loadLevelStates();
+
+        int globalIndex = world * levelsPerWorld + lvlIndex;
+
+        globalLevelStates.set(globalIndex, AdventureScene.LevelState.UNLOCKED_COMPLETED);
+
+        if (lvlIndex + 1 < levelsPerWorld) {
+            int nextGlobalIndex = globalIndex + 1;
+            if (globalLevelStates.get(nextGlobalIndex) == AdventureScene.LevelState.LOCKED) {
+                globalLevelStates.set(nextGlobalIndex, AdventureScene.LevelState.UNLOCKED_INCOMPLETE);
+            }
+        }
+
+        gameLoader.saveLevelsState(globalLevelStates);
+    }
+
+
+
     // Gestor de oleadas.
     private void waves() {
 
@@ -349,11 +375,12 @@ public class GameScene implements IScene {
                 } else {
                     DiamondManager.addDiamonds(DiamondManager.getDiamondsPerLevel());
                     gameLoader.saveDiamonds(DiamondManager.getDiamonds());
-                    AdventureScene adventureScene = new AdventureScene(gameLoader);
-                    adventureScene.loadLevelStates();
-                    adventureScene.setLevelState(this.level - 1, AdventureScene.LevelState.UNLOCKED_COMPLETED);
-                    adventureScene.setLevelState(level, AdventureScene.LevelState.UNLOCKED_INCOMPLETE);
-                    gameLoader.saveLevelsState(adventureScene.getLevelStates());
+
+                    completeLevel();
+
+                    DiamondManager.addDiamonds(DiamondManager.getDiamondsPerLevel());
+                    gameLoader.saveDiamonds(DiamondManager.getDiamonds());
+
                     this.iEngine.setScenes(new FinalScene(gameLoader, this.difficulty, true));
                 }
                 break;
