@@ -21,6 +21,8 @@ public interface IGraphics
     // Dibuja un hexágono en unas coordenadas y con un tamaño dado
     public void drawHexagon(float x, float y, float radius);
     public void fillHexagon(float x, float y, float radius);
+    public void fillOctagon(float x, float y, float radius);
+    public void fillStar(float x, float y, float radius);
     // Dibuja un círculo en unas coordenadas y un con un tamaño dado
     public void drawCircle(float cx, float cy, float radius);
     public void fillCircle(float cx, float cy, float radius);

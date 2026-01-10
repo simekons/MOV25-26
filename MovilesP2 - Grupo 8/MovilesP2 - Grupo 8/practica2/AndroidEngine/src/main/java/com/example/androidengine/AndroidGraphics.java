@@ -213,6 +213,50 @@ public class AndroidGraphics implements IGraphics
         canvas.drawPath(path, paint);
     }
 
+    @Override
+    public void fillOctagon(float x, float y, float radius) {
+        path.reset();
+
+        for (int i = 0; i < 8; i++) {
+            float cx = (float) (x + radius * Math.cos(Math.toRadians(45 * i - 22.5)));
+            float cy = (float) (y + radius * Math.sin(Math.toRadians(45 * i - 22.5)));
+
+            if (i == 0) {
+                path.moveTo(cx, cy);
+            } else {
+                path.lineTo(cx, cy);
+            }
+        }
+
+        path.close();
+        canvas.drawPath(path, paint);
+    }
+
+    @Override
+    public void fillStar(float x, float y, float radius) {
+        path.reset();
+
+        int points = 5;
+        float innerRadius = radius * 0.5f; // radio interno de la estrella
+
+        for (int i = 0; i < points * 2; i++) {
+            float r = (i % 2 == 0) ? radius : innerRadius;
+            double angle = Math.toRadians(i * 360.0 / (points * 2) - 90);
+
+            float cx = (float) (x + r * Math.cos(angle));
+            float cy = (float) (y + r * Math.sin(angle));
+
+            if (i == 0) {
+                path.moveTo(cx, cy);
+            } else {
+                path.lineTo(cx, cy);
+            }
+        }
+
+        path.close();
+        canvas.drawPath(path, paint);
+    }
+
     // Método que dibuja un círculo.
     @Override
     public void drawCircle(float cx, float cy, float radius) {

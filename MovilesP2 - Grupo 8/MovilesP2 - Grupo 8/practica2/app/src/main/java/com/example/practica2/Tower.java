@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 // Tipo de torres.
-enum TowerType {Rayo, Hielo, Fuego}
+enum TowerType {Rayo, Hielo, Fuego, Star, Stun, Poison}
 
 /*
 * Tower implementa la clase padre de las torres.

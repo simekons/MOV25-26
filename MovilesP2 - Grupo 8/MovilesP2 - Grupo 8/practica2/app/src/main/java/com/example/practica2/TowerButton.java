@@ -101,6 +101,21 @@ public class TowerButton {
                 float radius = Math.min(availableWidth, availableHeight) / 2;
                 iGraphics.fillHexagon(drawX, drawY, radius);
                 break;
+            case Star:
+                iGraphics.setColor(0xFFFF0080);
+                float radiusStar = Math.min(availableWidth, availableHeight) / 2;
+                iGraphics.fillStar(drawX, drawY, radiusStar);
+                break;
+            case Stun:
+                iGraphics.setColor(0xFF944D03);
+                float radiusStun = Math.min(availableWidth, availableHeight) / 2;
+                iGraphics.fillOctagon(drawX, drawY, radiusStun);
+                break;
+            case Poison:
+                iGraphics.setColor(0xFF00FF00);
+                float radiusPoison = Math.min(availableWidth, availableHeight) / 2;
+                iGraphics.fillCircle(drawX, drawY, radiusPoison);
+                break;
         }
 
 

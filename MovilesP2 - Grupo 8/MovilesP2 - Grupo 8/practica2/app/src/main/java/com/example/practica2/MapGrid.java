@@ -191,6 +191,15 @@ public class MapGrid {
             case Hielo:
                 tower = new TowerHielo(iGraphics, iAudio,  row, column, size, cost, cell);
                 break;
+            case Star:
+                tower = new TowerStar(iGraphics, iAudio, row, column, size, cost, cell);
+                break;
+            case Stun:
+                tower = new TowerStun(iGraphics, iAudio, row, column, size, cost, cell);
+                break;
+            case Poison:
+                tower = new TowerPoison(iGraphics, iAudio, row, column, size, cost, cell);
+                break;
             default:
                 throw new IllegalArgumentException("Tipo de torre no válido");
         }

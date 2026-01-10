@@ -44,6 +44,12 @@ public class Enemy {
     // Defensa del enemigo.
     private int defensa;
 
+    private int poison;
+    private float poisonTimer = 0; // acumula delta para el tick
+    private int poisonTicksRemaining = 0; // cuántos ticks quedan por aplicar
+
+    private float stunTimeRemaining = 0f;
+
     // Radio (tamaño) del enemigo.
     private float radius;
 
@@ -121,6 +127,36 @@ public class Enemy {
     public void update(float delta) {
         if (!isActive || path.isEmpty() || currentTarget >= path.size()) return;
 
+        // Aplicar poison por ticks de 0.5s
+        if (poisonTicksRemaining > 0) {
+            poisonTimer += delta;
+
+            while (poisonTimer >= 0.5f && poisonTicksRemaining > 0) {
+                poisonTimer -= 0.5f;
+
+                vida -= poison; // aplicamos el daño del poison
+                poisonTicksRemaining--;
+
+                if (vida <= 0) {
+                    this.iAudio.playSound(this.death, false);
+                    this.isActive = false;
+                    return;
+                }
+            }
+        }
+
+        // Actualizar STUN
+        if (stunTimeRemaining > 0f) {
+            stunTimeRemaining -= delta;
+
+            if (stunTimeRemaining < 0f) {
+                stunTimeRemaining = 0f;
+            }
+
+            // Si está stuneado, NO se mueve
+            return;
+        }
+
         float targetX = path.get(currentTarget)[0];
         float targetY = path.get(currentTarget)[1];
 
@@ -159,6 +195,17 @@ public class Enemy {
             this.iAudio.playSound(this.death, false);
             this.isActive = false;
         }
+    }
+
+    // Recibe veneno
+    public void putPoison(int amount, int ticksToApply) {
+        this.poison += amount;
+        this.poisonTicksRemaining += ticksToApply;
+    }
+
+    // Paraliza a los enemigos
+    public void putStun(float time) {
+        this.stunTimeRemaining += time;
     }
 
     // Alterador de la velocidad.
