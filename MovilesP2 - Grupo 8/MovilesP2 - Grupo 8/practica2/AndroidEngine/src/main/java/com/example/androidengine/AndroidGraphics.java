@@ -309,6 +309,17 @@ public class AndroidGraphics implements IGraphics
         canvas.drawText(text, x, y, paint);
     }
 
+    @Override
+    public void drawTextNotCentered(IFont iFont, String text, float x, float y){
+        AndroidFont font = (AndroidFont)iFont;
+        font.setStyle(font.getStyle());
+        paint.setTextAlign(Paint.Align.LEFT);
+        paint.setTextSize(font.getSize());
+        paint.setTypeface(font.getFont());
+
+        canvas.drawText(text, x, y, paint);
+    }
+
     // Método que hace la transformación en X.
     public int realToLogicX(int x){
         return (int)(x / scale)-(int)(offsetX / scale);

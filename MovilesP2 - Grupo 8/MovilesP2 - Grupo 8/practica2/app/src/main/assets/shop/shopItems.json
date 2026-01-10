@@ -3,9 +3,9 @@
     {
       "id": "tower1",
       "type": "TOWER",
-      "cost": 100,
-      "description": "AAA",
-      "image": "sprites/heart.png",
+      "cost": 250,
+      "description": "Torre que dispara un rayo a un solo enemigo y también daño en area",
+      "image": "star",
       "backgroundColor": "0",
       "buttonColor": "0",
       "buttonColor2": "0"
@@ -13,9 +13,9 @@
     {
       "id": "tower2",
       "type": "TOWER",
-      "cost": 150,
-      "description": "BBB",
-      "image": "sprites/heart.png",
+      "cost": 200,
+      "description": "Torre que aturde a los enemigos impidiendoles moverse",
+      "image": "octagon",
       "backgroundColor": "0",
       "buttonColor": "0",
       "buttonColor2": "0"
@@ -23,9 +23,9 @@
     {
       "id": "tower3",
       "type": "TOWER",
-      "cost": 200,
-      "description": "CCC",
-      "image": "sprites/heart.png",
+      "cost": 120,
+      "description": "Torre que tira veneno que se puede acumular entre torres",
+      "image": "circle",
       "backgroundColor": "0",
       "buttonColor": "0",
       "buttonColor2": "0"
@@ -33,8 +33,8 @@
     {
       "id": "skin1",
       "type": "SKIN",
-      "cost": 100,
-      "description": "DDD",
+      "cost": 150,
+      "description": "Apariencia para la torre de fuego, no tiene efectos.",
       "image": "sprites/heart.png",
       "backgroundColor": "0xfff596a5",
       "buttonColor": "0xffeb0a2d",
@@ -43,8 +43,8 @@
     {
       "id": "skin2",
       "type": "SKIN",
-      "cost": 150,
-      "description": "EEE",
+      "cost": 200,
+      "description": "Apariencia para la torre de hielo, no tiene efectos.",
       "image": "sprites/heart.png",
       "backgroundColor": "0xfff0e69e",
       "buttonColor": "0xfffae105",
@@ -53,8 +53,8 @@
     {
       "id": "skin3",
       "type": "SKIN",
-      "cost": 200,
-      "description": "FFF",
+      "cost": 100,
+      "description": "Apariencia para la torre de rayo, no tiene efectos.",
       "image": "sprites/heart.png",
       "backgroundColor": "0xffa0d9a5",
       "buttonColor": "0xff1fcc2d",

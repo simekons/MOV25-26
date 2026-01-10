@@ -21,6 +21,8 @@ public class Button {
     // Texto de botón.
     private String text;
 
+    private TowerType tower;
+
     // Coordenadas, ancho y alto.
     private float x, y, width, height;
 
@@ -28,6 +30,7 @@ public class Button {
     private int color;
 
     private boolean isShopItem = false;
+    private boolean selected = false;
 
     // CONSTRUCTORA (con texto)
     public Button(IGraphics graphics, IFont font, float x, float y, float width, float height, String text, int color)
@@ -64,13 +67,48 @@ public class Button {
         this.isShopItem = isItem;
     }
 
+    public Button(IGraphics graphics, TowerType type, float x, float y, float width, float height, Boolean isItem)
+    {
+        iGraphics = graphics;
+        tower = type;
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+        this.isShopItem = isItem;
+    }
+
     // RENDERIZADO
     public void render() {
-        if (iImage != null)
-            iGraphics.drawImage(iImage, (int) x, (int) y, (int) width, (int) height);
-        else if(isShopItem)
+        if(isShopItem)
         {
-            iGraphics.drawRect(x, y, width, height);
+            iGraphics.setColor(selected ? 0xFF00FF00 : 0xFF000000);
+
+            iGraphics.drawRect(x - width/2, y - height/2, width, height);
+        }
+        if (iImage != null)
+            iGraphics.drawImage(iImage, (int) x, (int) y, (int) width-10, (int) height-10);
+        else if(tower != null){
+            switch (tower){
+                case Star: {
+                    float radius = width / 2f - 5;
+                    iGraphics.setColor(0xFFFF0080);
+                    iGraphics.fillStar(x, y, radius);
+                    break;
+                }
+                case Stun: {
+                    float radius = width / 2f - 5;
+                    iGraphics.setColor(0xFF944D03);
+                    iGraphics.fillOctagon(x, y, radius);
+                    break;
+                }
+                case Poison: {
+                    float radius = width / 2f - 5;
+                    iGraphics.setColor(0xFF00FF00);
+                    iGraphics.fillCircle(x, y, radius);
+                    break;
+                }
+            }
         }
         else {
             iGraphics.setColor(color);
@@ -106,4 +144,6 @@ public class Button {
 
     // Imagen de botón.
     public void setImage(IImage image) { this.iImage = image; }
+
+    public void setSelected(boolean s) { selected = s; }
 }

@@ -33,6 +33,7 @@ public interface IGraphics
     public void setFont(IFont font);
     // Dibuja un texto en unas coordenadas dadas y con una fuente
     public void drawText(IFont font, String text, float x, float y);
+    public void drawTextNotCentered(IFont font, String text, float x, float y);
     // Getter de la anchura del canvas
     int getWidth();
     // Getter de la altura del canvas

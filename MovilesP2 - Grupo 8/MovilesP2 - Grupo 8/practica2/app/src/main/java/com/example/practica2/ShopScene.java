@@ -66,6 +66,7 @@ public class ShopScene implements IScene {
         this.exitButton.render();
         iGraphics.drawText(buttonFont, "Tienes " + DiamondManager.getDiamonds(), 180, 40);
 
+        iGraphics.setColor(0xFF000000);
         buttonFont.setSize(30);
         iGraphics.drawText(buttonFont, "Nuevas torres", 100, 95);
         buttonFont.setSize(35);
@@ -76,12 +77,12 @@ public class ShopScene implements IScene {
 
             boolean selected = itemId.equals(selectedItemId);
 
-            if (selected)
-                iGraphics.drawRect(b.getX() - (b.getWidth() / 2), b.getY() - (b.getHeight() / 2), b.getWidth(), b.getHeight());
+            b.setSelected(selected);
 
             b.render();
         }
 
+        iGraphics.setColor(0xFF000000);
         buttonFont.setSize(30);
         iGraphics.drawText(buttonFont, "Apariencias de torres", 147, 225);
         buttonFont.setSize(35);
@@ -92,8 +93,7 @@ public class ShopScene implements IScene {
 
             boolean selected = itemId.equals(selectedItemId);
 
-            if (selected)
-                iGraphics.drawRect(b.getX() - (b.getWidth() / 2), b.getY() - (b.getHeight() / 2), b.getWidth(), b.getHeight());
+            b.setSelected(selected);
 
             b.render();
         }
@@ -120,13 +120,28 @@ public class ShopScene implements IScene {
 
         int x = startX;
 
+        int i = 0;
         for (ShopItemData item : towers) {
-            AndroidImage img = iGraphics.loadImage(item.getImagePath());
+            TowerType type;
+            switch (item.getImagePath()) {
+                case "circle":
+                    type = TowerType.Poison;
+                    break;
+                case "star":
+                    type = TowerType.Star;
+                    break;
+                case "octagon":
+                    type = TowerType.Stun;
+                    break;
+                default:
+                    continue;
+            }
 
-            Button b = new Button(iGraphics, img, x, startY, size, size, true);
+            Button b = new Button(iGraphics, type, x, startY, size, size, true);
             towerButtons.put(item.getId(), b);
 
             x += size + margin;
+            i++;
         }
 
         startX = 45;
