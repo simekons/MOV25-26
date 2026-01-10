@@ -84,9 +84,10 @@ public class GameScene implements IScene {
 
     // Tipo de torre.
     private TowerType type = null;
+    private int cost = 0;
 
     // Torres.
-    private TowerButton tower1, tower2, tower3;
+    private List<TowerButton> towerButtons;
 
     // Imágenes de dinero/vida.
     private IImage coinimg;
@@ -150,9 +151,24 @@ public class GameScene implements IScene {
         this.enemies = new ArrayList<>();
 
         IFont fontButton = graphics.createFont("fonts/fff.ttf", 10, false, false);
-        this.tower1 = new TowerButton(this.graphics, fontButton, 445, 360, 50, 50, 100, TowerType.Rayo, 0xFFFFFFFF, 0xFF000000);
-        this.tower2 = new TowerButton(this.graphics, fontButton, 505, 360, 50, 50, 150, TowerType.Hielo, 0xFFFFFFFF, 0xFF000000);
-        this.tower3 = new TowerButton(this.graphics, fontButton, 565, 360, 50, 50, 200, TowerType.Fuego, 0xFFFFFFFF, 0xFF000000);
+        towerButtons = new ArrayList<>();
+
+        towerButtons.add(new TowerButton(graphics, fontButton, 445, 360, 50, 50, 100, TowerType.Rayo, 0xFFFFFFFF, 0xFF000000));
+        towerButtons.add(new TowerButton(graphics, fontButton, 505, 360, 50, 50, 150, TowerType.Hielo, 0xFFFFFFFF, 0xFF000000));
+        towerButtons.add(new TowerButton(graphics, fontButton, 565, 360, 50, 50, 200, TowerType.Fuego, 0xFFFFFFFF, 0xFF000000));
+
+        int x = 385;
+        if(true){
+            towerButtons.add(new TowerButton(graphics, fontButton, x, 360, 50, 50, 250, TowerType.Star, 0xFFFFFFFF, 0xFF000000));
+            x -= 60;
+        }
+        if(false){
+            towerButtons.add(new TowerButton(graphics, fontButton, x, 360, 50, 50, 200, TowerType.Stun, 0xFFFFFFFF, 0xFF000000));
+            x -= 60;
+        }
+        if(true){
+            towerButtons.add(new TowerButton(graphics, fontButton, x, 360, 50, 50, 120, TowerType.Poison, 0xFFFFFFFF, 0xFF000000));
+        }
 
         this.sword = new UpgradeButton(this.graphics, fontButton, this.sword_img, 445, 360, 50, 50, 75, 0xFFFFFFFF, 0xFF000000);
         this.bow = new UpgradeButton(this.graphics, fontButton, this.bow_img, 505, 360, 50, 50, 75, 0xFFFFFFFF, 0xFF000000);
@@ -199,9 +215,9 @@ public class GameScene implements IScene {
             this.bow.render();
             this.clock.render();
         } else {
-            this.tower1.render();
-            this.tower2.render();
-            this.tower3.render();
+            for(TowerButton tb : this.towerButtons){
+                tb.render();
+            }
         }
 
         for (Enemy e : this.enemies) {
@@ -435,38 +451,28 @@ public class GameScene implements IScene {
 
         Tower tower = mapGrid.placeTowerAt(e.x, e.y, type, graphics, audio);
         if (tower != null) {
-            switch (type){
-                case Rayo:
-                    money -= tower1.getCost();
-                    break;
-                case Hielo:
-                    money -= tower2.getCost();
-                    break;
-                case Fuego:
-                    money -= tower3.getCost();
-                    break;
-            }
+            money -= cost;
+            cost = 0;
             audio.playSound(turret, false);
             towers.add(tower);
         }
         mapGrid.showAvailableCells(false);
         type = null;
 
-        tower1.setSelected(false);
-        tower2.setSelected(false);
-        tower3.setSelected(false);
+        for(TowerButton tb : this.towerButtons){
+            tb.setSelected(false);
+        }
 
         return true;
     }
 
     // Gestor para clicar un botón de torre.
     private void handleTowerTypeSelection(IInput.TouchEvent e) {
-        if (tower1.isTouched(e.x, e.y)) {
-            selectTowerType(tower1);
-        } else if (tower2.isTouched(e.x, e.y)) {
-            selectTowerType(tower2);
-        } else if (tower3.isTouched(e.x, e.y)) {
-            selectTowerType(tower3);
+        for(TowerButton tb : this.towerButtons){
+            if(tb.isTouched(e.x, e.y)) {
+                selectTowerType(tb);
+                return;
+            }
         }
     }
 
@@ -476,6 +482,7 @@ public class GameScene implements IScene {
             towerBtn.setSelected(true);
             mapGrid.showAvailableCells(true);
             type = towerBtn.getTipo();
+            cost = towerBtn.getCost();
         }
     }
 
