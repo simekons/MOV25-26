@@ -1,7 +1,11 @@
 package com.example.practica2;
 
+import android.media.Image;
+
+import com.example.androidengine.AndroidImage;
 import com.example.engine.IFont;
 import com.example.engine.IGraphics;
+import com.example.engine.IImage;
 
 /*
 * TowerButton implementa los botones de torres.
@@ -21,6 +25,8 @@ public class TowerButton {
     // Coordenadas, ancho y alto.
     private float x, y, width, height;
 
+    private IImage img;
+
     // Variables.
     private int buttonColor, textColor, cost;
 
@@ -33,7 +39,7 @@ public class TowerButton {
     // CONSTRUCTORA
     public TowerButton(IGraphics graphics, IFont font,
                        float x, float y, float width, float height,
-                       int cost, TowerType tipo, int buttonColor, int textColor) {
+                       int cost, TowerType tipo, int buttonColor, int textColor, IImage img) {
         this.iGraphics = graphics;
         this.iFont = font;
         this.cost = cost;
@@ -46,6 +52,7 @@ public class TowerButton {
         this.buttonColor = buttonColor;
         this.textColor = textColor;
         this.selected = false;
+        this.img = img;
     }
 
     // RENDERIZADO
@@ -69,54 +76,56 @@ public class TowerButton {
         float drawX = x + (width / 2);
         float drawY = y + (imageHeight / 2);
 
+        if (img != null)
+            iGraphics.drawImage(img, (int) (x +  width/2), (int) (y + height/2 - 7), (int) (width-15), (int) (height-15));
+        else
+            switch (tipo) {
+                case Rayo:
+                    iGraphics.setColor(0xFF000000);
+                    float halfBase = availableWidth / 2;
+                    float halfHeight = availableHeight / 2;
 
-        switch (tipo) {
-            case Rayo:
-                iGraphics.setColor(0xFF000000);
-                float halfBase = availableWidth / 2;
-                float halfHeight = availableHeight / 2;
+                    float x1 = drawX;
+                    float y1 = drawY - halfHeight;
+                    float x2 = drawX - halfBase;
+                    float y2 = drawY + halfHeight;
+                    float x3 = drawX + halfBase;
+                    float y3 = drawY + halfHeight;
 
-                float x1 = drawX;
-                float y1 = drawY - halfHeight;
-                float x2 = drawX - halfBase;
-                float y2 = drawY + halfHeight;
-                float x3 = drawX + halfBase;
-                float y3 = drawY + halfHeight;
+                    iGraphics.fillTriangle(x1, y1, x2, y2, x3, y3);
+                    break;
+                case Hielo:
+                    iGraphics.setColor(0xFF88539E);
 
-                iGraphics.fillTriangle(x1, y1, x2, y2, x3, y3);
-                break;
-            case Hielo:
-                iGraphics.setColor(0xFF88539E);
+                    float side = Math.min(availableWidth, availableHeight);
 
-                float side = Math.min(availableWidth, availableHeight);
+                    float squareX = drawX - (side / 2);
+                    float squareY = drawY - (side / 2);
 
-                float squareX = drawX - (side / 2);
-                float squareY = drawY - (side / 2);
+                    iGraphics.fillRectangle(squareX, squareY, side, side);
+                    break;
 
-                iGraphics.fillRectangle(squareX, squareY, side, side);
-                break;
-
-            case Fuego:
-                iGraphics.setColor(0xFFE1050F);
-                float radius = Math.min(availableWidth, availableHeight) / 2;
-                iGraphics.fillHexagon(drawX, drawY, radius);
-                break;
-            case Star:
-                iGraphics.setColor(0xFFFF0080);
-                float radiusStar = Math.min(availableWidth, availableHeight) / 2;
-                iGraphics.fillStar(drawX, drawY, radiusStar);
-                break;
-            case Stun:
-                iGraphics.setColor(0xFF944D03);
-                float radiusStun = Math.min(availableWidth, availableHeight) / 2;
-                iGraphics.fillOctagon(drawX, drawY, radiusStun);
-                break;
-            case Poison:
-                iGraphics.setColor(0xFF00FF00);
-                float radiusPoison = Math.min(availableWidth, availableHeight) / 2;
-                iGraphics.fillCircle(drawX, drawY, radiusPoison);
-                break;
-        }
+                case Fuego:
+                    iGraphics.setColor(0xFFE1050F);
+                    float radius = Math.min(availableWidth, availableHeight) / 2;
+                    iGraphics.fillHexagon(drawX, drawY, radius);
+                    break;
+                case Star:
+                    iGraphics.setColor(0xFFFF0080);
+                    float radiusStar = Math.min(availableWidth, availableHeight) / 2;
+                    iGraphics.fillStar(drawX, drawY, radiusStar);
+                    break;
+                case Stun:
+                    iGraphics.setColor(0xFF944D03);
+                    float radiusStun = Math.min(availableWidth, availableHeight) / 2;
+                    iGraphics.fillOctagon(drawX, drawY, radiusStun);
+                    break;
+                case Poison:
+                    iGraphics.setColor(0xFF00FF00);
+                    float radiusPoison = Math.min(availableWidth, availableHeight) / 2;
+                    iGraphics.fillCircle(drawX, drawY, radiusPoison);
+                    break;
+            }
 
 
         if (text != null && iFont != null) {

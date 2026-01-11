@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
         FinalScene finalScene = new FinalScene(gameLoader, 0, true);
         AdventureScene adventureScene = new AdventureScene(gameLoader);
         MenuScene menuScene = new MenuScene(gameLoader);
-        androidEngine.setScenes(finalScene);
+        androidEngine.setScenes(menuScene);
     }
 
     // Método que delega la gestión de la reanudación al motor.

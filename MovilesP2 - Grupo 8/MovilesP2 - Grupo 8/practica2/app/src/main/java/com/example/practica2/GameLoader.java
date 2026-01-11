@@ -21,20 +21,10 @@ public class GameLoader {
     private PlayerShopState playerShopState;
 
     private ArrayList<AdventureScene.LevelState> levelStates;
-    private static ArrayList<Theme> themes;
-    private ArrayList<Boolean> itemsState;
-    private ArrayList<Boolean> fruitItems;
-    private ArrayList<Boolean> selectedItems;
     private ArrayList<ShopItemData> shopItems;
-
-    private ArrayList<String> waveTypes;
-
-    private ArrayList<Integer> waveAmounts;
-
     private static String path;
 
-    private int colorUnlocked, colorLocked, colorPassed;
-    private int backgroundColor, buttonColor, buttonColor2;
+    private int colorUnlocked, colorLocked;
 
     // Constructora de la clase
     public GameLoader(AndroidFile iFile)
@@ -47,10 +37,6 @@ public class GameLoader {
         }
 
         levelStates = new ArrayList<>();
-        waveAmounts = new ArrayList<>();
-        waveTypes = new ArrayList<>();
-        selectedItems = new ArrayList<>();
-        themes = new ArrayList<>();
         shopItems = new ArrayList<>();
 
         loadData();
@@ -142,13 +128,7 @@ public class GameLoader {
                 int cost = obj.getInt("cost");
                 String description = obj.getString("description");
                 String image = obj.getString("image");
-                int backgroundColor = parseColor(obj, "backgroundColor");
-                int buttonColor = parseColor(obj, "buttonColor");
-                int buttonColor2 = parseColor(obj, "buttonColor2");
-
-                items.add(new ShopItemData(
-                        id, type, cost, description, image, backgroundColor, buttonColor, buttonColor2
-                ));
+                items.add(new ShopItemData( id, type, cost, description, image));
             }
         }
         catch (Exception e) {
@@ -167,23 +147,6 @@ public class GameLoader {
             JSONObject jsonObject = file.loadDataWithHash(path);
             int diamonds = jsonObject.optInt("diamonds", 0);
             DiamondManager.setDiamonds(diamonds);
-            this.backgroundColor = jsonObject.optInt("backgroundColor", 0);
-            this.buttonColor = jsonObject.optInt("buttonColor", 0);
-            this.buttonColor2 = jsonObject.optInt("buttonColor2", 0);
-
-            /*if(backgroundColor == 0)
-                backgroundColor = 0xffffffff;
-            if(buttonColor == 0)
-                buttonColor = 0xff808080;*/
-
-            /*if(Theme.getCurrentTheme() == null)
-            {
-                loadThemes();
-                setThemes();
-            }*/
-
-            //int theme = jsonObject.optInt("currentTheme", 0);
-            //Theme.setCurrentTheme(Theme.getTheme(theme));
         } catch (Exception e) {
 
         }
@@ -269,50 +232,6 @@ public class GameLoader {
         return state;
     }
 
-
-    // !!!!!
-    // Carga si los items de personalización de la escena de juego están seleccionados
-    public ArrayList<Boolean> loadFruitItems()
-    {
-        JSONObject jsonObject = file.loadDataWithHash("fruitItems.json");
-        fruitItems.clear();
-        try{
-            for (int i = 1; jsonObject.has("item" + i); i++) {
-                boolean state = jsonObject.getBoolean("item" + i);
-                fruitItems.add(state);
-            }
-            return fruitItems;
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-
-    // !!!!!
-    // Carga si los items de la tienda están seleccionados
-    public ArrayList<Boolean> loadSelectedItems()
-    {
-        JSONObject jsonObject = file.loadDataWithHash("selectedItems.json");
-        selectedItems.clear();
-        try{
-            for (int i = 1; jsonObject.has("item" + i); i++) {
-                boolean state = jsonObject.getBoolean("item" + i);
-                selectedItems.add(state);
-            }
-            return selectedItems;
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-
-    // !!!!!
-    // Guarda progreso del nivel
-    public void saveLevel(){
-
-    }
-
-
     // Guarda estado de los niveles (bloqueados, desbloqueados sin hacer, desbloqueados hechos)
     public void saveLevelsState(ArrayList<AdventureScene.LevelState> states) {
         JSONObject json = new JSONObject();
@@ -349,23 +268,33 @@ public class GameLoader {
 
         }
     }
+    public PlayerShopState getPlayerShopState() {
+        path = "player_shop.json";
+        PlayerShopState state = new PlayerShopState();
 
-    // !!!!!
-    // Guarda si los items de la tienda están seleccionados o no
-    public void saveSelectedItems(ArrayList<Boolean> selectedItems)
-    {
-        try{
-            path = "selectedItems.json";
-            JSONObject selectedItemsJson = new JSONObject();
+        try {
+            JSONObject json = file.loadDataWithHash(path);
+            if (json == null) {
+                return state; // estado vacío por defecto
+            }
+            if (json.has("purchased")) {
+                JSONArray purchased = json.getJSONArray("purchased");
+                for (int i = 0; i < purchased.length(); i++) {
+                    state.purchase(purchased.getString(i));
+                }
+            }
+            if (json.has("selectedTower")) {
+                state.selectTower(json.getString("selectedTower"));
+            }
+            if (json.has("selectedSkin")) {
+                state.selectSkin(json.getString("selectedSkin"));
+            }
 
-            for (int i = 1; i < selectedItems.size() + 1; i++)
-                selectedItemsJson.put("item" + i, selectedItems.get(i - 1));
-
-            file.saveDataWithHash(path, selectedItemsJson);
-
-        }catch (Exception e) {
+        } catch (Exception e) {
 
         }
+
+        return state;
     }
 
     // !!!!!
@@ -376,22 +305,6 @@ public class GameLoader {
             path = "gameData.json";
             JSONObject jsonObject = file.loadDataWithHash(path);
             jsonObject.put("diamonds", diamonds);
-            file.saveDataWithHash(path, jsonObject);
-        } catch (Exception e) {
-
-        }
-    }
-
-    // !!!!!
-    // Guarda theme actual del juego
-    public void saveTheme(int backgroundColor, int buttonColor, int buttonColor2)
-    {
-        try {
-            path = "gameData.json";
-            JSONObject jsonObject = file.loadDataWithHash(path);
-            jsonObject.put("backgroundColor", backgroundColor);
-            jsonObject.put("buttonColor", buttonColor);
-            jsonObject.put("buttonColor2", buttonColor2);
             file.saveDataWithHash(path, jsonObject);
         } catch (Exception e) {
 
@@ -449,81 +362,30 @@ public class GameLoader {
         }
     }
 
-    // !!!!!
-    // Devuelve el estado de los items de la tienda
-    public ArrayList<Boolean> itemsStateInfo(JSONObject jsonObject)
-    {
-        try {
-            for (int i = 1; jsonObject.has("item" + i); i++) {
-                String state = jsonObject.getString("item" + i);
-                if(state.equals("Locked"))
-                    itemsState.add(true);
-                else
-                    itemsState.add(false);
-            }
-            return itemsState;
-        } catch (Exception e)
-        {
-            return null;
-        }
-
-    }
-
-    private int parseColor(JSONObject obj, String key) {
-        String value = obj.optString(key, "0");
-
-        if (value.equals("0"))
-            return 0;
-
-        return (int) Long.parseLong(value.substring(2), 16);
-    }
-
     public int getBackgroundColor()
     {
-        if(shopManager.getSelectedSkin() != null)
-            return shopManager.getSelectedSkin().getBackgroundColor();
-        else
-            return 0xffffffff;
+        return 0xffffffff;
     }
 
     public int getButtonColor()
     {
-        if(shopManager.getSelectedSkin() != null)
-            return shopManager.getSelectedSkin().getButtonColor();
-        else
-            return 0xff808080;
+        return 0xff808080;
     }
 
     public int getButtonColor2()
     {
-        if(shopManager.getSelectedSkin() != null)
-            return shopManager.getSelectedSkin().getButtonColor2();
-        else
-            return 0xff9ce4f5;
+        return 0xff9ce4f5;
     }
 
     public int getPanelColor()
     {
-        if(shopManager.getSelectedSkin() != null)
-            return shopManager.getSelectedSkin().getButtonColor2();
-        else
-            return 0xff79c8d7;
+        return 0xff79c8d7;
     }
 
     public int getPanelButtonColor()
     {
-        if(shopManager.getSelectedSkin() != null)
-            return shopManager.getSelectedSkin().getButtonColor();
-        else
-            return 0xff01a9c9;
+        return 0xff01a9c9;
     }
 
-
     public ShopManager getShopManager() { return shopManager; }
-
-    public static String getPath() { return path; }
-
-
-    //public void setThemes() {Theme.setThemes(themes);}
-
 }

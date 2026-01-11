@@ -2,6 +2,7 @@ package com.example.practica2;
 
 import com.example.engine.IAudio;
 import com.example.engine.IGraphics;
+import com.example.engine.IImage;
 import com.example.engine.ISound;
 
 import java.util.HashSet;
@@ -19,22 +20,28 @@ public class TowerHielo extends Tower {
     // Enemigos ralentizados.
     private Set<Enemy> slowedEnemies = new HashSet<>();
 
+    private IImage img;
 
     // CONSTRUCTORA
-    public TowerHielo(IGraphics iGraphics, IAudio iAudio, int row, int column, float size, int cost, Cell cell) {
+    public TowerHielo(IGraphics iGraphics, IAudio iAudio, int row, int column, float size, int cost, Cell cell, IImage img) {
         super(iGraphics, row, column, size, cost, cell);
         this.damage = 7;
         this.range = 60;
         this.cooldown = 3f;
+        this.img = img;
     }
 
     // RENDERIZADO
     @Override
     public void render() {
-        iGraphics.setColor(0xFF88539E);
-        float side = size;
-        iGraphics.fillRectangle(x - side / 2f, y - side / 2f, side, side);
-
+        if(img != null){
+            iGraphics.drawImage(img, (int) x, (int) y, (int) (size), (int) (size));
+        }
+        else {
+            iGraphics.setColor(0xFF88539E);
+            float side = size;
+            iGraphics.fillRectangle(x - side / 2f, y - side / 2f, side, side);
+        }
         if (selected) {
             iGraphics.setColor(0xFF000000);
             iGraphics.drawCircle(x, y, range);
