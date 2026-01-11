@@ -8,6 +8,7 @@ import com.example.androidengine.AndroidGraphics;
 import com.example.androidengine.AndroidImage;
 import com.example.androidengine.AndroidSound;
 import com.example.engine.IFont;
+import com.example.engine.IImage;
 import com.example.engine.IInput;
 import com.example.engine.IScene;
 
@@ -38,6 +39,7 @@ public class ShopScene implements IScene {
     private String selectedItemId = null;
     private int panelColor, panelButtonColor;
 
+    private IImage imgDiamond;
     public ShopScene(GameLoader gameLoader)
     {
         this.iEngine = AndroidEngine.get_instance();
@@ -54,6 +56,8 @@ public class ShopScene implements IScene {
         panelColor = gameLoader.getPanelColor();
         panelButtonColor = gameLoader.getPanelButtonColor();
 
+        imgDiamond = iGraphics.loadImage("sprites/diamond.png");
+
         infoPanel = new ShopInfoPanel(iGraphics, this.buttonFont, 400, 10, 250, 325, panelColor, panelButtonColor);
         initShopButtons();
     }
@@ -69,7 +73,10 @@ public class ShopScene implements IScene {
         iGraphics.clear(gameLoader.getBackgroundColor());
 
         this.exitButton.render();
-        iGraphics.drawText(buttonFont, "Tienes " + DiamondManager.getDiamonds(), 180, 40);
+        buttonFont.setSize(30);
+        iGraphics.drawTextNotCentered(buttonFont, "Tienes ", 60, 40);
+        iGraphics.drawImage(imgDiamond, 200, 30, 40,40);
+        iGraphics.drawTextNotCentered(buttonFont, String.valueOf(DiamondManager.getDiamonds()), 225, 40);
 
         iGraphics.setColor(0xFF000000);
         buttonFont.setSize(30);

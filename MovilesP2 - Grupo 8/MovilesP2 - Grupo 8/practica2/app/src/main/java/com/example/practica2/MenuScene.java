@@ -6,6 +6,7 @@ import com.example.engine.IAudio;
 import com.example.engine.IEngine;
 import com.example.engine.IFont;
 import com.example.engine.IGraphics;
+import com.example.engine.IImage;
 import com.example.engine.IInput;
 import com.example.engine.IScene;
 import com.example.engine.ISound;
@@ -40,7 +41,7 @@ public class MenuScene implements IScene {
     private Button shopButton;
 
     // Fuente de título.
-    private IFont titleFont;
+    private IFont titleFont, fontButton;
 
     // Sonido de botón.
     private ISound soundButton;
@@ -56,6 +57,8 @@ public class MenuScene implements IScene {
     // Booleano de tienda.
     private boolean shop = false;
 
+    private IImage imgDiamond;
+
     // CONSTRUCTORA
     public MenuScene(GameLoader gameLoader){
         this.iEngine = AndroidEngine.get_instance();
@@ -65,12 +68,14 @@ public class MenuScene implements IScene {
         this.startGame = false;
         this.gameLoader = gameLoader;
 
-        IFont fontButton = iGraphics.createFont("fonts/pixellari.ttf", 30, false, false);
+        fontButton = iGraphics.createFont("fonts/pixellari.ttf", 30, false, false);
         playButton = new Button(iGraphics, fontButton, 225,200,125,50, "Jugar", this.gameLoader.getButtonColor());
         adventureButton = new Button(iGraphics, fontButton, 375 ,200,125,50, "Aventura", this.gameLoader.getButtonColor());
         shopButton = new Button(iGraphics, fontButton, 225,275,125,50, "Tienda", this.gameLoader.getButtonColor2());
 
         titleFont = iGraphics.createFont("fonts/pixelGotic.ttf", 30, false, false);
+
+        this.imgDiamond = iGraphics.loadImage("sprites/diamond.png");
 
         this.soundButton = this.iAudio.newSound("music/button.wav");
     }
@@ -86,6 +91,9 @@ public class MenuScene implements IScene {
         playButton.render();
         adventureButton.render();
         shopButton.render();
+
+        iGraphics.drawImage(imgDiamond, 350, 275, 40,40);
+        iGraphics.drawTextNotCentered(fontButton, String.valueOf(DiamondManager.getDiamonds()), 375, 285);
     }
 
     // Update.
