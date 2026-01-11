@@ -149,7 +149,15 @@ public class GameScene implements IScene {
 
         this.difficulty = difficulty;
 
-        Maps map = Maps.level1();
+        ArrayList<Pair<String, Integer>> levels = gameLoader.get_levels();
+
+        Random random = new Random();
+        int world = random.nextInt(levels.size());
+        int level = random.nextInt(levels.get(world).second);
+
+        LevelData levelData = gameLoader.loadLevelFromAssets(world+1, level);
+
+        Maps map = new Maps(levelData);
         this.mapGrid = new MapGrid(map, 600, 320, graphics);
     }
 
