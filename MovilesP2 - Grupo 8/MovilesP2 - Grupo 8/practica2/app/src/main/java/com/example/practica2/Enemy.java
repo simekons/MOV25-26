@@ -177,27 +177,33 @@ public class Enemy {
         float targetX = path.get(currentTarget)[0];
         float targetY = path.get(currentTarget)[1];
 
-        // Calcular dirección normalizada
         float dx = targetX - x;
         float dy = targetY - y;
         float distance = (float) Math.sqrt(dx * dx + dy * dy);
 
-        if (distance < 1f) {
-            // Llegó al siguiente punto
+        float step = speed * delta * speedModifier;
+
+// Si este frame llegamos o nos pasamos
+        if (distance <= step) {
+            x = targetX;
+            y = targetY;
             currentTarget++;
+
             if (currentTarget >= path.size()) {
                 isActive = false;
-                reachEnd = true; // llegó al final
+                reachEnd = true;
             }
             return;
         }
 
+// Normalizar
         dx /= distance;
         dy /= distance;
 
-        // Avanzar hacia el objetivo
-        x += dx * speed * delta * speedModifier;
-        y += dy * speed * delta * speedModifier;
+// Avanzar
+        x += dx * step;
+        y += dy * step;
+
     }
 
     /**

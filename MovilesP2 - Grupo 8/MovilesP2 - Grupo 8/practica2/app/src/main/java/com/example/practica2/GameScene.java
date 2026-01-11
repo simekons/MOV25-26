@@ -85,7 +85,7 @@ public class GameScene implements IScene {
     private int money;
 
     // Vidas actuales.
-    private int lives = 2;
+    private int lives = 10;
 
     // Tipo de torre.
     private TowerType type = null;
@@ -136,9 +136,8 @@ public class GameScene implements IScene {
 
         this.difficulty = difficulty;
 
-        Maps map = new Maps();
+        Maps map = Maps.level1();
         this.mapGrid = new MapGrid(map, 600, 320, graphics);
-
     }
 
     private void init(GameLoader gameLoader){
@@ -149,7 +148,7 @@ public class GameScene implements IScene {
         this.gameLoader = gameLoader;
 
         this.iEngine.getAds().setBannerVisible(false);
-        this.money = 1500;
+        this.money = 500;
 
         loadAssets();
 
