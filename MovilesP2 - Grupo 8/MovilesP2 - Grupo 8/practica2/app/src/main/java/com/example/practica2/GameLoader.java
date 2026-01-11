@@ -1,6 +1,7 @@
 package com.example.practica2;
 
 import android.util.Log;
+import android.util.Pair;
 
 import com.example.androidengine.AndroidFile;
 
@@ -9,7 +10,9 @@ import org.json.JSONObject;
 
 import java.sql.Array;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * GameLoader es la clase que gestiona el cargado y guardado de niveles.
@@ -27,6 +30,10 @@ public class GameLoader {
 
     // Estados de nivel
     private ArrayList<AdventureScene.LevelState> levelStates;
+
+    ArrayList<Pair<String, Integer>> worlds;
+
+    private int totalWorlds, totalLevels;
 
     // Ruta del archivo.
     private static String path;
@@ -49,6 +56,10 @@ public class GameLoader {
 
         levelStates = new ArrayList<>();
         shopItems = new ArrayList<>();
+        this.worlds = new ArrayList<>();
+
+        this.totalLevels = 0;
+        this.totalWorlds = 0;
 
         loadData();
     }
@@ -60,6 +71,32 @@ public class GameLoader {
     {
         loadGenericData();
         loadShop();
+        loadLevels();
+    }
+
+    private void loadLevels(){
+        try{
+            String path = "levels/world_config.json";
+            JSONObject jsonObject = readJSONFromAssets(path);
+
+            JSONArray worldArray = jsonObject.getJSONArray("worlds");
+
+            this.totalWorlds = worldArray.length();
+
+            for (int i = 0; i < worldArray.length(); i++) {
+                JSONObject worldObj = worldArray.getJSONObject(i);
+
+                Iterator<String> keys = worldObj.keys();
+                if (keys.hasNext()) {
+                    String worldName = keys.next();
+                    this.worlds.add(new Pair<>(worldName, worldObj.getInt(worldName)));
+                    this.totalLevels += worldObj.getInt(worldName);
+                }
+            }
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -199,6 +236,15 @@ public class GameLoader {
         return levelInfo(jsonObject, _world, _level, true);
     }
 
+
+    /**
+     * Método que devuelve la información del nivel.
+     * @param jsonObject
+     * @param _world
+     * @param _level
+     * @param isFromFiles
+     * @return
+     */
     public LevelData levelInfo(JSONObject jsonObject, int _world, int _level, boolean isFromFiles)
     {
         try{
@@ -410,14 +456,6 @@ public class GameLoader {
         }
     }
 
-    /**
-     * Método que devuelve la información del nivel.
-     * @param jsonObject
-     * @param _world
-     * @param _level
-     * @param isFromFiles
-     * @return
-     */
 
 
     /*
@@ -431,4 +469,9 @@ public class GameLoader {
     public int get_unlocked() { return colorUnlocked; }
     public int get_locked() { return colorLocked; }
     public ShopManager getShopManager() { return shopManager; }
+
+    public int get_totalLevels() { return this.totalLevels; }
+    public int get_totalWorlds() { return this.totalWorlds; }
+    public ArrayList<Pair<String, Integer>> get_levels() { return this.worlds; }
+
 }

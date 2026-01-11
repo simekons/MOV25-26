@@ -1,5 +1,7 @@
 package com.example.practica2;
 
+import android.util.Pair;
+
 import com.example.androidengine.AndroidAudio;
 import com.example.androidengine.AndroidEngine;
 import com.example.androidengine.AndroidFile;
@@ -15,6 +17,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -75,8 +78,11 @@ public class AdventureScene implements IScene {
 
     // Mundo actual.
     private int currentWorld;
-
+    private int totalWorlds;
     private int levelsPerWorld;
+
+    private ArrayList<Pair<String, Integer>> worlds;
+    private String worldName;
 
     // Estados de los niveles.
     public enum LevelState {
@@ -103,10 +109,10 @@ public class AdventureScene implements IScene {
         // Estados de los niveles.
         this.levelStates = new ArrayList<>();
         this.currentWorld = 0;
-        this.levelsPerWorld = 0;
 
         // GameLoader.
         this.gameLoader = gameLoader;
+        this.worlds = this.gameLoader.get_levels();
 
         // Botones de salida, mundo a la izq y mundo a la der.
         this.exitButton = new Button(this.graphics, this.exitImage, 25, 25, 50, 50);
@@ -126,7 +132,7 @@ public class AdventureScene implements IScene {
     public void buttonsVariables()
     {
         this.offsetX = 20;
-        this.offsetY = 75;
+        this.offsetY = 80;
         this.buttonDimension = 100;
 
         this.lastTouchY = -1;
@@ -146,12 +152,14 @@ public class AdventureScene implements IScene {
         int separationX = buttonDimension + 20;
         int separationY = buttonDimension + 20;
 
-        this.levelsPerWorld = 14;
+        this.worldName = this.worlds.get(this.currentWorld).first;
+
+        this.levelsPerWorld = this.worlds.get(this.currentWorld).second;
         // this.levelsPerWorld = gameLoader.loadLevelStates().size() /
 
         // ruta del style.json de cada mundo
         this.gameLoader.loadStyle(currentWorld);
-        for (int i = 0; i < levelsPerWorld; i++) {
+        for (int i = 0; i < this.levelsPerWorld; i++) {
             int col = i % 5;
             int row = i / 5;
 
@@ -195,8 +203,8 @@ public class AdventureScene implements IScene {
      * */
     private void loadAssets(){
         this.exitImage = this.graphics.loadImage("sprites/exit.png");
-        this.scoreFont = this.graphics.createFont("fonts/pixelGotic.ttf", 30, false, false);
-        this.worldFont = this.graphics.createFont("fonts/pixelGotic.ttf", 16, false, false);
+        this.scoreFont = this.graphics.createFont("fonts/pixellari.ttf", 50, false, false);
+        this.worldFont = this.graphics.createFont("fonts/pixellari.ttf", 35, false, false);
         this.lockImage = this.graphics.loadImage("sprites/lock.png");
         this.leftImage = this.graphics.loadImage("sprites/arrow1.png");
         this.rightImage = this.graphics.loadImage("sprites/arrow2.png");
@@ -243,7 +251,9 @@ public class AdventureScene implements IScene {
                 "Mundo 1 - Bosque",
                 "Mundo 2 - Desierto"
         };
-        graphics.drawText(worldFont, worldNames[currentWorld], 300, 50);
+
+        this.worldName = "Mundo " + String.valueOf(this.currentWorld + 1) + " - " + this.worlds.get(this.currentWorld).first;
+        graphics.drawText(worldFont, this.worldName, 300, 50);
     }
 
     /**
@@ -317,14 +327,15 @@ public class AdventureScene implements IScene {
      * @param world
      */
     public void loadLevelStatesForCurrentWorld(int world) {
-        int levelsPerWorld = 14;
+
+        this.levelsPerWorld = this.worlds.get(this.currentWorld).second;
 
         // Cargar todos los estados globales desde GameLoader
         ArrayList<LevelState> globalLevelStates = gameLoader.loadLevelStates();
 
         levelStates.clear();
 
-        int baseIndex = world * levelsPerWorld; // solo este mundo
+        int baseIndex = world * this.levelsPerWorld; // solo este mundo
 
         for (int i = baseIndex; i < globalLevelStates.size(); i++) {
             levelStates.add(globalLevelStates.get(i));

@@ -1,5 +1,7 @@
 package com.example.practica2;
 
+import android.util.Pair;
+
 import com.example.androidengine.AndroidAudio;
 import com.example.androidengine.AndroidEngine;
 import com.example.androidengine.AndroidFile;
@@ -85,7 +87,7 @@ public class GameScene implements IScene {
     private int money;
 
     // Vidas actuales.
-    private int lives = 10;
+    private int lives = 0;
 
     // Tipo de torre.
     private TowerType type = null;
@@ -264,6 +266,8 @@ public class GameScene implements IScene {
 
         timer += deltaTime;
 
+        completeLevel();
+
         if (this.levelData != null){
             enemiesPerWave = this.levelData.getWaveAmounts().get(this.wave);
         }
@@ -381,17 +385,26 @@ public class GameScene implements IScene {
     }
 
     private void completeLevel() {
-        if (levelData == null) return;
+        if (levelData == null)
+            return;
 
-        if (lives < 1) return;
+        // if (lives < 1) return;
+
+        ArrayList<Pair<String, Integer>> worlds = this.gameLoader.get_levels();
 
         int world = levelData.getWorld() - 1;
         int lvlIndex = levelData.getLevel() - 1;
-        int levelsPerWorld = 14;
+
 
         ArrayList<AdventureScene.LevelState> globalLevelStates = gameLoader.loadLevelStates();
 
-        int globalIndex = world * levelsPerWorld + lvlIndex;
+        int globalIndex = 0;
+
+        for (int i = 0; i < world; i++){
+            globalIndex += worlds.get(i).second;
+        }
+
+        globalIndex += lvlIndex;
 
         globalLevelStates.set(globalIndex, AdventureScene.LevelState.UNLOCKED_COMPLETED);
 
