@@ -5,60 +5,42 @@
       "type": "TOWER",
       "cost": 250,
       "description": "Torre que dispara un rayo a un solo enemigo y también daño en area",
-      "image": "star",
-      "backgroundColor": "0",
-      "buttonColor": "0",
-      "buttonColor2": "0"
+      "image": "star"
     },
     {
       "id": "towerStun",
       "type": "TOWER",
       "cost": 200,
       "description": "Torre que aturde a los enemigos impidiendoles moverse",
-      "image": "octagon",
-      "backgroundColor": "0",
-      "buttonColor": "0",
-      "buttonColor2": "0"
+      "image": "octagon"
     },
     {
       "id": "towerPoison",
       "type": "TOWER",
       "cost": 300,
       "description": "Torre que tira veneno que se puede acumular entre torres",
-      "image": "circle",
-      "backgroundColor": "0",
-      "buttonColor": "0",
-      "buttonColor2": "0"
+      "image": "circle"
     },
     {
       "id": "skinFuego",
       "type": "SKIN",
       "cost": 150,
       "description": "Apariencia para la torre de fuego, no tiene efectos.",
-      "image": "sprites/towerFuego.png",
-      "backgroundColor": "0",
-      "buttonColor": "0",
-      "buttonColor2": "0"
+      "image": "sprites/towerFuego.png"
     },
     {
       "id": "skinHielo",
       "type": "SKIN",
       "cost": 200,
       "description": "Apariencia para la torre de hielo, no tiene efectos.",
-      "image": "sprites/towerHielo.png",
-      "backgroundColor": "0",
-      "buttonColor": "0",
-      "buttonColor2": "0"
+      "image": "sprites/towerHielo.png"
     },
     {
       "id": "skinRayo",
       "type": "SKIN",
       "cost": 100,
       "description": "Apariencia para la torre de rayo, no tiene efectos.",
-      "image": "sprites/towerRayo.png",
-      "backgroundColor": "0",
-      "buttonColor": "0",
-      "buttonColor2": "0"
+      "image": "sprites/towerRayo.png"
     }
   ]
 }
