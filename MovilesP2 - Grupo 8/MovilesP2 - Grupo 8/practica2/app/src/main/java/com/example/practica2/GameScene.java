@@ -418,13 +418,7 @@ public class GameScene implements IScene {
                     enemiesPerWave = 5 + this.wave;
                     waveCooldown = 5.0f;
                 } else {
-                    DiamondManager.addDiamonds(DiamondManager.getDiamondsPerLevel());
-                    gameLoader.saveDiamonds(DiamondManager.getDiamonds());
-
                     completeLevel();
-
-                    DiamondManager.addDiamonds(DiamondManager.getDiamondsPerLevel());
-                    gameLoader.saveDiamonds(DiamondManager.getDiamonds());
 
                     this.iEngine.setScenes(new FinalScene(gameLoader, this.difficulty, true));
                 }
@@ -434,8 +428,6 @@ public class GameScene implements IScene {
                     enemiesPerWave = 7 + this.wave;
                     waveCooldown = 4.0f;
                 } else {
-                    DiamondManager.addDiamonds(DiamondManager.getDiamondsPerLevel());
-                    gameLoader.saveDiamonds(DiamondManager.getDiamonds());
                     this.iEngine.setScenes(new FinalScene(gameLoader, this.difficulty, true));
                 }
                 break;

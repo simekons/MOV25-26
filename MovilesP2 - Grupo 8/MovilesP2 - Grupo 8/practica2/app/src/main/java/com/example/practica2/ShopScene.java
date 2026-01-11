@@ -195,14 +195,12 @@ public class ShopScene implements IScene {
                                 gameLoader.saveDiamonds(diamonds - infoPanel.itemCost());
                                 DiamondManager.subtractDiamonds(infoPanel.itemCost());
                                 gameLoader.savePlayerShopState(shopManager.getPlayerShopState());
-                                //gameLoader.saveTheme(shopManager.getSelectedSkin().getBackgroundColor(), shopManager.getSelectedSkin().getButtonColor(), shopManager.getSelectedSkin().getButtonColor2());
                             }
                             else if (!shopManager.isSelected(selectedItemId)) {
                                 shopManager.selectItem(selectedItemId);
                                 gameLoader.savePlayerShopState(shopManager.getPlayerShopState());
-                                //gameLoader.saveTheme(shopManager.getSelectedSkin().getBackgroundColor(), shopManager.getSelectedSkin().getButtonColor(), shopManager.getSelectedSkin().getButtonColor2());
                             }
-                            //infoPanel.setItem(shopManager.getShopCatalog().getItem(selectedItemId), shopManager, gameLoader.getPanelColor(), gameLoader.getPanelButtonColor());
+                            infoPanel.setItem(shopManager.getShopCatalog().getItem(selectedItemId), shopManager, gameLoader.getPanelColor(), gameLoader.getPanelButtonColor());
                         }
                     }
                     break;
