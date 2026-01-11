@@ -9,20 +9,22 @@ import com.example.engine.IAudio;
 import com.example.engine.IGraphics;
 import com.example.engine.IImage;
 
-/*
-* MapGrid es la clase que gestiona el tablero de juego.
-* */
+/**
+ * MapGrid gestiona el tablero del juego.
+ */
 public class MapGrid {
 
+    // Gráficos de Android.
     private AndroidGraphics graphics;
 
+    // Fondo.
     private AndroidImage backgroundImage;
+
     // Filas.
     private int rows;
 
     // Columnas.
     private int columns;
-
 
     // Tamaño cuadrado de cada celda
     private float cellSize;
@@ -32,7 +34,6 @@ public class MapGrid {
 
     // Margen superior para centrar el grid
     private float offsetY;
-
 
     // Ancho y alto de la pantalla.
     private float screenWidth;
@@ -47,9 +48,13 @@ public class MapGrid {
     // Posiciones de camino.
     private List<float[]> pathPositions = new ArrayList<>();
 
-    // Gráficos.
-
-    // CONSTRUCTORA
+    /**
+     * CONSTRUCTORA.
+     * @param mapData
+     * @param screenWidth
+     * @param screenHeight
+     * @param graphics
+     */
     public MapGrid(Maps mapData, float screenWidth, float screenHeight, AndroidGraphics graphics) {
         this.rows = mapData.getRows();
         this.columns = mapData.getCols();
@@ -74,7 +79,9 @@ public class MapGrid {
         createCellsFromMap(mapData.getMap());
     }
 
-    // RENDERIZADO
+    /**
+     * Método de RENDERIZADO.
+     */
     public void render() {
         this.graphics.drawImage(this.backgroundImage, (int)startingPoint.getX() + (int)this.screenWidth / 2 , 0, (int)this.screenWidth, (int)this.screenHeight);
         this.graphics.drawImage(this.backgroundImage, (int)startingPoint.getX() + (int)this.screenWidth / 2 , (int)this.screenHeight, (int)this.screenWidth, (int)this.screenHeight);
@@ -88,7 +95,10 @@ public class MapGrid {
         }
     }
 
-    // Creación de celdas.
+    /**
+     * Método que crea las celdas.
+     * @param map
+     */
     private void createCellsFromMap(String map) {
         for (int row = 0; row < rows; row++) {
             for (int col = 0; col < columns; col++) {
@@ -125,7 +135,9 @@ public class MapGrid {
         buildPathPositions();
     }
 
-    // Creación de camino.
+    /**
+     * Método que crea el camino a seguir.
+     */
     private void buildPathPositions() {
         if (startingPoint == null) return;
 
@@ -168,7 +180,16 @@ public class MapGrid {
         }
     }
 
-    // Colocar una torre
+    /**
+     * Método que coloca una torre.
+     * @param x
+     * @param y
+     * @param type
+     * @param iGraphics
+     * @param iAudio
+     * @param img
+     * @return
+     */
     public Tower placeTowerAt(float x, float y, TowerType type, IGraphics iGraphics, IAudio iAudio, IImage img) {
         Cell cell = getCellAtPosition(x, y);
 
@@ -211,14 +232,22 @@ public class MapGrid {
         return tower;
     }
 
-    // Añadir una celda.
+    /**
+     * Método que añade celda por celda.
+     * @param cell
+     * @param row
+     * @param column
+     */
     public void addCell(Cell cell, int row, int column) {
         if (row >= 0 && row < rows && column >= 0 && column < columns) {
             cells[row][column] = cell;
         }
     }
 
-    // Mostrar celdas disponibles.
+    /**
+     * Método que muestra las celdas disponibles.
+     * @param available
+     */
     public void showAvailableCells(boolean available) {
         for (int row = 0; row < rows; row++) {
             for (int col = 0; col < columns; col++) {
@@ -231,8 +260,9 @@ public class MapGrid {
         }
     }
 
-    // --------------------------GETTERS--------------------------
-
+    /**
+     * GETTERS
+     */
     // Celda en [row][column].
     public Cell getCell(int row, int column) {
         if (row >= 0 && row < rows && column >= 0 && column < columns) {
@@ -261,28 +291,9 @@ public class MapGrid {
         return null; // no se tocó ninguna celda
     }
 
-    // Celda inicial.
-    public Cell getStartingPoint() { return startingPoint; }
-
-    // Filas.
-    public int getRows() { return rows; }
-
-    // Column.
-    public int getColumns() { return columns; }
-
     // Posiciones de camino.
     public List<float[]> getPathPositions() {
         return pathPositions;
     }
-
-    // Tamaño de celda.
-    public float getCellSize() { return cellSize; }
-
-    // Márgenes.
-    public float getOffsetX() { return offsetX; }
-    public float getOffsetY() { return offsetY; }
-
-
-
 }
 

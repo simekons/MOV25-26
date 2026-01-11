@@ -10,8 +10,8 @@ import java.util.List;
 // Enumerador con las posibles resistencias de un enemigo.
 enum EnemyResist { Nada, Rayo, Hielo, Fuego }
 
-/*
- * Enemy implementa los enemigos y sus funcionalidades.
+/**
+ * Enemy implementa los enemigos.
  */
 public class Enemy {
 
@@ -68,7 +68,19 @@ public class Enemy {
     // Destino actual.
     private int currentTarget;    // Índice del waypoint actual
 
-    // CONSTRUCTORA
+    /**
+     * CONSTRUCTORA.
+     * @param graphics
+     * @param audio
+     * @param image
+     * @param speed
+     * @param radius
+     * @param isActive
+     * @param map
+     * @param vida
+     * @param defensa
+     * @param type
+     */
     public Enemy(AndroidGraphics graphics, AndroidAudio audio, AndroidImage image, float speed, float radius, boolean isActive, MapGrid map,
                  int vida, int defensa, EnemyResist type) {
         this.graphics = graphics;
@@ -110,7 +122,9 @@ public class Enemy {
         this.death = this.iAudio.newSound("music/death.wav");
     }
 
-    // RENDERIZADO
+    /**
+     * Método de RENDERIZADO.
+     */
     public void render() {
         if (!isActive) return;
 
@@ -123,7 +137,10 @@ public class Enemy {
         }
     }
 
-    // UPDATE
+    /**
+     * Método de UPDATE.
+     * @param delta
+     */
     public void update(float delta) {
         if (!isActive || path.isEmpty() || currentTarget >= path.size()) return;
 
@@ -183,7 +200,11 @@ public class Enemy {
         y += dy * speed * delta * speedModifier;
     }
 
-    // Recibe daño.
+    /**
+     * Método que gestiona recibir daño.
+     * @param amount
+     * @param resist
+     */
     public void makeDamage(int amount, EnemyResist resist) {
         if(resist == type){
             amount = (amount * 3) / 4;
@@ -197,18 +218,28 @@ public class Enemy {
         }
     }
 
-    // Recibe veneno
+    /**
+     * Método que gestiona recibir veneno.
+     * @param amount
+     * @param ticksToApply
+     */
     public void putPoison(int amount, int ticksToApply) {
         this.poison += amount;
         this.poisonTicksRemaining += ticksToApply;
     }
 
-    // Paraliza a los enemigos
+    /**
+     * Método que paraliza a los enemigos.
+     * @param time
+     */
     public void putStun(float time) {
         this.stunTimeRemaining += time;
     }
 
-    // Alterador de la velocidad.
+    /**
+     * Método que altera la velocidad.
+     * @param slowFactor
+     */
     public void setSpeedModifier(float slowFactor) {
         if(type == EnemyResist.Hielo) {
             slowFactor /= 2;
@@ -216,15 +247,12 @@ public class Enemy {
         speedModifier = slowFactor;
     }
 
-    // --------------------------GETTERS--------------------------
-
-    // ¿Está activo?
+    /**
+     * GETTERS.
+     * @return
+     */
     public boolean isActive() { return isActive; }
-
-    // ¿Ha llegado al final?
     public boolean reachedEnd() { return reachEnd; }
-
-    // Coordenadas.
     public float getX() {return this.x;}
     public float getY() {return this.y;}
 

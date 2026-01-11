@@ -2,7 +2,8 @@ package com.example.practica2;
 
 import java.util.ArrayList;
 
-/*
+
+/**
  * Maps guarda la información de los niveles.
  */
 public class Maps {
@@ -20,16 +21,25 @@ public class Maps {
 
     private LevelData levelData;
 
-    // CONSTRUCTORA
+    /**
+     * CONSTRUCTORA (por defecto).
+     */
     public Maps() {
     }
 
+    /**
+     * CONSTRUCTORA.
+     * @param levelData
+     */
     public Maps(LevelData levelData){
         this.levelData = levelData;
 
         createMap();
     }
 
+    /**
+     * Método que crea el mapa.
+     */
     private void createMap(){
         ArrayList<String> road = this.levelData.getRoad();
 
@@ -47,25 +57,11 @@ public class Maps {
         this.background = this.levelData.getLevelBackground();
     }
 
-    // Nivel 1.
-    public static Maps level1() {
-        Maps m = new Maps();
-        m.rows = 8;
-        m.cols = 15;
-        m.map = "..............." +
-                ".....#########." +
-                ".....#.......#." +
-                ".....######..#." +
-                "..........#..#." +
-                "###########..#." +
-                ".............##" +
-                "...............";
-        return m;
-    }
-
+    /**
+     * GETTERS.
+     */
     public int getRows() { return this.rows;}
     public int getCols() { return this.cols; }
     public String getMap() { return this.map; }
-
     public String getBackground() { return this.background; }
 }

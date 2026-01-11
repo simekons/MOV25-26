@@ -6,16 +6,27 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * ShopCatalog gestiona los elementos de la tienda.
+ */
 public class ShopCatalog {
 
+    // Mapa con los items.
     private Map<String, ShopItemData> itemsById = new HashMap<>();
 
+    /**
+     * CONSTRUCTORA.
+     * @param items
+     */
     public ShopCatalog(List<ShopItemData> items) {
         for (ShopItemData item : items) {
             itemsById.put(item.getId(), item);
         }
     }
 
+    /**
+     * GETTERS.
+     */
     public Collection<ShopItemData> getAllItems() {
         return itemsById.values();
     }
