@@ -105,7 +105,6 @@ public class GameLoader {
             JSONObject jsonObject = readJSONFromAssets(path);
 
             colorUnlocked = (int) Long.parseLong(jsonObject.getString("colorPassed").substring(2), 16);
-            colorUnlocked = (int) Long.parseLong(jsonObject.getString("colorUnlocked").substring(2), 16);
             colorLocked = (int) Long.parseLong(jsonObject.getString("colorLocked").substring(2), 16);
         }
         catch (Exception e) {

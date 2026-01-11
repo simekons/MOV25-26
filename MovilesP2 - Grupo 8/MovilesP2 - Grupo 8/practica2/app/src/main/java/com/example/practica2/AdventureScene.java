@@ -62,6 +62,9 @@ public class AdventureScene implements IScene {
     private Button exitButton;
     private AndroidImage exitImage;
 
+    private AndroidImage leftImage;
+    private AndroidImage rightImage;
+
     private AndroidSound clickButton;
 
     private String worldName;
@@ -96,8 +99,8 @@ public class AdventureScene implements IScene {
         this.gameLoader = gameLoader;
 
         this.exitButton = new Button(this.graphics, this.exitImage, 25, 25, 50, 50);
-        leftArrow = new Button(graphics, this.exitImage, 50, 300, 50, 50);
-        rightArrow = new Button(graphics, this.exitImage, 500, 300, 50, 50);
+        leftArrow = new Button(graphics, this.leftImage, 120, 35, 40, 40);
+        rightArrow = new Button(graphics, this.rightImage, 480, 35, 40, 40);
 
         buttonsVariables();
 
@@ -144,10 +147,20 @@ public class AdventureScene implements IScene {
                 levelButtons.add(new LevelButton(
                         graphics, lockImage, x, y,
                         buttonDimension, buttonDimension,
-                        this.gameLoader.get_locked(), LevelState.LOCKED,
+                        this.gameLoader.get_locked(), state,
                         currentWorld + 1, i
                 ));
-            } else {
+            } else if (state == LevelState.UNLOCKED_INCOMPLETE) {
+                levelButtons.add(new LevelButton(
+                        graphics, scoreFont, x, y,
+                        buttonDimension, buttonDimension,
+                        String.valueOf(i + 1),
+                        this.gameLoader.get_locked(), 0xff000000,
+                        state,
+                        currentWorld + 1, i
+                ));
+            }
+            else {
                 levelButtons.add(new LevelButton(
                         graphics, scoreFont, x, y,
                         buttonDimension, buttonDimension,
@@ -162,10 +175,12 @@ public class AdventureScene implements IScene {
 
 
     private void loadAssets(){
-        this.exitImage = this.graphics.loadImage("sprites/bow.png");
+        this.exitImage = this.graphics.loadImage("sprites/exit.png");
         this.scoreFont = this.graphics.createFont("fonts/pixelGotic.ttf", 30, false, false);
-        this.worldFont = this.graphics.createFont("fonts/pixelGotic.ttf", 20, false, false);
+        this.worldFont = this.graphics.createFont("fonts/pixelGotic.ttf", 16, false, false);
         this.lockImage = this.graphics.loadImage("sprites/lock.png");
+        this.leftImage = this.graphics.loadImage("sprites/arrow1.png");
+        this.rightImage = this.graphics.loadImage("sprites/arrow2.png");
     }
 
     @Override
@@ -188,7 +203,7 @@ public class AdventureScene implements IScene {
                 this.graphics.setColor(0xffffdd77);
                 break;
         }
-        this.graphics.fillRectangle(100, 5, 400, 60);
+        this.graphics.fillRectangle(150, 5, 300, 60);
 
         for(LevelButton lb : this.levelButtons){
             if (lb.getY() > 60 && lb.getY() < 600){
@@ -264,30 +279,6 @@ public class AdventureScene implements IScene {
         }
     }
 
-    /*
-    public void completeLevel(int world, int levelIndexInWorld) {
-
-        int levelsPerWorld = 14;
-        int globalIndex = world * levelsPerWorld + levelIndexInWorld;
-
-        ArrayList<LevelState> globalStates = gameLoader.loadLevelStates();
-
-        // Completa el nivel actual
-        globalStates.set(globalIndex, LevelState.UNLOCKED_COMPLETED);
-
-        // Desbloquea el siguiente nivel global
-        if (globalIndex + 1 < globalStates.size()) {
-            if (globalStates.get(globalIndex + 1) == LevelState.LOCKED) {
-                globalStates.set(globalIndex + 1, LevelState.UNLOCKED_INCOMPLETE);
-            }
-        }
-
-        // Recarga el mundo actual en pantalla
-        loadLevelStatesForCurrentWorld(currentWorld);
-        createLevelsButtons();
-    }
-
-*/
     public void loadLevelStatesForCurrentWorld(int world) {
         int levelsPerWorld = 14;
 
@@ -304,7 +295,6 @@ public class AdventureScene implements IScene {
         createLevelsButtons();
         setStyleLevelButtons();
     }
-
 
     public void handleLevelButtons(AndroidInput.TouchEvent e)
     {
