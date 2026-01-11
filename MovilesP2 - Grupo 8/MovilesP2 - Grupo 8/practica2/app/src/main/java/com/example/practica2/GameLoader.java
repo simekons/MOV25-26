@@ -503,6 +503,22 @@ public class GameLoader {
             return 0xff9ce4f5;
     }
 
+    public int getPanelColor()
+    {
+        if(shopManager.getSelectedSkin() != null)
+            return shopManager.getSelectedSkin().getButtonColor2();
+        else
+            return 0xff79c8d7;
+    }
+
+    public int getPanelButtonColor()
+    {
+        if(shopManager.getSelectedSkin() != null)
+            return shopManager.getSelectedSkin().getButtonColor();
+        else
+            return 0xff01a9c9;
+    }
+
 
     public ShopManager getShopManager() { return shopManager; }
 

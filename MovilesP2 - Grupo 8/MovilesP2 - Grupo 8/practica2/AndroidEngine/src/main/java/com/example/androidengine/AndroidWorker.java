@@ -35,7 +35,8 @@ public class AndroidWorker extends Worker {
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getApplicationContext());
 
         Intent intent = getApplicationContext().getPackageManager().getLaunchIntentForPackage(nameClass);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.putExtra("FROM_NOTIFICATION", true);
 
         PendingIntent contentIntent = PendingIntent. getActivity(getApplicationContext(), 0, intent,
                 PendingIntent. FLAG_IMMUTABLE | PendingIntent. FLAG_UPDATE_CURRENT);

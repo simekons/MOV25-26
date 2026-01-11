@@ -16,21 +16,24 @@ public class ShopInfoPanel {
     private String currentItemId;
 
     private int x, y, width, height;
+    private int panelColor, panelButtonColor;
 
     public ShopInfoPanel(AndroidGraphics g, AndroidFont font,
-                         int x, int y, int width, int height) {
+                         int x, int y, int width, int height, int panelColor, int panelButtonColor) {
         this.iGraphics = g;
         this.iFont = font;
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
+        this.panelColor = panelColor;
+        this.panelButtonColor = panelButtonColor;
     }
 
     public void render(ShopItemData item) {
         if (item == null) return;
 
-        iGraphics.setColor(0xff79c8d7);
+        iGraphics.setColor(panelColor);
         iGraphics.fillRectangle(x, y, width, height);
         iGraphics.setColor(0xff000000);
 
@@ -115,12 +118,15 @@ public class ShopInfoPanel {
         }
     }
 
-    public void setItem(ShopItemData item, ShopManager shopManager) {
+    public void setItem(ShopItemData item, ShopManager shopManager, int panelColor, int panelButtonColor) {
         if (item == null) {
             currentItemId = null;
             actionButton = null;
             return;
         }
+
+        this.panelColor = panelColor;
+        this.panelButtonColor = panelButtonColor;
 
         currentItemId = item.getId();
 
@@ -146,7 +152,7 @@ public class ShopInfoPanel {
             enabled = false;
         }
 
-        actionButton = new Button(iGraphics, iFont, x + 125, buttonY, width - 80, 45, text, 0xff01a9c9);
+        actionButton = new Button(iGraphics, iFont, x + 125, buttonY, width - 80, 45, text, this.panelButtonColor);
     }
 
     public Button getActionButton() { return this.actionButton; }

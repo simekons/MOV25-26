@@ -39,6 +39,8 @@ public class AndroidEngine implements Runnable {
     private AndroidFile androidFile;
     // Ads
     private AndroidAds androidAds;
+    // Share
+    private AndroidShare androidShare;
     // Actividad principal.
     private Activity activity;
     // Hebra de renderizado.
@@ -66,11 +68,12 @@ public class AndroidEngine implements Runnable {
         this.androidAudio = new AndroidAudio(a);
         this.androidFile = new AndroidFile(a);
         this.androidAds = new AndroidAds(a);
+        this.androidShare = new AndroidShare(a, surfaceView);
 
         this.surfaceView.setOnTouchListener(this.androidInput);
     }
 
-    public void showNotification(String title, String desc, int icon, String mainName){
+    public void programNotification(Long time, String title, String desc, int icon, String mainName){
 
         if (Build.VERSION. SDK_INT >= Build.VERSION_CODES. O) {
             CharSequence name = "notification";
@@ -90,7 +93,7 @@ public class AndroidEngine implements Runnable {
                         .putString("notifications_channel_id", channelId)
                         .putString("class",mainName)
                         .build())
-                .setInitialDelay(5, TimeUnit.SECONDS)
+                .setInitialDelay(time, TimeUnit.SECONDS)
                 .build();
 
         WorkManager.getInstance(this.activity.getBaseContext()).enqueue(notificationWork);
@@ -207,6 +210,12 @@ public class AndroidEngine implements Runnable {
     public AndroidFile getFile() { return this.androidFile; }
     // Anuncios
     public AndroidAds getAds() { return this.androidAds; }
+    // Share
+    public AndroidShare getAndroidShare() { return this.androidShare; }
     // Escena actual.
     public void setScenes(IScene scene) { this.scene = scene; }
+
+    public static void reset() {
+        _instance = null;
+    }
 }
