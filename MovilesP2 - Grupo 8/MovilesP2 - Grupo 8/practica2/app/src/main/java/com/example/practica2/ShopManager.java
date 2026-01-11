@@ -3,17 +3,32 @@ package com.example.practica2;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * ShopManager es el gestor de la tienda.
+ */
 public class ShopManager {
 
+    // Catálogo de la tienda.
     private ShopCatalog catalog;
+
+    // Estado de los ítems.
     private PlayerShopState playerShopState;
 
+    /**
+     * CONSTRUCTORA.
+     * @param catalog
+     * @param playerState
+     */
     public ShopManager(ShopCatalog catalog, PlayerShopState playerState) {
         this.catalog = catalog;
         this.playerShopState = playerState;
     }
 
-    // Comprueba si el item se puede comprar
+    /**
+     * Método que comprueba si el ítem se puede comprar.
+     * @param itemId
+     * @return
+     */
     public boolean canBuy(String itemId) {
         if (!catalog.exists(itemId)) return false;
         if (playerShopState.isPurchased(itemId)) return false;
@@ -22,7 +37,11 @@ public class ShopManager {
         return DiamondManager.getDiamonds() >= item.getCost();
     }
 
-    // Compra el item
+    /**
+     * Método que compra un objeto.
+     * @param itemId
+     * @return
+     */
     public boolean buyItem(String itemId) {
         if (!canBuy(itemId)) return false;
 
@@ -34,7 +53,11 @@ public class ShopManager {
         return true;
     }
 
-    // Selecciona el item
+    /**
+     * Método que selecciona un ítem.
+     * @param itemId
+     * @return
+     */
     public boolean selectItem(String itemId) {
         if (!catalog.exists(itemId)) return false;
         if (!playerShopState.isPurchased(itemId)) return false;
@@ -50,7 +73,10 @@ public class ShopManager {
         return true;
     }
 
-    // Selecciona un item al comprarlo
+    /**
+     * Método que selecciona un ítem al comprarlo.
+     * @param item
+     */
     private void autoSelect(ShopItemData item) {
         if (item.getType() == ShopItemData.ShopItemType.TOWER) {
             playerShopState.selectTower(item.getId());
@@ -59,7 +85,9 @@ public class ShopManager {
         }
     }
 
-    // Devuelve todos los items de la tienda
+    /**
+     * GETTERS.
+     */
     public Collection<ShopItemData> getAllItems() {
         return catalog.getAllItems();
     }

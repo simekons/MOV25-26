@@ -6,8 +6,8 @@ import com.example.engine.ISound;
 
 import java.util.List;
 
-/*
- * TowerStun implementa la torre que paraliza a los enemigos.
+/**
+ * TowerStun implementa la torre aturdidora.
  */
 public class TowerStun extends Tower {
 
@@ -23,7 +23,16 @@ public class TowerStun extends Tower {
     // Sonido.
     private ISound fire;
 
-    // CONSTRUCTORA
+    /**
+     * CONSTRUCTORA.
+     * @param iGraphics
+     * @param iAudio
+     * @param row
+     * @param column
+     * @param size
+     * @param cost
+     * @param cell
+     */
     public TowerStun(IGraphics iGraphics, IAudio iAudio, int row, int column, float size, int cost, Cell cell) {
         super(iGraphics, row, column, size, cost, cell);
         this.damage = 0;
@@ -35,7 +44,9 @@ public class TowerStun extends Tower {
         this.fire = this.iAudio.newSound("music/fire.wav");
     }
 
-    // RENDERIZADO
+    /**
+     * Método de RENDERIZADO.
+     */
     @Override
     public void render() {
         // Renderiza la torre
@@ -56,7 +67,11 @@ public class TowerStun extends Tower {
         }
     }
 
-    // UPDATE
+    /**
+     * Método de UPDATE.
+     * @param deltaTime
+     * @param enemies
+     */
     @Override
     public void update(float deltaTime, List<Enemy> enemies) {
         timeSinceLastShot += deltaTime;

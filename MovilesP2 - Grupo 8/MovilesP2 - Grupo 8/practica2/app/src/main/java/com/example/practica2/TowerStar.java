@@ -6,8 +6,8 @@ import com.example.engine.ISound;
 
 import java.util.List;
 
-/*
- * TowerStar implementa la torre de fuego y rayo en una sola torre
+/**
+ * TowerStar implementa la torre de estrella.
  */
 public class TowerStar extends Tower {
 
@@ -25,7 +25,16 @@ public class TowerStar extends Tower {
 
     private int damageRayo;
 
-    // CONSTRUCTORA
+    /**
+     * CONSTRUCTORA.
+     * @param iGraphics
+     * @param iAudio
+     * @param row
+     * @param column
+     * @param size
+     * @param cost
+     * @param cell
+     */
     public TowerStar(IGraphics iGraphics, IAudio iAudio, int row, int column, float size, int cost, Cell cell) {
         super(iGraphics, row, column, size, cost, cell);
         this.damageRayo = 10;
@@ -38,7 +47,9 @@ public class TowerStar extends Tower {
         this.fire = this.iAudio.newSound("music/fire.wav");
     }
 
-    // RENDERIZADO
+    /**
+     * Método de RENDERIZADO.
+     */
     @Override
     public void render() {
         // Renderiza la torre
@@ -64,7 +75,11 @@ public class TowerStar extends Tower {
         }
     }
 
-    // UPDATE
+    /**
+     * Método de UPDATE.
+     * @param deltaTime
+     * @param enemies
+     */
     @Override
     public void update(float deltaTime, List<Enemy> enemies) {
         timeSinceLastShot += deltaTime;

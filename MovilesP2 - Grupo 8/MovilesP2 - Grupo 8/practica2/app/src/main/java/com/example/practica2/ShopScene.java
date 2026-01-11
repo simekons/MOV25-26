@@ -17,29 +17,53 @@ import java.util.Map;
 
 import java.util.List;
 
+/**
+ * ShopScene implementa la escena de la tienda.
+ */
 public class ShopScene implements IScene {
 
+    // Motor de Android.
     private AndroidEngine iEngine;
+
+    // Gráficos de Android.
     private AndroidGraphics iGraphics;
+
+    // Audio en Android.
     private AndroidAudio iAudio;
+
+    // Archivo en Ancroid.
     private AndroidFile iFile;
 
+    // Imágenes.
     private AndroidImage exitImage;
+    private AndroidImage imgDiamond;
+
+    // Sonidos.
     private AndroidSound clickSound;
+
+    // Fuentes.
     private AndroidFont buttonFont;
 
+    // GameLoader.
     private GameLoader gameLoader;
+
+    // Manager de la tienda.
     private ShopManager shopManager;
     private ShopInfoPanel infoPanel;
 
+    // Botones.
     private Button exitButton;
-
     private Map<String, Button> towerButtons = new HashMap<>();
     private Map<String, Button> skinButtons = new HashMap<>();
+
+    // Variables de los botones.
     private String selectedItemId = null;
     private int panelColor, panelButtonColor;
 
-    private IImage imgDiamond;
+    /**
+     * CONSTRUCTORA.
+     * @param gameLoader
+     */
     public ShopScene(GameLoader gameLoader)
     {
         this.iEngine = AndroidEngine.get_instance();
@@ -62,12 +86,18 @@ public class ShopScene implements IScene {
         initShopButtons();
     }
 
+    /**
+     * Método que carga los assets.
+     */
     private void loadAssets(){
         this.exitImage = this.iGraphics.loadImage("sprites/exit.png");
         this.clickSound = this.iAudio.newSound("music/button.wav");
         this.buttonFont = iGraphics.createFont("fonts/pixellari.ttf", 35, false, false);
     }
 
+    /**
+     * Método de RENDERIZADO.
+     */
     @Override
     public void render() {
         iGraphics.clear(gameLoader.getBackgroundColor());
@@ -114,11 +144,18 @@ public class ShopScene implements IScene {
         infoPanel.render(selectedItem);
     }
 
+    /**
+     * Método de UPDATE (vacío).
+     * @param deltaTime
+     */
     @Override
     public void update(float deltaTime) {
 
     }
 
+    /**
+     * Método que inicializa los botones de la tienda.
+     */
     private void initShopButtons()
     {
         List<ShopItemData> towers = shopManager.getTowerItems();
@@ -170,6 +207,10 @@ public class ShopScene implements IScene {
         }
     }
 
+    /**
+     * Método que GESTIONA el INPUT.
+     * @param events
+     */
     @Override
     public void handleInput(List<IInput.TouchEvent> events) {
         for(IInput.TouchEvent e : events)
@@ -210,6 +251,12 @@ public class ShopScene implements IScene {
         }
     }
 
+    /**
+     * Método que comprueba un botón.
+     * @param buttons
+     * @param e
+     * @return
+     */
     private boolean checkButtons(Map<String, Button> buttons, IInput.TouchEvent e) {
         for (Map.Entry<String, Button> entry : buttons.entrySet()) {
             if (entry.getValue().imageIsTouched(e.x, e.y)) {

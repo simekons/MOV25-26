@@ -6,9 +6,9 @@ import com.example.engine.ISound;
 
 import java.util.List;
 
-/*
- * TowerPoison implementa la torre de veneno
- * */
+/**
+ * TowerPoison implementa la torre de veneno.
+ */
 public class TowerPoison extends Tower {
 
     // Audio.
@@ -17,7 +17,16 @@ public class TowerPoison extends Tower {
     // Sonido.
     private ISound thunder;
 
-    // CONSTRUCTORA
+    /**
+     * CONSTRUCTORA.
+     * @param iGraphics
+     * @param iAudio
+     * @param row
+     * @param column
+     * @param size
+     * @param cost
+     * @param cell
+     */
     public TowerPoison(IGraphics iGraphics, IAudio iAudio, int row, int column, float size, int cost, Cell cell) {
         super(iGraphics, row, column, size, cost, cell);
         this.damage = 3;
@@ -29,7 +38,9 @@ public class TowerPoison extends Tower {
         this.thunder = this.iAudio.newSound("music/thunder.wav");
     }
 
-    // RENDERIZADo
+    /**
+     * Método de RENDERIZADO.
+     */
     @Override
     public void render() {
         float radius = size / 2f;
@@ -44,7 +55,11 @@ public class TowerPoison extends Tower {
         }
     }
 
-    // UPDATE
+    /**
+     * Método de UPDATE.
+     * @param deltaTime
+     * @param enemies
+     */
     @Override
     public void update(float deltaTime, List<Enemy> enemies) {
         timeSinceLastShot += deltaTime;

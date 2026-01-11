@@ -7,10 +7,9 @@ import com.example.engine.IFont;
 import com.example.engine.IGraphics;
 import com.example.engine.IImage;
 
-/*
-* TowerButton implementa los botones de torres.
+/**
+ * TowerButton implementa los botones de las torres.
  */
-
 public class TowerButton {
 
     // Gráficos.
@@ -36,7 +35,20 @@ public class TowerButton {
     // Tipo de torre.
     private TowerType tipo;
 
-    // CONSTRUCTORA
+    /**
+     * CONSTRUCTORA.
+     * @param graphics
+     * @param font
+     * @param x
+     * @param y
+     * @param width
+     * @param height
+     * @param cost
+     * @param tipo
+     * @param buttonColor
+     * @param textColor
+     * @param img
+     */
     public TowerButton(IGraphics graphics, IFont font,
                        float x, float y, float width, float height,
                        int cost, TowerType tipo, int buttonColor, int textColor, IImage img) {
@@ -55,7 +67,9 @@ public class TowerButton {
         this.img = img;
     }
 
-    // RENDERIZADO
+    /**
+     * Método de RENDERIZADO.
+     */
     public void render() {
         iGraphics.setColor(buttonColor);
         iGraphics.fillRoundRectangle(x, y, width, height, 5);
@@ -136,7 +150,9 @@ public class TowerButton {
         }
     }
 
-    // ¿Está seleccionado? (sí/no).
+    /**
+     * GETTERS.
+     */
     public boolean isTouched(int touchX, int touchY) {
         float left = x;
         float top = y;
@@ -146,17 +162,6 @@ public class TowerButton {
         return touchX >= left && touchX <= right && touchY >= top && touchY <= bottom;
     }
 
-
-    // --------------------------SETTERS--------------------------
-
-    // Selección / deselección.
-    public void setSelected(boolean selected) {
-        this.selected = selected;
-        buttonColor = this.selected ? 0xFFD3D3D3 : 0xFFFFFFFF;
-    }
-
-    // --------------------------GETTERS--------------------------
-
     // Coste.
     public int getCost() {
         return this.cost;
@@ -165,5 +170,14 @@ public class TowerButton {
     // Tipo.
     public TowerType getTipo() {
         return this.tipo;
+    }
+
+    /**
+     * SETTERS
+     */
+    // Selección / deselección.
+    public void setSelected(boolean selected) {
+        this.selected = selected;
+        buttonColor = this.selected ? 0xFFD3D3D3 : 0xFFFFFFFF;
     }
 }

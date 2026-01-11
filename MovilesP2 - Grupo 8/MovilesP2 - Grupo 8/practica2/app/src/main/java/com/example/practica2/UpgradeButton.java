@@ -4,10 +4,10 @@ import com.example.engine.IFont;
 import com.example.engine.IGraphics;
 import com.example.engine.IImage;
 
-/*
-* UpgradeButton implementa los botones de mejora.
-* */
 
+/**
+ * UpgradeButton implementa los botones de los botones.
+ */
 public class UpgradeButton {
 
     // Gráficos.
@@ -31,7 +31,19 @@ public class UpgradeButton {
     // ¿Está activo? (sí/no).
     private boolean active;
 
-    // CONSTRUCTORA
+    /**
+     * CONSTRUCTORA.
+     * @param graphics
+     * @param font
+     * @param image
+     * @param x
+     * @param y
+     * @param width
+     * @param height
+     * @param cost
+     * @param buttonColor
+     * @param textColor
+     */
     public UpgradeButton(IGraphics graphics, IFont font, IImage image,
                          float x, float y, float width, float height,
                          int cost, int buttonColor, int textColor) {
@@ -49,7 +61,9 @@ public class UpgradeButton {
         this.active = true;
     }
 
-    // RENDERIZADO
+    /**
+     * Método de RENDERIZADO.
+     */
     public void render() {
         if(!active) return;
 
@@ -97,7 +111,9 @@ public class UpgradeButton {
         }
     }
 
-    // ¿Ha sido presionado? (sí/no).
+    /**
+     * GETTERS.
+     */
     public boolean isTouched(int touchX, int touchY) {
         if(!active) return false;
 
@@ -108,18 +124,13 @@ public class UpgradeButton {
 
         return touchX >= left && touchX <= right && touchY >= top && touchY <= bottom;
     }
-
-
-    // --------------------------SETTERS--------------------------
-
-    // Activación/desactivación.
-    public void setActive(boolean a) { active = a; }
-
-    // --------------------------GETTERS--------------------------
-
-    // Coste
     public int getCost() {
         return this.cost;
     }
+
+    /**
+     * SETTERS.
+     */
+    public void setActive(boolean a) { active = a; }
 
 }

@@ -9,9 +9,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-/*
-* TowerHielo implementa la torre de hielo.
-*/
+/**
+ * TowerHielo implementa la torre de hielo.
+ */
 public class TowerHielo extends Tower {
 
     // Ralentización.
@@ -22,7 +22,17 @@ public class TowerHielo extends Tower {
 
     private IImage img;
 
-    // CONSTRUCTORA
+    /**
+     * CONSTRUCTORA.
+     * @param iGraphics
+     * @param iAudio
+     * @param row
+     * @param column
+     * @param size
+     * @param cost
+     * @param cell
+     * @param img
+     */
     public TowerHielo(IGraphics iGraphics, IAudio iAudio, int row, int column, float size, int cost, Cell cell, IImage img) {
         super(iGraphics, row, column, size, cost, cell);
         this.damage = 7;
@@ -31,7 +41,9 @@ public class TowerHielo extends Tower {
         this.img = img;
     }
 
-    // RENDERIZADO
+    /**
+     * Método de RENDERIZADO.
+     */
     @Override
     public void render() {
         if(img != null){
@@ -48,7 +60,11 @@ public class TowerHielo extends Tower {
         }
     }
 
-    // UPDATE
+    /**
+     * Método de UPDATE.
+     * @param deltaTime
+     * @param enemies
+     */
     @Override
     public void update(float deltaTime, List<Enemy> enemies) {
 

@@ -5,12 +5,14 @@ import com.example.engine.IGraphics;
 import java.util.ArrayList;
 import java.util.List;
 
-// Tipo de torres.
+/**
+ * Tipo de torres.
+ */
 enum TowerType {Rayo, Hielo, Fuego, Star, Stun, Poison}
 
-/*
-* Tower implementa la clase padre de las torres.
-*/
+/**
+ * Tower implementa la clase padre de las torres.
+ */
 public abstract class Tower {
     // Gráficos.
     protected IGraphics iGraphics;
@@ -46,7 +48,15 @@ public abstract class Tower {
     // Mejoras.
     protected boolean[] upgrades = new boolean[3];
 
-    // CONSTRUCTORA
+    /**
+     * CONSTRUCTORA.
+     * @param iGraphics
+     * @param row
+     * @param column
+     * @param size
+     * @param cost
+     * @param cell
+     */
     public Tower(IGraphics iGraphics, int row, int column, float size, int cost, Cell cell) {
         this.iGraphics = iGraphics;
         this.row = row;
@@ -63,37 +73,22 @@ public abstract class Tower {
         upgrades[2] = false;
     }
 
-    // RENDERIZADO
+    /**
+     * Método de RENDERIZADO.
+     */
     public abstract void render();
 
-    // UPDATE
+    /**
+     * Método de UPDATE.
+     * @param deltaTime
+     * @param enemies
+     */
     public abstract void update(float deltaTime, java.util.List<Enemy> enemies);
 
-    // Mejoras actuales.
-    public List<Integer> getActiveUpgrades() {
-        List<Integer> active = new ArrayList<>();
-        for (int i = 0; i < upgrades.length; i++) {
-            if (upgrades[i]) active.add(i);
-        }
-        return active;
-    }
-
-    // --------------------------SETTERS--------------------------
-
-    // Selección / deselección.
-    public void setSelected(boolean selected) { this.selected = selected; }
-
-    // --------------------------GETTERS--------------------------
-
-    // ¿Está seleccionado? (sí/no).
-    public boolean isTouched(float touchX, float touchY) {
-        float cx = cell.getX();
-        float cy = cell.getY();
-        float s = cell.getSize();
-        return touchX >= cx && touchX <= cx + s && touchY >= cy && touchY <= cy + s;
-    }
-
-    // Activación de mejora.
+    /**
+     * Método que activa una mejora.
+      * @param index
+     */
     public void activateUpgrade(int index) {
         switch (index){
             case 0:
@@ -108,4 +103,29 @@ public abstract class Tower {
         }
         upgrades[index] = true;
     }
+
+    /**
+     * GETTERS.
+     */
+    public List<Integer> getActiveUpgrades() {
+        List<Integer> active = new ArrayList<>();
+        for (int i = 0; i < upgrades.length; i++) {
+            if (upgrades[i]) active.add(i);
+        }
+        return active;
+    }
+
+    // ¿Está seleccionado? (sí/no).
+    public boolean isTouched(float touchX, float touchY) {
+        float cx = cell.getX();
+        float cy = cell.getY();
+        float s = cell.getSize();
+        return touchX >= cx && touchX <= cx + s && touchY >= cy && touchY <= cy + s;
+    }
+
+    /**
+     * SETTERS.
+     */
+    // Selección / deselección.
+    public void setSelected(boolean selected) { this.selected = selected; }
 }

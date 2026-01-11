@@ -11,12 +11,18 @@ import com.example.androidengine.AndroidAds;
 import com.example.androidengine.AndroidEngine;
 import com.google.android.gms.ads.AdView;
 
+/**
+ * MainActivity es la actividad principal.
+ */
 public class MainActivity extends AppCompatActivity {
 
     // Motor de Android.
     private AndroidEngine androidEngine;
 
-    // Método que inicia la app.
+    /**
+     * Método que inicia la app.
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,14 +59,18 @@ public class MainActivity extends AppCompatActivity {
         androidEngine.setScenes(menuScene);
     }
 
-    // Método que delega la gestión de la reanudación al motor.
+    /**
+     * Método que delega la gestión de la reanudación al motor.
+     */
     @Override
     protected void onResume() {
         super.onResume();
         androidEngine.onResume();
     }
 
-    // Método que delega la gestión del pausado al motor.
+    /**
+     * Método que delega la gestión del pausado al motor.
+     */
     @Override
     protected void onPause() {
         super.onPause();

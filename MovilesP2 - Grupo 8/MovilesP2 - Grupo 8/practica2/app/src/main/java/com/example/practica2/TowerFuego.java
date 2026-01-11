@@ -7,9 +7,9 @@ import com.example.engine.ISound;
 
 import java.util.List;
 
-/*
-* TowerFuego implementa la torre de fuego.
-*/
+/**
+ * TowerFuego implementa la torre de fuego.
+ */
 public class TowerFuego extends Tower {
 
     // Área de efecto.
@@ -25,7 +25,17 @@ public class TowerFuego extends Tower {
     private IImage img;
     private ISound fire;
 
-    // CONSTRUCTORA
+    /**
+     * CONSTRUCTORA.
+     * @param iGraphics
+     * @param iAudio
+     * @param row
+     * @param column
+     * @param size
+     * @param cost
+     * @param cell
+     * @param img
+     */
     public TowerFuego(IGraphics iGraphics, IAudio iAudio, int row, int column, float size, int cost, Cell cell, IImage img) {
         super(iGraphics, row, column, size, cost, cell);
         this.damage = 5;
@@ -38,7 +48,9 @@ public class TowerFuego extends Tower {
         this.fire = this.iAudio.newSound("music/fire.wav");
     }
 
-    // RENDERIZADO
+    /**
+     * Método de RENDERIZADO.
+     */
     @Override
     public void render() {
         // Renderiza la torre
@@ -64,7 +76,11 @@ public class TowerFuego extends Tower {
         }
     }
 
-    // UPDATE
+    /**
+     * Método de UPDATE.
+     * @param deltaTime
+     * @param enemies
+     */
     @Override
     public void update(float deltaTime, List<Enemy> enemies) {
         timeSinceLastShot += deltaTime;
