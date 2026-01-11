@@ -474,40 +474,63 @@ public class GameLoader {
     * */
     public int getBackgroundColor()
     {
-        if(shopManager.getSelectedSkin().getBackgroundColor() != 0)
-            return shopManager.getSelectedSkin().getBackgroundColor();
+        if(shopManager.getSelectedSkin() != null)
+        {
+            if(shopManager.getSelectedSkin().getBackgroundColor() != 0)
+                return shopManager.getSelectedSkin().getBackgroundColor();
+            else
+                return 0xffffffff;
+        }
         else
             return 0xffffffff;
     }
 
     public int getButtonColor()
     {
-        if(shopManager.getSelectedSkin().getButtonColor() != 0)
-            return shopManager.getSelectedSkin().getButtonColor();
+        if(shopManager.getSelectedSkin() != null)
+        {
+            if(shopManager.getSelectedSkin().getButtonColor() != 0)
+                return shopManager.getSelectedSkin().getButtonColor();
+            else
+                return 0xff808080;
+        }
         else
             return 0xff808080;
     }
 
     public int getButtonColor2()
     {
-        if(shopManager.getSelectedSkin().getButtonColor2() != 0)
-            return shopManager.getSelectedSkin().getButtonColor2();
+        if(shopManager.getSelectedSkin() != null)
+        {
+            if(shopManager.getSelectedSkin().getButtonColor2() != 0)
+                return shopManager.getSelectedSkin().getButtonColor2();
+            else
+                return 0xff9ce4f5;
+        }
         else
             return 0xff9ce4f5;
     }
 
     public int getPanelColor()
     {
-        if(shopManager.getSelectedSkin().getButtonColor2() != 0)
-            return shopManager.getSelectedSkin().getButtonColor2();
+        if(shopManager.getSelectedSkin() != null) {
+            if(shopManager.getSelectedSkin().getButtonColor2() != 0)
+                return shopManager.getSelectedSkin().getButtonColor2();
+            else
+                return 0xff79c8d7;
+        }
         else
             return 0xff79c8d7;
     }
 
     public int getPanelButtonColor()
     {
-        if(shopManager.getSelectedSkin().getButtonColor() != 0)
-            return shopManager.getSelectedSkin().getButtonColor();
+        if(shopManager.getSelectedSkin() != null) {
+            if(shopManager.getSelectedSkin().getButtonColor() != 0)
+                return shopManager.getSelectedSkin().getButtonColor();
+            else
+                return 0xff01a9c9;
+        }
         else
             return 0xff01a9c9;
     }
