@@ -80,6 +80,11 @@ public class FinalScene implements IScene {
         this.win = win;
         this.diamondsPerLevel = DiamondManager.getDiamondsPerLevel();
 
+        if(win){
+            DiamondManager.addDiamonds(diamondsPerLevel);
+            this.gameLoader.saveDiamonds(DiamondManager.getDiamonds());
+        }
+
         this.fontButton = iGraphics.createFont("fonts/fff.ttf", 15, false, false);
         this.titleFont = iGraphics.createFont("fonts/pixelGotic.ttf", 35, false, false);
 
@@ -144,17 +149,17 @@ public class FinalScene implements IScene {
                     {
                         this.iEngine.setScenes(new MenuScene(gameLoader));
                     }
-                    if(adButton.isTouched(e.x, e.y))
+                    if(adButton.isTouched(e.x, e.y) && win)
                     {
                         if(!adWatched)
                         {
-                            androidAds.showRewardedAd(() -> diamondsPerLevel *= 2);
                             DiamondManager.addDiamonds(diamondsPerLevel);
                             gameLoader.saveDiamonds(DiamondManager.getDiamonds());
+                            androidAds.showRewardedAd(() -> diamondsPerLevel *= 2);
                             adWatched = true;
                         }
                     }
-                    if(shareButton.isTouched(e.x, e.y))
+                    if(shareButton.isTouched(e.x, e.y) && win)
                     {
                         // Compartimos la captura de pantalla.
                         iEngine.getAndroidShare().screenshot();
