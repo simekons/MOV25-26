@@ -22,8 +22,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Random;
 
-/*
- * GameScene implementa las funcionalidades del juego principal.
+/**
+ * GameScene implementa la escena de juego.
  */
 public class GameScene implements IScene {
 
@@ -47,6 +47,8 @@ public class GameScene implements IScene {
     // ¿Está por mejorar? (sí/no)
     private boolean upgrades = false;
 
+    // ¿Es la primera vez que se pasa este nivel?
+    private boolean isFirstTime = false;
     // Array de enemigos.
     private ArrayList<Enemy> enemies;
 
@@ -87,7 +89,7 @@ public class GameScene implements IScene {
     private int money;
 
     // Vidas actuales.
-    private int lives = 0;
+    private int lives = 10;
 
     // Tipo de torre.
     private TowerType type = null;
@@ -120,7 +122,11 @@ public class GameScene implements IScene {
 
     private LevelData levelData;
 
-    // CONSTRUCTORA
+    /**
+     * CONSTRUCTORA.
+     * @param levelData
+     * @param gameLoader
+     */
     public GameScene(LevelData levelData, GameLoader gameLoader){
         init(gameLoader);
 
@@ -133,6 +139,11 @@ public class GameScene implements IScene {
         this.mapGrid = new MapGrid(map, 600, 320, graphics);
     }
 
+    /**
+     * CONSTRUCTORA (modo libre).
+     * @param gameLoader
+     * @param difficulty
+     */
     public GameScene(GameLoader gameLoader, int difficulty) {
         init(gameLoader);
 
@@ -142,6 +153,10 @@ public class GameScene implements IScene {
         this.mapGrid = new MapGrid(map, 600, 320, graphics);
     }
 
+    /**
+     * Método que inicializa las variables.
+     * @param gameLoader
+     */
     private void init(GameLoader gameLoader){
         this.iEngine = AndroidEngine.get_instance();
         this.graphics = this.iEngine.getGraphics();
@@ -204,7 +219,9 @@ public class GameScene implements IScene {
         this.towers = new ArrayList<Tower>();
     }
 
-    // Carga de recursos.
+    /**
+     * Método que carga los recursos necesarios.
+     */
     public void loadAssets() {
         this.goblin = (AndroidImage) this.graphics.loadImage("sprites/goblin.png");
         this.orc = (AndroidImage) this.graphics.loadImage("sprites/orc.png");
@@ -222,7 +239,9 @@ public class GameScene implements IScene {
         moneyText = graphics.createFont("fonts/fff.ttf", 15, false, false);
     }
 
-    // RENDERIZADO
+    /**
+     * Método de RENDERIZADO.
+     */
     @Override
     public void render() {
         // Banda de abajo
@@ -260,13 +279,14 @@ public class GameScene implements IScene {
         graphics.drawText(moneyText, "Oleada " + (this.wave + 1), 525, 25);
     }
 
-    // UPDATE
+    /**
+     * Método de UPDATE.
+     * @param deltaTime
+     */
     @Override
     public void update(float deltaTime) {
 
         timer += deltaTime;
-
-        completeLevel();
 
         if (this.levelData != null){
             enemiesPerWave = this.levelData.getWaveAmounts().get(this.wave);
@@ -328,11 +348,14 @@ public class GameScene implements IScene {
         enemies.removeIf(e -> !e.isActive());
 
         if (lives == 0){
-            iEngine.setScenes(new FinalScene(gameLoader, this.difficulty, false));
+            iEngine.setScenes(new FinalScene(gameLoader, this.difficulty, false, this.isFirstTime));
         }
     }
 
-    // INPUT
+    /**
+     * Método que GESTIONA el INPUT.
+     * @param events
+     */
     @Override
     public void handleInput(List<IInput.TouchEvent> events) {
         for (IInput.TouchEvent e : events) {
@@ -351,7 +374,10 @@ public class GameScene implements IScene {
         }
     }
 
-    // Añadir enemigos.
+    /**
+     * Método que añade los enemigos.
+     * @param wave
+     */
     private void addEnemy(int wave) {
         int vida = 30 + (wave * 15);
         int defensa = 0 + (wave * 2);
@@ -384,6 +410,9 @@ public class GameScene implements IScene {
         this.enemies.add(new Enemy(this.graphics, this.audio, enemyImage, speed, 5, true, this.mapGrid, vida, defensa, resist));
     }
 
+    /**
+     * Método de completar nivel.
+     */
     private void completeLevel() {
         if (levelData == null)
             return;
@@ -406,9 +435,13 @@ public class GameScene implements IScene {
 
         globalIndex += lvlIndex;
 
+        if (globalLevelStates.get(globalIndex) == AdventureScene.LevelState.UNLOCKED_INCOMPLETE) {
+            this.isFirstTime = true;
+        }
+
         globalLevelStates.set(globalIndex, AdventureScene.LevelState.UNLOCKED_COMPLETED);
 
-        if (lvlIndex + 1 < globalLevelStates.size()) {
+        if (globalIndex + 1 < globalLevelStates.size()) {
             int nextGlobalIndex = globalIndex + 1;
             if (globalLevelStates.get(nextGlobalIndex) == AdventureScene.LevelState.LOCKED) {
                 globalLevelStates.set(nextGlobalIndex, AdventureScene.LevelState.UNLOCKED_INCOMPLETE);
@@ -418,9 +451,9 @@ public class GameScene implements IScene {
         gameLoader.saveLevelsState(globalLevelStates);
     }
 
-
-
-    // Gestor de oleadas.
+    /**
+     * Método que gestiona las oleadas.
+     */
     private void waves() {
 
 
@@ -432,7 +465,7 @@ public class GameScene implements IScene {
                 } else {
                     completeLevel();
 
-                    this.iEngine.setScenes(new FinalScene(gameLoader, this.difficulty, true));
+                    this.iEngine.setScenes(new FinalScene(gameLoader, this.difficulty, true, this.isFirstTime));
                 }
                 break;
             case 1:
@@ -440,7 +473,7 @@ public class GameScene implements IScene {
                     enemiesPerWave = 7 + this.wave;
                     waveCooldown = 4.0f;
                 } else {
-                    this.iEngine.setScenes(new FinalScene(gameLoader, this.difficulty, true));
+                    this.iEngine.setScenes(new FinalScene(gameLoader, this.difficulty, true, this.isFirstTime));
                 }
                 break;
             case 2:
@@ -456,7 +489,11 @@ public class GameScene implements IScene {
 
     }
 
-    // Gestor para seleccionar una torre.
+    /**
+     * Gestor de torres.
+     * @param e
+     * @return
+     */
     private boolean handleTowerSelection(IInput.TouchEvent e) {
         for (Tower tower : towers) {
             if (tower.isTouched(e.x, e.y)) {
@@ -477,7 +514,11 @@ public class GameScene implements IScene {
         return false;
     }
 
-    // Gestor para posicionar la torre (tras clicar botón).
+    /**
+     * Gestor para posicionar la torre (tras clicar en ella).
+     * @param e
+     * @return
+     */
     private boolean handleTowerPlacement(IInput.TouchEvent e) {
         if (type == null) return false;
 
@@ -507,7 +548,10 @@ public class GameScene implements IScene {
         return true;
     }
 
-    // Gestor para clicar un botón de torre.
+    /**
+     * Gestor para clicar un botón de torre.
+     * @param e
+     */
     private void handleTowerTypeSelection(IInput.TouchEvent e) {
         for(TowerButton tb : this.towerButtons){
             if(tb.isTouched(e.x, e.y)) {
@@ -517,7 +561,10 @@ public class GameScene implements IScene {
         }
     }
 
-    // Activar botón de torre (si hay dinero).
+    /**
+     * Método para activar el botón de torre (si hay dinero).
+     * @param towerBtn
+     */
     private void selectTowerType(TowerButton towerBtn) {
         if(money >= towerBtn.getCost()){
             towerBtn.setSelected(true);
@@ -527,7 +574,10 @@ public class GameScene implements IScene {
         }
     }
 
-    // Gestor de mejoras.
+    /**
+     * Gestor de mejoras.
+     * @param e
+     */
     private void handleUpgrades(IInput.TouchEvent e) {
         if (sword.isTouched(e.x, e.y)) {
             if(canAffordUpgrade(sword)){
@@ -549,19 +599,29 @@ public class GameScene implements IScene {
         }
     }
 
-    // ¿Puede comprar una mejora? (sí/no)
+    /**
+     * Método que devuelve si puede comprar una mejora o no.
+     * @param upgradeBtn
+     * @return
+     */
     private boolean canAffordUpgrade(UpgradeButton upgradeBtn) {
         return money >= upgradeBtn.getCost();
     }
 
-    // Aplicar mejora.
+    /**
+     * Método que aplica una mejora.
+     * @param upgradeId
+     * @param upgradeBtn
+     */
     private void applyUpgrade(int upgradeId, UpgradeButton upgradeBtn) {
         activeTower.activateUpgrade(upgradeId);
         money -= upgradeBtn.getCost();
         upgrades = false;
     }
 
-    // Deselector de torres.
+    /**
+     * Deselector de torres.
+     */
     private void deselectAllTowers() {
         for (Tower tower : towers) {
             tower.setSelected(false);

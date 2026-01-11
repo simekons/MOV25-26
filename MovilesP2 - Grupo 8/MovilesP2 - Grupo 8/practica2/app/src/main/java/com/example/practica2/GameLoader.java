@@ -309,10 +309,6 @@ public class GameLoader {
 
         levelStates.clear();
 
-        int totalWorlds = 2;
-        int levelsPerWorld = 14;
-        int totalLevels = totalWorlds * levelsPerWorld;
-
         if (json == null || json.length() == 0) {
             for (int i = 0; i < totalLevels; i++) {
                 if (i == 0)

@@ -155,7 +155,6 @@ public class AdventureScene implements IScene {
         this.worldName = this.worlds.get(this.currentWorld).first;
 
         this.levelsPerWorld = this.worlds.get(this.currentWorld).second;
-        // this.levelsPerWorld = gameLoader.loadLevelStates().size() /
 
         // ruta del style.json de cada mundo
         this.gameLoader.loadStyle(currentWorld);
@@ -327,7 +326,6 @@ public class AdventureScene implements IScene {
      * @param world
      */
     public void loadLevelStatesForCurrentWorld(int world) {
-
         this.levelsPerWorld = this.worlds.get(this.currentWorld).second;
 
         // Cargar todos los estados globales desde GameLoader
@@ -335,7 +333,10 @@ public class AdventureScene implements IScene {
 
         levelStates.clear();
 
-        int baseIndex = world * this.levelsPerWorld; // solo este mundo
+        int baseIndex = 0;
+        for (int i = 0; i < world; i++){
+            baseIndex += this.worlds.get(i).second;
+        }
 
         for (int i = baseIndex; i < globalLevelStates.size(); i++) {
             levelStates.add(globalLevelStates.get(i));
