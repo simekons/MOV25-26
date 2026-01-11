@@ -30,7 +30,10 @@ public class Button {
     private int color;
 
     private boolean isShopItem = false;
+    private boolean isPurchased = false;
     private boolean selected = false;
+
+    private IImage imgLock = null;
 
     /**
      * CONSTRUCTORA (con texto).
@@ -84,8 +87,9 @@ public class Button {
      * @param width
      * @param height
      * @param isItem
+     * @param isPurchased
      */
-    public Button(IGraphics graphics, IImage image, float x, float y, float width, float height, Boolean isItem)
+    public Button(IGraphics graphics, IImage image, float x, float y, float width, float height, Boolean isItem, Boolean isPurchased)
     {
         iGraphics = graphics;
         iImage = image;
@@ -94,6 +98,8 @@ public class Button {
         this.width = width;
         this.height = height;
         this.isShopItem = isItem;
+        this.isPurchased = isPurchased;
+        imgLock = iGraphics.loadImage("sprites/lock.png");
     }
 
     /**
@@ -105,8 +111,9 @@ public class Button {
      * @param width
      * @param height
      * @param isItem
+     * @param isPurchased
      */
-    public Button(IGraphics graphics, TowerType type, float x, float y, float width, float height, Boolean isItem)
+    public Button(IGraphics graphics, TowerType type, float x, float y, float width, float height, Boolean isItem, Boolean isPurchased)
     {
         iGraphics = graphics;
         tower = type;
@@ -115,18 +122,14 @@ public class Button {
         this.width = width;
         this.height = height;
         this.isShopItem = isItem;
+        this.isPurchased = isPurchased;
+        imgLock = iGraphics.loadImage("sprites/lock.png");
     }
 
     /**
      * Método de RENDERIZADO.
      */
     public void render() {
-        if(isShopItem)
-        {
-            iGraphics.setColor(selected ? 0xFF00FF00 : 0xFF000000);
-
-            iGraphics.drawRect(x - width/2, y - height/2, width, height);
-        }
         if (iImage != null)
             iGraphics.drawImage(iImage, (int) x, (int) y, (int) width-10, (int) height-10);
         else if(tower != null){
@@ -156,6 +159,14 @@ public class Button {
             iGraphics.fillRoundRectangle(x, y, width, height, 5);
             iGraphics.setColor(0xff000000);
             iGraphics.drawText(iFont, text, x + (width / 2), y + (height / 2) + 5);
+        }
+        if(isShopItem)
+        {
+            if(!isPurchased)
+                iGraphics.drawImage(imgLock, (int)(x - (width / 2) + 8), (int)(y - (height / 2) + 8), 15,15);
+            iGraphics.setColor(selected ? 0xFF00FF00 : 0xFF000000);
+
+            iGraphics.drawRect(x - width/2, y - height/2, width, height);
         }
     }
 

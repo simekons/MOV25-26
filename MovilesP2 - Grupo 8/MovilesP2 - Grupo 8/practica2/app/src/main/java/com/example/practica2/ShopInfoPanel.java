@@ -142,23 +142,12 @@ public class ShopInfoPanel {
         int buttonY = y + height - 40;
 
         String text;
-        boolean enabled = true;
 
         if (!shopManager.isPurchased(item.getId())) {
             text = "Comprar";
-            /*if (shopManager.canBuy(item.getId())) {
-                text = "Comprar";
-            } else {
-                text = "Sin diamantes";
-                enabled = false;
-            }*/
-        }
-        else if (!shopManager.isSelected(item.getId())) {
-            text = "Seleccionar";
         }
         else {
-            text = "Seleccionado";
-            enabled = false;
+            text = "Agregado";
         }
 
         actionButton = new Button(iGraphics, iFont, x + 125, buttonY, width - 80, 45, text, this.panelButtonColor);

@@ -149,7 +149,7 @@ public class ShopScene implements IScene {
                     continue;
             }
 
-            Button b = new Button(iGraphics, type, x, startY, size, size, true);
+            Button b = new Button(iGraphics, type, x, startY, size, size, true, shopManager.isPurchased(item.getId()));
             towerButtons.put(item.getId(), b);
 
             x += size + margin;
@@ -163,7 +163,7 @@ public class ShopScene implements IScene {
         for (ShopItemData item : shopManager.getSkinItems()) {
             AndroidImage img = iGraphics.loadImage(item.getImagePath());
 
-            Button b = new Button(iGraphics, img, x, startY, size, size, true);
+            Button b = new Button(iGraphics, img, x, startY, size, size, true,shopManager.isPurchased(item.getId()));
             skinButtons.put(item.getId(), b);
 
             x += size + margin;
