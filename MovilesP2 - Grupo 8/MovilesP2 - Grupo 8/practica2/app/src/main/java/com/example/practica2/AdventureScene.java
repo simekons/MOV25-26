@@ -17,111 +17,128 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * AdventureScene es la clase que implementa la escena de Aventura, con los niveles de cada mundo.
+ */
 public class AdventureScene implements IScene {
 
 
-    // Motor.
+    // Motor
     private AndroidEngine engine;
 
     // Gráficos
     private AndroidGraphics graphics;
 
-    // Audio.
+    // Audio
     private AndroidAudio audio;
 
-    private AndroidFile file;
+    // Botones de niveles.
     private ArrayList<LevelButton> levelButtons;
 
+    // Estados de los niveles.
     private static ArrayList<LevelState> levelStates;
 
-    //variables botones
-    private int levelsNumber;
+    // Variables para los botones
     private int offsetX;
     private int offsetY;
     private int buttonDimension;
-    private int separationBetweenButtons;
 
-    //variables scroll
+    // Variables para el scroll
     private int lastTouchY;
     private int scrollOffset;
-    private int scrollSpeed;
     private int maxScrollOffset;
     private int minScrollOffset;
     private boolean isScrolling;
 
-    private boolean isNewGame = true;
     private boolean created = false;
 
+    // Imágenes
     private AndroidImage lockImage;
-
-    private AndroidFont scoreFont;
-    private AndroidFont worldFont;
-
-    private GameLoader gameLoader;
-
-    private Button exitButton;
     private AndroidImage exitImage;
-
     private AndroidImage leftImage;
     private AndroidImage rightImage;
 
-    private AndroidSound clickButton;
+    // Fuentes
+    private AndroidFont scoreFont;
+    private AndroidFont worldFont;
 
-    private String worldName;
-
+    // Botones
+    private Button exitButton;
+    private Button rightArrow;
     private Button leftArrow;
 
-    private Button rightArrow;
+    // GameLoader
+    private GameLoader gameLoader;
 
+    // Sonidos
+    private AndroidSound clickButton;
+
+    // Mundo actual.
     private int currentWorld;
 
-    private int totalWorlds;
+    private int levelsPerWorld;
+
+    // Estados de los niveles.
     public enum LevelState {
         LOCKED,
         UNLOCKED_INCOMPLETE,
         UNLOCKED_COMPLETED,
     }
 
+    /**
+     * CONSTRUCTORA.
+     * @param gameLoader
+     */
     public AdventureScene(GameLoader gameLoader){
         this.engine = AndroidEngine.get_instance();
         this.graphics = this.engine.getGraphics();
         this.audio = this.engine.getAudio();
         this.engine.getAds().setBannerVisible(false);
-        this.file = this.engine.getFile();
 
         loadAssets();
 
-        levelButtons = new ArrayList<>();
-        levelStates = new ArrayList<>();
-        this.totalWorlds = 2;
-        this.currentWorld= 0;
+        // Botones de niveles.
+        this.levelButtons = new ArrayList<>();
 
+        // Estados de los niveles.
+        this.levelStates = new ArrayList<>();
+        this.currentWorld = 0;
+        this.levelsPerWorld = 0;
+
+        // GameLoader.
         this.gameLoader = gameLoader;
 
+        // Botones de salida, mundo a la izq y mundo a la der.
         this.exitButton = new Button(this.graphics, this.exitImage, 25, 25, 50, 50);
-        leftArrow = new Button(graphics, this.leftImage, 120, 35, 40, 40);
-        rightArrow = new Button(graphics, this.rightImage, 480, 35, 40, 40);
+        this.leftArrow = new Button(this.graphics, this.leftImage, 120, 35, 40, 40);
+        this.rightArrow = new Button(this.graphics, this.rightImage, 480, 35, 40, 40);
 
+        // Variables para los botones.
         buttonsVariables();
 
+        // Sonido de clic.
         this.clickButton = this.audio.newSound("music/button.wav");
     }
 
+    /**
+    * Método que inicializa las variables necesarias para los botones.
+    */
     public void buttonsVariables()
     {
-        this.levelsNumber = 14;
         this.offsetX = 20;
         this.offsetY = 75;
         this.buttonDimension = 100;
-        this.separationBetweenButtons = buttonDimension + offsetX;
 
         this.lastTouchY = -1;
         this.scrollOffset = 0;
-        this.maxScrollOffset = 0;
+        this.maxScrollOffset = 60;
         this.minScrollOffset = 0;
-        this.scrollSpeed = 10;
         this.isScrolling = false;
     }
+
+    /**
+     * Método que crea los botones de los niveles.
+     */
     public void createLevelsButtons() {
         levelButtons.clear();
 
@@ -129,8 +146,8 @@ public class AdventureScene implements IScene {
         int separationX = buttonDimension + 20;
         int separationY = buttonDimension + 20;
 
-        int levelsPerWorld = 14;
-        int baseIndex = currentWorld * levelsPerWorld;
+        this.levelsPerWorld = 14;
+        // this.levelsPerWorld = gameLoader.loadLevelStates().size() /
 
         // ruta del style.json de cada mundo
         this.gameLoader.loadStyle(currentWorld);
@@ -173,7 +190,9 @@ public class AdventureScene implements IScene {
         }
     }
 
-
+    /*
+     * Método que carga los assets.
+     * */
     private void loadAssets(){
         this.exitImage = this.graphics.loadImage("sprites/exit.png");
         this.scoreFont = this.graphics.createFont("fonts/pixelGotic.ttf", 30, false, false);
@@ -183,18 +202,21 @@ public class AdventureScene implements IScene {
         this.rightImage = this.graphics.loadImage("sprites/arrow2.png");
     }
 
+    /*
+     * Método de RENDERIZADO.
+     * */
     @Override
     public void render() {
-
+        // Botón de salida
         this.exitButton.render();
         this.graphics.setColor(0xff000000);
-        //this.graphics.drawText(this.scoreFont, "Adventure", 300, 40);
 
         if (!this.created){
             loadLevelStatesForCurrentWorld(this.currentWorld);
             this.created = true;
         }
 
+        // Color según el mundo
         switch(currentWorld){
             case 0:
                 this.graphics.setColor(0xff116D3A);
@@ -205,15 +227,18 @@ public class AdventureScene implements IScene {
         }
         this.graphics.fillRectangle(150, 5, 300, 60);
 
+        // Botones de niveles
         for(LevelButton lb : this.levelButtons){
             if (lb.getY() > 60 && lb.getY() < 600){
                 lb.render();
             }
         }
 
+        // Flechas de cambio entre mundos
         leftArrow.render();
         rightArrow.render();
 
+        // Nombre del mundo
         String[] worldNames = {
                 "Mundo 1 - Bosque",
                 "Mundo 2 - Desierto"
@@ -221,11 +246,19 @@ public class AdventureScene implements IScene {
         graphics.drawText(worldFont, worldNames[currentWorld], 300, 50);
     }
 
+    /**
+     * Método UPDATE vacío.
+     * @param deltaTime
+     */
     @Override
     public void update(float deltaTime) {
 
     }
 
+    /**
+     * Método que GESTIONA el INPUT.
+     * @param events
+     */
     @Override
     public void handleInput(List<IInput.TouchEvent> events) {
         for(AndroidInput.TouchEvent e : events)
@@ -279,6 +312,10 @@ public class AdventureScene implements IScene {
         }
     }
 
+    /**
+     * Método que carga el estado de los niveles del mundo actual.
+     * @param world
+     */
     public void loadLevelStatesForCurrentWorld(int world) {
         int levelsPerWorld = 14;
 
@@ -293,9 +330,12 @@ public class AdventureScene implements IScene {
             levelStates.add(globalLevelStates.get(i));
         }
         createLevelsButtons();
-        setStyleLevelButtons();
     }
 
+    /**
+     * Método que gestiona el PRESIONADO de los niveles.
+     * @param e
+     */
     public void handleLevelButtons(AndroidInput.TouchEvent e)
     {
         for (LevelButton lb : levelButtons) {
@@ -317,12 +357,4 @@ public class AdventureScene implements IScene {
             }
         }
     }
-
-    private void setStyleLevelButtons(){
-
-    }
-
-    public static ArrayList<LevelState> getLevelStates() { return levelStates; }
-
-    public static void setLevelState(int i, LevelState levelState) { levelStates.set(i, levelState); }
 }

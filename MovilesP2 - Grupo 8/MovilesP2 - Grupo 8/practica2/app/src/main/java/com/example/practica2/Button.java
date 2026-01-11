@@ -4,7 +4,7 @@ import com.example.engine.IFont;
 import com.example.engine.IGraphics;
 import com.example.engine.IImage;
 
-/*
+/**
  * Button implementa la funcionalidad de los botones.
  */
 public class Button {
@@ -32,7 +32,17 @@ public class Button {
     private boolean isShopItem = false;
     private boolean selected = false;
 
-    // CONSTRUCTORA (con texto)
+    /**
+     * CONSTRUCTORA (con texto).
+     * @param graphics
+     * @param font
+     * @param x
+     * @param y
+     * @param width
+     * @param height
+     * @param text
+     * @param color
+     */
     public Button(IGraphics graphics, IFont font, float x, float y, float width, float height, String text, int color)
     {
         iGraphics = graphics;
@@ -45,7 +55,16 @@ public class Button {
         this.color = color;
     }
 
-    // CONSTRUCTORA (con imagen)
+
+    /**
+     * CONSTRUCTORA (con imagen).
+     * @param graphics
+     * @param image
+     * @param x
+     * @param y
+     * @param width
+     * @param height
+     */
     public Button(IGraphics graphics, IImage image, float x, float y, float width, float height)
     {
         iGraphics = graphics;
@@ -56,6 +75,16 @@ public class Button {
         this.height = height;
     }
 
+    /**
+     * CONSTRUCTORA (es ítem).
+     * @param graphics
+     * @param image
+     * @param x
+     * @param y
+     * @param width
+     * @param height
+     * @param isItem
+     */
     public Button(IGraphics graphics, IImage image, float x, float y, float width, float height, Boolean isItem)
     {
         iGraphics = graphics;
@@ -67,6 +96,16 @@ public class Button {
         this.isShopItem = isItem;
     }
 
+    /**
+     * CONSTRUCTORA (torre e ítem).
+     * @param graphics
+     * @param type
+     * @param x
+     * @param y
+     * @param width
+     * @param height
+     * @param isItem
+     */
     public Button(IGraphics graphics, TowerType type, float x, float y, float width, float height, Boolean isItem)
     {
         iGraphics = graphics;
@@ -78,7 +117,9 @@ public class Button {
         this.isShopItem = isItem;
     }
 
-    // RENDERIZADO
+    /**
+     * Método de RENDERIZADO.
+     */
     public void render() {
         if(isShopItem)
         {
@@ -118,7 +159,12 @@ public class Button {
         }
     }
 
-    // Botón pulsado (texto).
+    /**
+     * Método de botón (texto) pulsado.
+     * @param touchX
+     * @param touchY
+     * @return
+     */
     public boolean isTouched(int touchX, int touchY)
     {
         float left = (iImage != null) ? (x - width / 2) : x;
@@ -129,21 +175,28 @@ public class Button {
         return touchX >= left && touchX <= right && touchY >= top && touchY <= bottom;
     }
 
-    // Botón pulsado (imagen).
+    /**
+     * Método de botón (imagen) pulsado.
+     * @param touchX
+     * @param touchY
+     * @return
+     */
     public boolean imageIsTouched(int touchX, int touchY)
     {
         return touchX >= (x - width / 2) && touchX <= (x + width / 2) && touchY >= (y - height / 2) && touchY <= (y + height / 2);
     }
 
-    // --------------------------GETTERS--------------------------
+
+    /**
+     * GETTERS.
+     * @return
+     */
     public float getX() { return this.x; }
     public float getY() { return this.y; }
-    public float getWidth() { return width; }
-    public float getHeight() { return height; }
-    // --------------------------SETTERS--------------------------
 
-    // Imagen de botón.
-    public void setImage(IImage image) { this.iImage = image; }
-
+    /**
+     * SETTERS.
+     * @param s
+     */
     public void setSelected(boolean s) { selected = s; }
 }

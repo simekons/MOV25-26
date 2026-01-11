@@ -4,14 +4,13 @@ import com.example.androidengine.AndroidGraphics;
 import com.example.androidengine.AndroidImage;
 import com.example.engine.IGraphics;
 
-/*
- *  Cell implementa la funcionalidad de cáda celda.
+
+/**
+ * Cell implementa la funcionalidad de cada celda.
  */
 public class Cell {
     // Gráficos.
     private AndroidGraphics graphics;
-
-    private AndroidImage cellImage;
 
     // Color.
     private int color;
@@ -34,7 +33,17 @@ public class Cell {
     // Está disponible (sí/no).
     private boolean available;
 
-    // CONSTRUCTORA
+    /**
+     * CONSTRUCTORA.
+     * @param graphics
+     * @param x
+     * @param y
+     * @param size
+     * @param color
+     * @param row
+     * @param col
+     * @param path
+     */
     public Cell(AndroidGraphics graphics, float x, float y, float size, int color, int row, int col, boolean path){
         this.graphics = graphics;
         this.color = color;
@@ -48,7 +57,9 @@ public class Cell {
         this.available = false;
     }
 
-    // RENDERIZADO
+    /**
+     * Método de RENDERIZADO.
+     */
     public void render() {
         // Si es camino, se dibuja llena.
         if (this.path) {
@@ -68,36 +79,23 @@ public class Cell {
         }
     }
 
-    // --------------------------SETTERS--------------------------
 
-    // Hay torre.
+    /**
+     * SETTERS.
+     */
     public void setTower(boolean tower) { this.tower = tower; }
-
-    // Está disponible.
     public void setAvailable(boolean available) { this.available = available; }
 
-    // --------------------------GETTERS--------------------------
-
-    // Está disponible.
+    /**
+     * GETTERS.
+     */
     public boolean isAvailable() { return available; }
-
-    // Es camino.
     public boolean getPath() { return this.path; }
-
-    // Tiene una torre.
     public boolean getTower() { return this.tower; }
-
-    // Filas.
     public int getRow() { return this.row; }
-
-    // Columnas.
     public int getColumn() { return this.column; }
-
-    // Coordenadas.
     public float getX() { return this.x; }
     public float getY() { return this.y; }
-
-    // Tamaño.
     public float getSize() { return this.size; }
 
 }

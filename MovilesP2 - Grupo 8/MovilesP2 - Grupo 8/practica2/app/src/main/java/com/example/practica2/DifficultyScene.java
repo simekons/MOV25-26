@@ -11,8 +11,8 @@ import com.example.engine.ISound;
 
 import java.util.List;
 
-/*
- * DifficultyScene es la escena de menú de seleccion de dificultad.
+/**
+ * DifficultyScene implementa la pantalla de juego rápido con dificultades.
  */
 public class DifficultyScene implements IScene {
 
@@ -43,7 +43,10 @@ public class DifficultyScene implements IScene {
 
     private int difficulty;
 
-    // CONSTRUCTORA
+    /**
+     * CONSTRUCTORA.
+     * @param gameLoader
+     */
     public DifficultyScene(GameLoader gameLoader){
         this.iEngine = AndroidEngine.get_instance();
         this.iGraphics = this.iEngine.getGraphics();
@@ -61,7 +64,9 @@ public class DifficultyScene implements IScene {
         this.soundButton = this.iAudio.newSound("music/button.wav");
     }
 
-    // RENDERIZADO
+    /**
+     * RENDERIZAO.
+     */
     @Override
     public void render() {
         iGraphics.clear(gameLoader.getBackgroundColor());
@@ -73,7 +78,10 @@ public class DifficultyScene implements IScene {
         infButton.render();
     }
 
-    // UPDATE
+    /**
+     * Método de UPDATE.
+     * @param deltaTime
+     */
     @Override
     public void update(float deltaTime) {
         if(startGame){
@@ -82,7 +90,10 @@ public class DifficultyScene implements IScene {
         }
     }
 
-    // INPUT
+    /**
+     * Método que GESTIONA el INPUT.
+     * @param events
+     */
     @Override
     public void handleInput(List<IInput.TouchEvent> events) {
         for(IInput.TouchEvent e : events)

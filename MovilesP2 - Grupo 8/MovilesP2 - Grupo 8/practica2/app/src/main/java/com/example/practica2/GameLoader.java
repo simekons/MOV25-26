@@ -11,30 +11,41 @@ import java.sql.Array;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * GameLoader es la clase que gestiona el cargado y guardado de niveles.
+ */
 public class GameLoader {
 
-
+    // AndroidFile.
     private AndroidFile file;
 
+    // Variables de tienda.
     private ShopManager shopManager;
     private ShopCatalog shopCatalog;
     private PlayerShopState playerShopState;
-
-    private ArrayList<AdventureScene.LevelState> levelStates;
     private ArrayList<ShopItemData> shopItems;
+
+    // Estados de nivel
+    private ArrayList<AdventureScene.LevelState> levelStates;
+
+    // Ruta del archivo.
     private static String path;
 
+    // Colore de los botones.
     private int colorUnlocked, colorLocked;
 
-    // Constructora de la clase
+    /**
+     * CONSTRUCTORA.
+     * @param iFile
+     */
     public GameLoader(AndroidFile iFile)
     {
         this.file = iFile;
 
-        String[] files = this.file.listFiles("levels/world1");
-        for (String f : files) {
-            Log.e("ASSETS", f);
-        }
+        // String[] files = this.file.listFiles("levels/world1");
+        // for (String f : files) {
+           // Log.e("ASSETS", f);
+        // }
 
         levelStates = new ArrayList<>();
         shopItems = new ArrayList<>();
@@ -42,13 +53,20 @@ public class GameLoader {
         loadData();
     }
 
+    /**
+     * Método que carga variables.
+     */
     private void loadData()
     {
         loadGenericData();
         loadShop();
     }
 
-    // Lee archivo json de las carpetas del proyecto (ej: assets)
+    /**
+     * Método que lee archivo .JSON de las carpetas del proyecto (ej. assets)
+     * @param path
+     * @return
+     */
     public JSONObject readJSONFromAssets(String path)
     {
         try{
@@ -64,7 +82,12 @@ public class GameLoader {
         }
     }
 
-    // Carga nivel de las carpetas del proyecto (ej: assets)
+    /**
+     * Método que carga nivel de las carpetas del proyecto (ej. assets).
+     * @param _world
+     * @param _level
+     * @return
+     */
     public LevelData loadLevelFromAssets(int _world, int _level)
     {
         String world = "world" + _world;
@@ -83,7 +106,10 @@ public class GameLoader {
         return levelInfo(jsonObject, _world, _level, false);
     }
 
-    // Carga estilo de los botones de los niveles
+    /**
+     * Método que carga el estilo de los botones de los niveles.
+     * @param world
+     */
     public void loadStyle(int world)
     {
         try{
@@ -98,9 +124,9 @@ public class GameLoader {
         }
     }
 
-    public int get_unlocked() { return colorUnlocked; }
-    public int get_locked() { return colorLocked; }
-
+    /**
+     * Método que carga las variables de la tienda.
+     */
     private void loadShop()
     {
         this.shopItems = loadShopItems();
@@ -111,7 +137,10 @@ public class GameLoader {
         this.shopManager = new ShopManager(shopCatalog, playerShopState);
     }
 
-    // Carga items de la tienda
+    /**
+     * Método que carga ítems de la tienda.
+     * @return
+     */
     public ArrayList<ShopItemData> loadShopItems()
     {
         ArrayList<ShopItemData> items = new ArrayList<>();
@@ -138,8 +167,9 @@ public class GameLoader {
         return items;
     }
 
-    // !!!!!!
-    // Carga datos generales del almacenamiento interno (diamantes y theme guardado)
+    /**
+     * Método que carga datso generales del almacenamiento interno (diamantes y theme guardado).
+     */
     public void loadGenericData()
     {
         try {
@@ -152,7 +182,12 @@ public class GameLoader {
         }
     }
 
-    // Carga nivel del almacenamiento interno
+    /**
+     * Método que carga el nivel del almacenamiento interno.
+     * @param _world
+     * @param _level
+     * @return
+     */
     public LevelData loadLevelFromFiles(int _world, int _level)
     {
         String level = "level_" + _world + "_0" + _level;
@@ -164,154 +199,6 @@ public class GameLoader {
         return levelInfo(jsonObject, _world, _level, true);
     }
 
-    // !!!!!
-    // Carga estado de los niveles del almacenamiento interno
-    public ArrayList<AdventureScene.LevelState> loadLevelStates() {
-
-        JSONObject json = file.loadDataWithHash("levelsState.json");
-
-        levelStates.clear();
-
-        int totalWorlds = 2;
-        int levelsPerWorld = 14;
-        int totalLevels = totalWorlds * levelsPerWorld;
-
-        if (json == null || json.length() == 0) {
-            for (int i = 0; i < totalLevels; i++) {
-                if (i == 0)
-                    levelStates.add(AdventureScene.LevelState.UNLOCKED_INCOMPLETE);
-                else
-                    levelStates.add(AdventureScene.LevelState.LOCKED);
-            }
-
-            saveLevelsState(levelStates);
-            return levelStates;
-        }
-
-        for (int i = 0; i < totalLevels; i++) {
-            String key = "level_" + i;
-            String value = json.optString(key, "LOCKED");
-
-            switch (value) {
-                case "UNLOCKED_INCOMPLETE":
-                    levelStates.add(AdventureScene.LevelState.UNLOCKED_INCOMPLETE);
-                    break;
-                case "UNLOCKED_COMPLETED":
-                    levelStates.add(AdventureScene.LevelState.UNLOCKED_COMPLETED);
-                    break;
-                default:
-                    levelStates.add(AdventureScene.LevelState.LOCKED);
-            }
-        }
-
-        return levelStates;
-    }
-
-
-
-    // Carga estado de los items de la tienda
-    public PlayerShopState loadPlayerShopState() {
-        PlayerShopState state = new PlayerShopState();
-
-        try {
-            JSONObject json = file.loadDataWithHash("player_shop.json");
-
-
-            JSONArray purchased = json.getJSONArray("purchased");
-            for (int i = 0; i < purchased.length(); i++) {
-                state.purchase(purchased.getString(i));
-            }
-
-            state.selectTower(json.optString("selectedTower", null));
-            state.selectSkin(json.optString("selectedSkin", null));
-
-        } catch (Exception e) {
-
-        }
-
-        return state;
-    }
-
-    // Guarda estado de los niveles (bloqueados, desbloqueados sin hacer, desbloqueados hechos)
-    public void saveLevelsState(ArrayList<AdventureScene.LevelState> states) {
-        JSONObject json = new JSONObject();
-
-        try {
-            for (int i = 0; i < states.size(); i++) {
-                json.put("level_" + i, states.get(i).name());
-            }
-        }
-        catch(Exception e){
-            e.printStackTrace();
-        }
-
-        file.saveDataWithHash("levelsState.json", json);
-    }
-
-
-
-    // Guarda estado de los items de la tienda
-    public void savePlayerShopState(PlayerShopState state) {
-        try {
-            path = "player_shop.json";
-            JSONObject json = new JSONObject();
-
-            JSONArray purchased = new JSONArray(state.getPurchasedItems());
-            json.put("purchased", purchased);
-
-            json.put("selectedTower", state.getSelectedTowerId());
-            json.put("selectedSkin", state.getSelectedSkinId());
-
-            file.saveDataWithHash(path, json);
-
-        } catch (Exception e) {
-
-        }
-    }
-    public PlayerShopState getPlayerShopState() {
-        path = "player_shop.json";
-        PlayerShopState state = new PlayerShopState();
-
-        try {
-            JSONObject json = file.loadDataWithHash(path);
-            if (json == null) {
-                return state; // estado vacío por defecto
-            }
-            if (json.has("purchased")) {
-                JSONArray purchased = json.getJSONArray("purchased");
-                for (int i = 0; i < purchased.length(); i++) {
-                    state.purchase(purchased.getString(i));
-                }
-            }
-            if (json.has("selectedTower")) {
-                state.selectTower(json.getString("selectedTower"));
-            }
-            if (json.has("selectedSkin")) {
-                state.selectSkin(json.getString("selectedSkin"));
-            }
-
-        } catch (Exception e) {
-
-        }
-
-        return state;
-    }
-
-    // !!!!!
-    // Guarda número de diamantes
-    public void saveDiamonds(int diamonds)
-    {
-        try {
-            path = "gameData.json";
-            JSONObject jsonObject = file.loadDataWithHash(path);
-            jsonObject.put("diamonds", diamonds);
-            file.saveDataWithHash(path, jsonObject);
-        } catch (Exception e) {
-
-        }
-    }
-
-    // Devuelve la información del nivel
     public LevelData levelInfo(JSONObject jsonObject, int _world, int _level, boolean isFromFiles)
     {
         try{
@@ -362,30 +249,186 @@ public class GameLoader {
         }
     }
 
-    public int getBackgroundColor()
-    {
-        return 0xffffffff;
+    /**
+     * Método que carga estado de los niveles del almacenamiento interno.
+     * @return
+     */
+    public ArrayList<AdventureScene.LevelState> loadLevelStates() {
+
+        JSONObject json = file.loadDataWithHash("levelsState.json");
+
+        levelStates.clear();
+
+        int totalWorlds = 2;
+        int levelsPerWorld = 14;
+        int totalLevels = totalWorlds * levelsPerWorld;
+
+        if (json == null || json.length() == 0) {
+            for (int i = 0; i < totalLevels; i++) {
+                if (i == 0)
+                    levelStates.add(AdventureScene.LevelState.UNLOCKED_INCOMPLETE);
+                else
+                    levelStates.add(AdventureScene.LevelState.LOCKED);
+            }
+
+            saveLevelsState(levelStates);
+            return levelStates;
+        }
+
+        for (int i = 0; i < totalLevels; i++) {
+            String key = "level_" + i;
+            String value = json.optString(key, "LOCKED");
+
+            switch (value) {
+                case "UNLOCKED_INCOMPLETE":
+                    levelStates.add(AdventureScene.LevelState.UNLOCKED_INCOMPLETE);
+                    break;
+                case "UNLOCKED_COMPLETED":
+                    levelStates.add(AdventureScene.LevelState.UNLOCKED_COMPLETED);
+                    break;
+                default:
+                    levelStates.add(AdventureScene.LevelState.LOCKED);
+            }
+        }
+
+        return levelStates;
     }
 
-    public int getButtonColor()
-    {
-        return 0xff808080;
+
+    /**
+     * Método que carga estado de los ítems de la tienda.
+     */
+    public PlayerShopState loadPlayerShopState() {
+        PlayerShopState state = new PlayerShopState();
+
+        try {
+            JSONObject json = file.loadDataWithHash("player_shop.json");
+
+
+            JSONArray purchased = json.getJSONArray("purchased");
+            for (int i = 0; i < purchased.length(); i++) {
+                state.purchase(purchased.getString(i));
+            }
+
+            state.selectTower(json.optString("selectedTower", null));
+            state.selectSkin(json.optString("selectedSkin", null));
+
+        } catch (Exception e) {
+
+        }
+
+        return state;
     }
 
-    public int getButtonColor2()
-    {
-        return 0xff9ce4f5;
+    /**
+     * Método que guarda el estado de los niveles.
+     * @param states
+     */
+    public void saveLevelsState(ArrayList<AdventureScene.LevelState> states) {
+        JSONObject json = new JSONObject();
+
+        try {
+            for (int i = 0; i < states.size(); i++) {
+                json.put("level_" + i, states.get(i).name());
+            }
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+
+        file.saveDataWithHash("levelsState.json", json);
     }
 
-    public int getPanelColor()
-    {
-        return 0xff79c8d7;
+    /**
+     * Método que guarda el estado de los ítems de la tienda.
+     * @param state
+     */
+    public void savePlayerShopState(PlayerShopState state) {
+        try {
+            path = "player_shop.json";
+            JSONObject json = new JSONObject();
+
+            JSONArray purchased = new JSONArray(state.getPurchasedItems());
+            json.put("purchased", purchased);
+
+            json.put("selectedTower", state.getSelectedTowerId());
+            json.put("selectedSkin", state.getSelectedSkinId());
+
+            file.saveDataWithHash(path, json);
+
+        } catch (Exception e) {
+
+        }
     }
 
-    public int getPanelButtonColor()
-    {
-        return 0xff01a9c9;
+    /**
+     * Método que carga los ítems comprados hasta el momento.
+     * @return
+     */
+    public PlayerShopState getPlayerShopState() {
+        path = "player_shop.json";
+        PlayerShopState state = new PlayerShopState();
+
+        try {
+            JSONObject json = file.loadDataWithHash(path);
+            if (json == null) {
+                return state; // estado vacío por defecto
+            }
+            if (json.has("purchased")) {
+                JSONArray purchased = json.getJSONArray("purchased");
+                for (int i = 0; i < purchased.length(); i++) {
+                    state.purchase(purchased.getString(i));
+                }
+            }
+            if (json.has("selectedTower")) {
+                state.selectTower(json.getString("selectedTower"));
+            }
+            if (json.has("selectedSkin")) {
+                state.selectSkin(json.getString("selectedSkin"));
+            }
+
+        } catch (Exception e) {
+
+        }
+
+        return state;
     }
 
+    /**
+     * Método que guarda los diamantes.
+     * @param diamonds
+     */
+    public void saveDiamonds(int diamonds)
+    {
+        try {
+            path = "gameData.json";
+            JSONObject jsonObject = file.loadDataWithHash(path);
+            jsonObject.put("diamonds", diamonds);
+            file.saveDataWithHash(path, jsonObject);
+        } catch (Exception e) {
+
+        }
+    }
+
+    /**
+     * Método que devuelve la información del nivel.
+     * @param jsonObject
+     * @param _world
+     * @param _level
+     * @param isFromFiles
+     * @return
+     */
+
+
+    /*
+    * GETTERS
+    * */
+    public int getBackgroundColor() { return 0xffffffff; }
+    public int getButtonColor() { return 0xff808080; }
+    public int getButtonColor2() { return 0xff9ce4f5; }
+    public int getPanelColor() { return 0xff79c8d7; }
+    public int getPanelButtonColor() { return 0xff01a9c9; }
+    public int get_unlocked() { return colorUnlocked; }
+    public int get_locked() { return colorLocked; }
     public ShopManager getShopManager() { return shopManager; }
 }
