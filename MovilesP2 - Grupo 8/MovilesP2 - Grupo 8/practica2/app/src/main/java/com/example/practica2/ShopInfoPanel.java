@@ -15,6 +15,8 @@ public class ShopInfoPanel {
 
     private String currentItemId;
 
+    private int currentItemCost;
+
     private int x, y, width, height;
     private int panelColor, panelButtonColor;
 
@@ -129,6 +131,7 @@ public class ShopInfoPanel {
         this.panelButtonColor = panelButtonColor;
 
         currentItemId = item.getId();
+        currentItemCost = item.getCost();
 
         int buttonY = y + height - 40;
 
@@ -156,4 +159,6 @@ public class ShopInfoPanel {
     }
 
     public Button getActionButton() { return this.actionButton; }
+
+    public int itemCost() { return currentItemCost; }
 }

@@ -5,7 +5,7 @@ public class DiamondManager {
     // Número de monedas
     private static int diamonds = 0;
     // Número de monedas por nivel
-    private static int diamondsPerLevel = 10;
+    private static int diamondsPerLevel = 20;
 
     // Añade una cantidad de monedas
     public static void addDiamonds(int diamondAmount)

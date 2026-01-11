@@ -27,7 +27,6 @@ public class ShopManager {
         if (!canBuy(itemId)) return false;
 
         ShopItemData item = catalog.getItem(itemId);
-        DiamondManager.subtractDiamonds(item.getCost());
 
         playerShopState.purchase(itemId);
         autoSelect(item);

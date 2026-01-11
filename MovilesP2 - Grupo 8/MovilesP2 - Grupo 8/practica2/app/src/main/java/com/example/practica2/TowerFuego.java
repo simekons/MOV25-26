@@ -2,6 +2,7 @@ package com.example.practica2;
 
 import com.example.engine.IAudio;
 import com.example.engine.IGraphics;
+import com.example.engine.IImage;
 import com.example.engine.ISound;
 
 import java.util.List;
@@ -21,14 +22,16 @@ public class TowerFuego extends Tower {
     private IAudio iAudio;
 
     // Sonido.
+    private IImage img;
     private ISound fire;
 
     // CONSTRUCTORA
-    public TowerFuego(IGraphics iGraphics, IAudio iAudio, int row, int column, float size, int cost, Cell cell) {
+    public TowerFuego(IGraphics iGraphics, IAudio iAudio, int row, int column, float size, int cost, Cell cell, IImage img) {
         super(iGraphics, row, column, size, cost, cell);
         this.damage = 5;
         this.range = 75;
         this.cooldown = 2f;
+        this.img = img;
 
         this.iAudio = iAudio;
 
@@ -39,9 +42,14 @@ public class TowerFuego extends Tower {
     @Override
     public void render() {
         // Renderiza la torre
-        float radius = size / 2f;
-        iGraphics.setColor(0xFFE1050F);
-        iGraphics.fillHexagon(x, y, radius);
+        if(img != null){
+            iGraphics.drawImage(img, (int) x, (int) y, (int) (size), (int) (size));
+        }
+        else {
+            float radius = size / 2f;
+            iGraphics.setColor(0xFFE1050F);
+            iGraphics.fillHexagon(x, y, radius);
+        }
 
         // Renderiza el rango si está seleccionada
         if (selected) {

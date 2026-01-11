@@ -167,7 +167,8 @@ public class GameLoader {
             path = "gameData.json";
             JSONObject jsonObject = file.loadDataWithHash(path);
             int diamonds = jsonObject.optInt("diamonds", 0);
-            DiamondManager.setDiamonds(diamonds);
+            DiamondManager.setDiamonds(400);
+
             this.backgroundColor = jsonObject.optInt("backgroundColor", 0);
             this.buttonColor = jsonObject.optInt("buttonColor", 0);
             this.buttonColor2 = jsonObject.optInt("buttonColor2", 0);
@@ -349,6 +350,34 @@ public class GameLoader {
         } catch (Exception e) {
 
         }
+    }
+    public PlayerShopState getPlayerShopState() {
+        path = "player_shop.json";
+        PlayerShopState state = new PlayerShopState();
+
+        try {
+            JSONObject json = file.loadDataWithHash(path);
+            if (json == null) {
+                return state; // estado vacío por defecto
+            }
+            if (json.has("purchased")) {
+                JSONArray purchased = json.getJSONArray("purchased");
+                for (int i = 0; i < purchased.length(); i++) {
+                    state.purchase(purchased.getString(i));
+                }
+            }
+            if (json.has("selectedTower")) {
+                state.selectTower(json.getString("selectedTower"));
+            }
+            if (json.has("selectedSkin")) {
+                state.selectSkin(json.getString("selectedSkin"));
+            }
+
+        } catch (Exception e) {
+
+        }
+
+        return state;
     }
 
     // !!!!!

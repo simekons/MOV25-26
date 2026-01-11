@@ -14,8 +14,10 @@ import com.example.engine.IScene;
 import com.example.engine.ISound;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Random;
 
 /*
@@ -51,6 +53,9 @@ public class GameScene implements IScene {
 
     // Array de torres.
     private ArrayList<Tower> towers;
+    private IImage imgRayo = null;
+    private IImage imgFuego = null;
+    private IImage imgHielo = null;
 
     // Torre activa.
     private Tower activeTower;
@@ -151,23 +156,45 @@ public class GameScene implements IScene {
         this.enemies = new ArrayList<>();
 
         IFont fontButton = graphics.createFont("fonts/fff.ttf", 10, false, false);
+
+        PlayerShopState state = gameLoader.getPlayerShopState();
+
         towerButtons = new ArrayList<>();
 
-        towerButtons.add(new TowerButton(graphics, fontButton, 445, 360, 50, 50, 100, TowerType.Rayo, 0xFFFFFFFF, 0xFF000000));
-        towerButtons.add(new TowerButton(graphics, fontButton, 505, 360, 50, 50, 150, TowerType.Hielo, 0xFFFFFFFF, 0xFF000000));
-        towerButtons.add(new TowerButton(graphics, fontButton, 565, 360, 50, 50, 200, TowerType.Fuego, 0xFFFFFFFF, 0xFF000000));
+        Map<String, ShopItemData> skins = new HashMap<>();
+
+        for (ShopItemData item : gameLoader.getShopManager().getSkinItems()) {
+            skins.put(item.getId(), item);
+        }
+
+        if (state.isPurchased("skinRayo") && skins.get("skinRayo") != null) {
+            imgRayo = graphics.loadImage(skins.get("skinRayo").getImagePath());
+        }
+
+        if (state.isPurchased("skinFuego") && skins.get("skinFuego") != null) {
+            imgFuego = graphics.loadImage(skins.get("skinFuego").getImagePath());
+        }
+
+        if (state.isPurchased("skinHielo") && skins.get("skinHielo") != null) {
+            imgHielo = graphics.loadImage(skins.get("skinHielo").getImagePath());
+        }
+
+        towerButtons.add(new TowerButton(graphics, fontButton, 445, 360, 50, 50, 100, TowerType.Rayo, 0xFFFFFFFF, 0xFF000000, imgRayo));
+        towerButtons.add(new TowerButton(graphics, fontButton, 505, 360, 50, 50, 150, TowerType.Hielo, 0xFFFFFFFF, 0xFF000000, imgHielo));
+        towerButtons.add(new TowerButton(graphics, fontButton, 565, 360, 50, 50, 200, TowerType.Fuego, 0xFFFFFFFF, 0xFF000000, imgFuego));
 
         int x = 385;
-        if(true){
-            towerButtons.add(new TowerButton(graphics, fontButton, x, 360, 50, 50, 250, TowerType.Star, 0xFFFFFFFF, 0xFF000000));
+
+        if(state.isPurchased("towerStar")){
+            towerButtons.add(new TowerButton(graphics, fontButton, x, 360, 50, 50, 250, TowerType.Star, 0xFFFFFFFF, 0xFF000000, null));
             x -= 60;
         }
-        if(true){
-            towerButtons.add(new TowerButton(graphics, fontButton, x, 360, 50, 50, 200, TowerType.Stun, 0xFFFFFFFF, 0xFF000000));
+        if(state.isPurchased("towerStun")){
+            towerButtons.add(new TowerButton(graphics, fontButton, x, 360, 50, 50, 200, TowerType.Stun, 0xFFFFFFFF, 0xFF000000, null));
             x -= 60;
         }
-        if(true){
-            towerButtons.add(new TowerButton(graphics, fontButton, x, 360, 50, 50, 120, TowerType.Poison, 0xFFFFFFFF, 0xFF000000));
+        if(state.isPurchased("towerPoison")){
+            towerButtons.add(new TowerButton(graphics, fontButton, x, 360, 50, 50, 120, TowerType.Poison, 0xFFFFFFFF, 0xFF000000, null));
         }
 
         this.sword = new UpgradeButton(this.graphics, fontButton, this.sword_img, 445, 360, 50, 50, 75, 0xFFFFFFFF, 0xFF000000);
@@ -325,7 +352,7 @@ public class GameScene implements IScene {
     private void addEnemy(int wave) {
         int vida = 30 + (wave * 15);
         int defensa = 0 + (wave * 2);
-        int speed = 150;
+        int speed = 50;
         EnemyResist resist = EnemyResist.Nada;
 
         if (this.wave >= 2) {
@@ -450,8 +477,16 @@ public class GameScene implements IScene {
     private boolean handleTowerPlacement(IInput.TouchEvent e) {
         if (type == null) return false;
 
+        IImage img = null;
 
-        Tower tower = mapGrid.placeTowerAt(e.x, e.y, type, graphics, audio);
+        switch (type)
+        {
+            case Rayo: img = imgRayo; break;
+            case Fuego: img = imgFuego; break;
+            case Hielo: img = imgHielo; break;
+        }
+
+        Tower tower = mapGrid.placeTowerAt(e.x, e.y, type, graphics, audio, img);
         if (tower != null) {
             money -= cost;
             cost = 0;

@@ -7,6 +7,7 @@ import com.example.androidengine.AndroidGraphics;
 import com.example.androidengine.AndroidImage;
 import com.example.engine.IAudio;
 import com.example.engine.IGraphics;
+import com.example.engine.IImage;
 
 /*
 * MapGrid es la clase que gestiona el tablero de juego.
@@ -168,7 +169,7 @@ public class MapGrid {
     }
 
     // Colocar una torre
-    public Tower placeTowerAt(float x, float y, TowerType type, IGraphics iGraphics, IAudio iAudio) {
+    public Tower placeTowerAt(float x, float y, TowerType type, IGraphics iGraphics, IAudio iAudio, IImage img) {
         Cell cell = getCellAtPosition(x, y);
 
         if (cell == null || cell.getPath() || cell.getTower() || !cell.isAvailable())
@@ -183,13 +184,13 @@ public class MapGrid {
 
         switch (type) {
             case Rayo:
-                tower = new TowerRayo(iGraphics, iAudio, row, column, size, cost, cell);
+                tower = new TowerRayo(iGraphics, iAudio, row, column, size, cost, cell, img);
                 break;
             case Fuego:
-                tower = new TowerFuego(iGraphics, iAudio, row, column, size, cost, cell);
+                tower = new TowerFuego(iGraphics, iAudio, row, column, size, cost, cell, img);
                 break;
             case Hielo:
-                tower = new TowerHielo(iGraphics, iAudio,  row, column, size, cost, cell);
+                tower = new TowerHielo(iGraphics, iAudio,  row, column, size, cost, cell, img);
                 break;
             case Star:
                 tower = new TowerStar(iGraphics, iAudio, row, column, size, cost, cell);
