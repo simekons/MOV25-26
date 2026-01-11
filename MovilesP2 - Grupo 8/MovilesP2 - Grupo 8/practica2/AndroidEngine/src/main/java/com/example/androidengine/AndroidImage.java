@@ -4,16 +4,26 @@ import android.graphics.Bitmap;
 
 import com.example.engine.IImage;
 
+/**
+ * AndroidImage implementa las imágenes en Android.
+ */
 public class AndroidImage implements IImage
 {
     // Bitmap de la imagen.
     private Bitmap bitmap;
 
+    /**
+     * CONSTRUCTORA.
+     * @param bitmap
+     */
     public AndroidImage(Bitmap bitmap)
     {
         this.bitmap = bitmap;
     }
 
+    /**
+     * GETTERS.
+     */
     // Ancho de la imagen.
     @Override
     public int getWidth() { return this.bitmap.getWidth(); }

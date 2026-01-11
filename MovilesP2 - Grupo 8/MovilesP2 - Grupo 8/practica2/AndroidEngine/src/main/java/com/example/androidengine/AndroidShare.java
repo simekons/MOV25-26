@@ -14,6 +14,9 @@ import android.view.SurfaceView;
 
 import java.io.ByteArrayOutputStream;
 
+/**
+ * AndroidShare implementa el compartir.
+ */
 public class AndroidShare {
 
     // Actividad principal.
@@ -21,13 +24,19 @@ public class AndroidShare {
     // SurfaceView.
     private static SurfaceView s;
 
-    // CONSTRUCTORA
+    /**
+     * CONSTRUCTORA.
+     * @param a
+     * @param s
+     */
     public AndroidShare(Activity a, SurfaceView s){
         this.a = a;
         this.s = s;
     }
 
-    // CAPTURA DE PANTALLA
+    /**
+     * Método que captura pantalla.
+     */
     public static void screenshot(){
         // Comprobamos que la versión tiene soporte para capturas de pantalla (PixelCopy).
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
@@ -48,7 +57,10 @@ public class AndroidShare {
         }
     }
 
-    // COMPARTIR CAPTURA DE PANTALLA
+    /**
+     * Método que comparte la captura de pantalla.
+     * @param bitmap
+     */
     public static void shareImage(Bitmap bitmap){
         Context context = a.getApplicationContext();
 

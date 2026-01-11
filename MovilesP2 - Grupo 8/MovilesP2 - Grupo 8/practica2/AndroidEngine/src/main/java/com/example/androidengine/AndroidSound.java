@@ -8,6 +8,9 @@ import com.example.engine.ISound;
 
 import java.io.IOException;
 
+/**
+ * AndroidSound implementa los sonidos en Android.
+ */
 public class AndroidSound implements ISound
 {
     // Id del sonido.
@@ -15,7 +18,12 @@ public class AndroidSound implements ISound
     // Id de la reproducción.
     private int streamId;
 
-    // CONSTRUCTORA.
+    /**
+     * CONSTRUCTORA.
+     * @param file
+     * @param assetManager
+     * @param soundPool
+     */
     public AndroidSound(String file, AssetManager assetManager, SoundPool soundPool){
 
         try {
@@ -29,6 +37,9 @@ public class AndroidSound implements ISound
         streamId = -1;
     }
 
+    /**
+     * GETTERS.
+     */
     // Id del sonido.
     public int getId() { return soundId; }
     // Id de la reproducción.
@@ -37,6 +48,9 @@ public class AndroidSound implements ISound
         return this.streamId;
     }
 
+    /**
+     * SETTERS.
+     */
     // Id de la reproducción.
     public void setStreamId(int id)
     {

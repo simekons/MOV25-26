@@ -13,26 +13,44 @@ import com.google.android.gms.ads.rewarded.RewardedAd;
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
 
 
+/**
+ * AndroidAds implementa los anuncions de Android.
+ */
 public class AndroidAds {
 
+    // Actividad principal.
     private Activity activity;
+
+    // AdView.
     private AdView adView;
+
+    // RewardedAd.
     private RewardedAd rewardedAd;
 
-    // Inicializa el sistema de anuncios
+    /**
+     * CONSTRUCTORA.
+     * @param activity
+     */
     public AndroidAds(Activity activity) {
         this.activity = activity;
         MobileAds.initialize(activity, initializationStatus -> {
         });
     }
 
-    // Carga el anuncio de banner según un id
+    /**
+     * Método que carga el anuncio de banner.
+     * @param adViewId
+     */
     public void loadBannerAd(int adViewId) {
         adView = activity.findViewById(adViewId);
         AdRequest adRequest = new AdRequest.Builder().build();
         adView.loadAd(adRequest);
     }
 
+    /**
+     * Método que hace que el banner sea visible o no.
+     * @param visible
+     */
     public void setBannerVisible(boolean visible) {
         if (adView == null) return;
 
@@ -41,7 +59,10 @@ public class AndroidAds {
         });
     }
 
-    // Carga el anuncio de recompensas según un id
+    /**
+     * Método que carga el rewarded ad.
+     * @param adId
+     */
     public void loadRewardedAd(String adId) {
         RewardedAd.load(activity, adId, new AdRequest.Builder().build(), new RewardedAdLoadCallback() {
             @Override
@@ -56,7 +77,10 @@ public class AndroidAds {
         });
     }
 
-    // Enseña el anuncio de recompensas
+    /**
+     * Método que muestra el rewarded ad.
+     * @param onReward
+     */
     public void showRewardedAd(Runnable onReward) {
         if (rewardedAd != null) {
             activity.runOnUiThread(() -> rewardedAd.show(activity, rewardItem -> {

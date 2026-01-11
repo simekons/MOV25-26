@@ -4,6 +4,9 @@ import android.graphics.Typeface;
 
 import com.example.engine.IFont;
 
+/**
+ * AndrroidFont gestiona las fuentes de Android.
+ */
 public class AndroidFont implements IFont
 {
     // La fuente.
@@ -17,6 +20,13 @@ public class AndroidFont implements IFont
     // Entero del estilo.
     private int style;
 
+    /**
+     * CONSTRUCTORA.
+     * @param typeface
+     * @param size
+     * @param bold
+     * @param italic
+     */
     public AndroidFont(Typeface typeface, float size, boolean bold, boolean italic)
     {
         this.typeface = typeface;
@@ -34,6 +44,10 @@ public class AndroidFont implements IFont
             style = Typeface.BOLD_ITALIC;
     }
 
+    /**
+     * GETTERS.
+     * @return
+     */
     // Tamaño de la fuente.
     @Override
     public int getSize() { return (int)this.size; }
@@ -45,6 +59,10 @@ public class AndroidFont implements IFont
     @Override
     public boolean isBold() { return this.bold; }
 
+    /**
+     * SETTERS.
+     * @param size
+     */
     public void setSize(int size) {this.size = size; }
     // El estilo de la fuente.
     public void setStyle(int style) { this.typeface = Typeface.create(typeface, style); }

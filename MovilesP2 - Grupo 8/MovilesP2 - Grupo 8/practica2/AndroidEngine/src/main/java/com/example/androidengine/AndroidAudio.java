@@ -7,6 +7,9 @@ import android.media.SoundPool;
 import com.example.engine.IAudio;
 import com.example.engine.ISound;
 
+/**
+ * AndroidAudio implementa los sonidos en Android.
+ */
 public class AndroidAudio implements IAudio
 {
 
@@ -17,18 +20,32 @@ public class AndroidAudio implements IAudio
     // Actividad principal.
     private Activity activity;
 
+    /**
+     * CONSTRUCTORA.
+     * @param activity
+     */
     AndroidAudio(Activity activity) {
         this.soundPool = new SoundPool.Builder().setMaxStreams(10).build();
         this.activity = activity;
         this.assetManager = this.activity.getAssets();
     }
 
+    /**
+     * Método que registra un nuevo sonido.
+     * @param file
+     * @return
+     */
     @Override
     public AndroidSound newSound(String file) {
         AndroidSound sound = new AndroidSound(file, assetManager, soundPool);
         return sound;
     }
 
+    /**
+     * Método que ejecuta un sonido.
+     * @param sound
+     * @param loop
+     */
     @Override
     public void playSound(ISound sound, boolean loop) {
         AndroidSound s = (AndroidSound) sound;
@@ -47,6 +64,10 @@ public class AndroidAudio implements IAudio
         ((AndroidSound) sound).setStreamId(streamID);
     }
 
+    /**
+     * Método que para la reproducción de un sonido.
+     * @param sound
+     */
     @Override
     public void stopSound(ISound sound) {
         AndroidSound s = (AndroidSound) sound;

@@ -17,19 +17,32 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
+/**
+ * AndroidFile gestiona los archivos en Android.
+ */
 public class AndroidFile {
 
+    // Actividad principal.
     private Activity activity;
+
+    // AssetManager.
     private AssetManager assetManager;
 
-    // Constructora de AndroidFile
+    /**
+     * CONSTRUCTORA.
+     * @param activity
+     */
     public AndroidFile(Activity activity)
     {
         this.activity = activity;
         this.assetManager = this.activity.getAssets();
     }
 
-    // Lee un archivo según una ruta dentro del proyecto (ej: assets)
+    /**
+     * Método que lee un archivo según una ruta dentro del proyecto (ej. assets)
+     * @param path
+     * @return
+     */
     public byte[] readFile(String path) {
         try {
             InputStream inputStream = assetManager.open(path);
@@ -44,7 +57,10 @@ public class AndroidFile {
         }
     }
 
-    // Elimina un archivo del almacenamiento interno del móvil
+    /**
+     * Método que elimina un archivo del almacenamiento interno del móvil
+     * @param fileName
+     */
     public void deleteFile(String fileName) {
         try {
             File file = new File(activity.getFilesDir().getPath(), fileName);
@@ -63,7 +79,11 @@ public class AndroidFile {
         }
     }
 
-    // Devuelve los archivos que se encuentran dentro de una ruta
+    /**
+     * Método que devuelve los archivos que se encuentran dentro de una ruta.
+     * @param path
+     * @return
+     */
     public String[] listFiles(String path) {
         try {
             return assetManager.list(path);
@@ -73,7 +93,11 @@ public class AndroidFile {
         }
     }
 
-    // Carga un archivo del almacenamiento interno del móvil con un hash
+    /**
+     * Método que carga un archivo del almacenamiento interno del móvil con un hash.
+     * @param path
+     * @return
+     */
     public JSONObject loadDataWithHash(String path)
     {
         try{
@@ -105,7 +129,11 @@ public class AndroidFile {
         }
     }
 
-    // Guarda datos en un archivo del almacenamiento interno del móvil con un hash
+    /**
+     * Método que guarda datos en un archivo del almacenamiento interno del móvil con un hash.
+     * @param path
+     * @param jsonObject
+     */
     public void saveDataWithHash(String path, JSONObject jsonObject)
     {
         try{

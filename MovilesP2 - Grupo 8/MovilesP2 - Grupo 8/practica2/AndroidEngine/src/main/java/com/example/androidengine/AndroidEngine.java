@@ -23,6 +23,9 @@ import java.util.concurrent.TimeUnit;
 
 import kotlin.jvm.Volatile;
 
+/**
+ * AndroidEngine implementa el motor de Android.
+ */
 public class AndroidEngine implements Runnable {
 
     // SurfaceView.
@@ -52,13 +55,24 @@ public class AndroidEngine implements Runnable {
     private boolean running = false;
     private static String channelId = "Notification";
 
-
+    /**
+     * Instancia de AndroidEngine.
+     * @param sw
+     * @param a
+     * @return
+     */
     public static AndroidEngine Instance(SurfaceView sw, Activity a){
         if (_instance == null){
             _instance = new AndroidEngine(sw, a);
         }
         return _instance;
     }
+
+    /**
+     * CONSTRUCTORA.
+     * @param surfaceView
+     * @param a
+     */
     public AndroidEngine(SurfaceView surfaceView, Activity a)
     {
         activity = a;
@@ -73,6 +87,14 @@ public class AndroidEngine implements Runnable {
         this.surfaceView.setOnTouchListener(this.androidInput);
     }
 
+    /**
+     * Método que programa una notificación.
+     * @param time
+     * @param title
+     * @param desc
+     * @param icon
+     * @param mainName
+     */
     public void programNotification(Long time, String title, String desc, int icon, String mainName){
 
         if (Build.VERSION. SDK_INT >= Build.VERSION_CODES. O) {
@@ -99,7 +121,9 @@ public class AndroidEngine implements Runnable {
         WorkManager.getInstance(this.activity.getBaseContext()).enqueue(notificationWork);
     }
 
-    // Método con el bucle principal.
+    /**
+     * Método con el bucle principal del juego.
+     */
     @Override
     public void run()
     {
@@ -145,7 +169,9 @@ public class AndroidEngine implements Runnable {
         }
     }
 
-    // Método que gestiona el input.
+    /**
+     * Método que GESTIONA el INPUT.
+     */
     public void handleInput()
     {
         // Siempre que haya escena.
@@ -163,7 +189,9 @@ public class AndroidEngine implements Runnable {
         }
     }
 
-    // Método que gestiona la reanudación.
+    /**
+     * Método que reanuda el bucle.
+     */
     public void onResume()
     {
         if (!this.running) {
@@ -177,7 +205,9 @@ public class AndroidEngine implements Runnable {
 
     }
 
-    // Método que gestiona el pausado.
+    /**
+     * Método que gestiona el pausado.
+     */
     public void onPause()
     {
         if (this.running) {
@@ -193,14 +223,25 @@ public class AndroidEngine implements Runnable {
         }
     }
 
-    // Carga de la librería nativa
+    /**
+     * Método que carga la librería nativa.
+     */
     static {
         System.loadLibrary("AndroidEngine");
     }
 
-    // Método para crear el hash
+
+    /**
+     * Método que crea el hash.
+     * @param data
+     * @return
+     */
     public static native String createHash(String data);
 
+    /**
+     * GETTERS.
+     * @return
+     */
     public static AndroidEngine get_instance() { return _instance;}
     // Gráficos de Android.
     public AndroidGraphics getGraphics() { return this.androidGraphics; }
@@ -212,9 +253,15 @@ public class AndroidEngine implements Runnable {
     public AndroidAds getAds() { return this.androidAds; }
     // Share
     public AndroidShare getAndroidShare() { return this.androidShare; }
-    // Escena actual.
+
+    /**
+     * SETTERS.
+     */
     public void setScenes(IScene scene) { this.scene = scene; }
 
+    /**
+     * Reset de la instancia.
+     */
     public static void reset() {
         _instance = null;
     }

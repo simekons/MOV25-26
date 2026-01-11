@@ -11,6 +11,9 @@ import androidx.core.app.NotificationManagerCompat;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
+/**
+ * AndroidWorker implementa parte de las notificaciones.
+ */
 public class AndroidWorker extends Worker {
 
     public static String channelIdInput = "notifications_channel_id";
@@ -19,10 +22,19 @@ public class AndroidWorker extends Worker {
     public static String iconInput = "notifications_icon";
     public static String classInput = "class";
 
+    /**
+     * CONSTRUCTORA.
+     * @param context
+     * @param workerParams
+     */
     public AndroidWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
     }
 
+    /**
+     * Método que gestiona la notificación.
+     * @return
+     */
     @NonNull
     @Override
     public Result doWork() {

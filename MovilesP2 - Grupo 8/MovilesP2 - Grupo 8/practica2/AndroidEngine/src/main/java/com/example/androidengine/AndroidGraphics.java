@@ -19,6 +19,9 @@ import com.example.engine.IImage;
 import java.io.IOException;
 import java.io.InputStream;
 
+/**
+ * AndroidGraphics gestiona los gráficos de Android.
+ */
 public class AndroidGraphics implements IGraphics
 {
     // SurfaceView.
@@ -44,7 +47,11 @@ public class AndroidGraphics implements IGraphics
     private float offsetX;
     private float offsetY;
 
-    // CONSTRUCTORA
+    /**
+     * CONSTRUCTORA.
+     * @param surfaceView
+     * @param activity
+     */
     public AndroidGraphics(SurfaceView surfaceView, Activity activity)
     {
         this.surfaceView = surfaceView;
@@ -61,7 +68,9 @@ public class AndroidGraphics implements IGraphics
         this.path = new Path();
     }
 
-    // Método que prepara el frame antes de dibujar.
+    /**
+     * Método que prepara el frame antes de dibujar.
+     */
     protected void prepareFrame()
     {
         while (!this.surfaceView.getHolder().getSurface().isValid() );
@@ -72,13 +81,17 @@ public class AndroidGraphics implements IGraphics
         this.canvas.drawColor(0xFFFFFFFF);
     }
 
-    // Método que finaliza el frame actual.
+    /**
+     * Método que finaliza el frame actual.
+     */
     protected void endFrame()
     {
         this.surfaceView.getHolder().unlockCanvasAndPost(canvas);
     }
 
-    // Método que calcula el posicionamiento de los elementos.
+    /**
+     * Método que calcula el posicionamiento de los elementos.
+     */
     private void calculateTransform()
     {
         float tempScaleX = this.surfaceView.getWidth() / this.logicWidth;
@@ -89,23 +102,37 @@ public class AndroidGraphics implements IGraphics
         this.offsetY = (this.surfaceView.getHeight() - this.logicHeight * this.scale) / 2;
     }
 
-    // Método que cambia la escala del canvas.
+    /**
+     * Método que cambia la escala del canvas.
+     * @param scale
+     */
     @Override
     public void scale(float scale) {
         this.canvas.scale(scale, scale);
     }
 
-    // Método que cambia la posición del canvas.
+    /**
+     * Método que cambia la posición del canvas.
+     * @param offsetX
+     * @param offsetY
+     */
     @Override
     public void translate(float offsetX, float offsetY) {
         this.canvas.translate(offsetX, offsetY);
     }
 
-    // Método que limpia la escena.
+    /**
+     * Método que limpia la escena.
+     * @param color
+     */
     @Override
     public void clear(int color) { this.canvas.drawColor(color); }
 
-    // Método que carga una imagen.
+    /**
+     * Método que carga una imagen.
+     * @param path
+     * @return
+     */
     @Override
     public AndroidImage loadImage(String path) {
         Bitmap bitmap = null;
@@ -121,7 +148,14 @@ public class AndroidGraphics implements IGraphics
         return new AndroidImage(bitmap);
     }
 
-    // Método que dibuja una imagen.
+    /**
+     * Método que dibuja una imagen.
+     * @param image
+     * @param x
+     * @param y
+     * @param width
+     * @param height
+     */
     @Override
     public void drawImage(IImage image, int x, int y, int width, int height) {
         AndroidImage img = (AndroidImage)image;
@@ -134,7 +168,13 @@ public class AndroidGraphics implements IGraphics
         canvas.drawBitmap(img.getImage(), null, rect, this.paint);
     }
 
-    // Método que dibuja un rectángulo relleno.
+    /**
+     * Método que dibuja un rectángula relleno.
+     * @param x
+     * @param y
+     * @param width
+     * @param height
+     */
     @Override
     public void fillRectangle(float x, float y, float width, float height) {
         float left = x;
@@ -144,8 +184,14 @@ public class AndroidGraphics implements IGraphics
         canvas.drawRect(left, top, right, bottom, this.paint);
     }
 
-
-    // Método que dibuja un rectángulo relleno con los bordes redondeados.
+    /**
+     * Método que dibuja un rectángulo relleno con los bordes redondeados.
+     * @param x
+     * @param y
+     * @param width
+     * @param height
+     * @param arc
+     */
     @Override
     public void fillRoundRectangle(float x, float y, float width, float height, float arc) {
         float left = x;
@@ -155,8 +201,13 @@ public class AndroidGraphics implements IGraphics
         canvas.drawRoundRect(left, top, right, bottom, arc, arc, paint);
     }
 
-
-    // Dibujo de rectángulo
+    /**
+     * Método que dibuja un rectángulo.
+     * @param x
+     * @param y
+     * @param width
+     * @param height
+     */
     @Override
     public void drawRect(float x, float y, float width, float height) {
         Paint stroke = new Paint(paint);
@@ -168,7 +219,14 @@ public class AndroidGraphics implements IGraphics
         canvas.drawRect(left, top, right, bottom, stroke);
     }
 
-    // Método que dibuja una línea.
+    /**
+     * Método que dibuja una línea.
+     * @param initX
+     * @param initY
+     * @param endX
+     * @param endY
+     * @param width
+     */
     @Override
     public void drawLine(float initX, float initY, float endX, float endY, int width) {
         float stroke = this.paint.getStrokeWidth();
@@ -177,7 +235,12 @@ public class AndroidGraphics implements IGraphics
         this.paint.setStrokeWidth(stroke);
     }
 
-    // Método que dibuja un hexágono.
+    /**
+     * Método que dibuja un hexágono.
+     * @param x
+     * @param y
+     * @param radius
+     */
     @Override
     public void drawHexagon(float x, float y, float radius) {
         path.reset();
@@ -197,6 +260,12 @@ public class AndroidGraphics implements IGraphics
         paint.setStyle(Paint.Style.FILL);
     }
 
+    /**
+     * Método que dibuja un hexágono relleno.
+     * @param x
+     * @param y
+     * @param radius
+     */
     @Override
     public void fillHexagon(float x, float y, float radius) {
         path.reset();
@@ -213,6 +282,12 @@ public class AndroidGraphics implements IGraphics
         canvas.drawPath(path, paint);
     }
 
+    /**
+     * Método que dibuja un octágono relleno.
+     * @param x
+     * @param y
+     * @param radius
+     */
     @Override
     public void fillOctagon(float x, float y, float radius) {
         path.reset();
@@ -232,6 +307,12 @@ public class AndroidGraphics implements IGraphics
         canvas.drawPath(path, paint);
     }
 
+    /**
+     * Método que dibuja una estrella rellena.
+     * @param x
+     * @param y
+     * @param radius
+     */
     @Override
     public void fillStar(float x, float y, float radius) {
         path.reset();
@@ -257,7 +338,12 @@ public class AndroidGraphics implements IGraphics
         canvas.drawPath(path, paint);
     }
 
-    // Método que dibuja un círculo.
+    /**
+     * Método que dibuja un círculo.
+     * @param cx
+     * @param cy
+     * @param radius
+     */
     @Override
     public void drawCircle(float cx, float cy, float radius) {
         paint.setStyle(Paint.Style.STROKE);
@@ -266,11 +352,26 @@ public class AndroidGraphics implements IGraphics
         paint.setStyle(Paint.Style.FILL);
     }
 
+    /**
+     * Método que dibuja un círculo relleno.
+     * @param cx
+     * @param cy
+     * @param radius
+     */
     @Override
     public void fillCircle(float cx, float cy, float radius) {
         canvas.drawCircle(cx, cy, radius, this.paint);
     }
 
+    /**
+     * Método que dibuja un tríangulo relleno.
+     * @param x1
+     * @param y1
+     * @param x2
+     * @param y2
+     * @param x3
+     * @param y3
+     */
     @Override
     public void fillTriangle(float x1, float y1, float x2, float y2, float x3, float y3) {
         path.reset();
@@ -282,8 +383,14 @@ public class AndroidGraphics implements IGraphics
         canvas.drawPath(path, paint);
     }
 
-
-    // Método que crea una fuente.
+    /**
+     * Método que crea una fuente.
+     * @param fontFile
+     * @param size
+     * @param bold
+     * @param italic
+     * @return
+     */
     @Override
     public AndroidFont createFont(String fontFile, int size, boolean bold, boolean italic) {
 
@@ -291,13 +398,22 @@ public class AndroidGraphics implements IGraphics
         return new AndroidFont(typeface, size, bold, italic);
     }
 
-    // Método que asigna una fuente.
+    /**
+     * Método que asigna una fuente.
+     * @param font
+     */
     @Override
     public void setFont(IFont font) {
         this.paint.setTypeface(((AndroidFont)font).getFont());
     }
 
-    // Método que renderiza texto.
+    /**
+     * Método que renderiza texto.
+     * @param iFont
+     * @param text
+     * @param x
+     * @param y
+     */
     @Override
     public void drawText(IFont iFont, String text, float x, float y) {
         AndroidFont font = (AndroidFont)iFont;
@@ -309,6 +425,13 @@ public class AndroidGraphics implements IGraphics
         canvas.drawText(text, x, y, paint);
     }
 
+    /**
+     * Método que renderiza texto no centrado.
+     * @param iFont
+     * @param text
+     * @param x
+     * @param y
+     */
     @Override
     public void drawTextNotCentered(IFont iFont, String text, float x, float y){
         AndroidFont font = (AndroidFont)iFont;
@@ -320,16 +443,27 @@ public class AndroidGraphics implements IGraphics
         canvas.drawText(text, x, y, paint);
     }
 
-    // Método que hace la transformación en X.
+    /**
+     * Método que hace la transformación en X.
+     * @param x
+     * @return
+     */
     public int realToLogicX(int x){
         return (int)(x / scale)-(int)(offsetX / scale);
     }
 
-    // Método que hace la transformación en Y.
+    /**
+     * Método que hace la transformación en Y.
+     * @param y
+     * @return
+     */
     public int realToLogicY(int y){
         return (int)(y / scale)-(int)(offsetY / scale);
     }
 
+    /**
+     * GETTERS.
+     */
     @Override
     public int getWidth(){ return this.surfaceView.getWidth(); }
     // Alto de la pantalla.
@@ -342,6 +476,9 @@ public class AndroidGraphics implements IGraphics
     @Override
     public int getLogicHeight(){ return (int)logicHeight; }
 
+    /**
+     * SETTERS.
+     */
     // Color del Paint.
     @Override
     public void setColor(int color) { this.paint.setColor(color); }

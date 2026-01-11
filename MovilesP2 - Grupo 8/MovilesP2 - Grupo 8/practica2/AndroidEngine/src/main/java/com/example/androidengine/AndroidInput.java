@@ -9,19 +9,28 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * AndroidInput implementa la gestión del input en Android.
+ */
 public class AndroidInput implements IInput, View.OnTouchListener {
 
     // Listas de eventos de input.
     private List<TouchEvent> events;
     private List<TouchEvent> pendingEvents;
 
+    /**
+     * CONSTRUCTORA.
+     */
     AndroidInput()
     {
         events = new ArrayList<>();
         pendingEvents = new ArrayList<>();
     }
 
-    // Accesor de los eventos de input.
+    /**
+     * Accesor de los eventos de input.
+     * @return
+     */
     @Override
     synchronized public List<TouchEvent> getTouchEvents() {
         events.clear();
@@ -31,7 +40,12 @@ public class AndroidInput implements IInput, View.OnTouchListener {
         return events;
     }
 
-    // Método que gestiona el input táctil.
+    /**
+     * Método que gestiona el input táctil.
+     * @param view
+     * @param motionEvent
+     * @return
+     */
     public boolean onTouch(View view, MotionEvent motionEvent)
     {
         TouchEvent touchEvent = new TouchEvent();
