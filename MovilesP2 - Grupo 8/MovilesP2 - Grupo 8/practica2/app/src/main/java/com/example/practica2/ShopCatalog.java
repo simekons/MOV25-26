@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * ShopCatalog gestiona los elementos de la tienda.
+ * ShopCatalog es el catálogo de los elementos de la tienda.
  */
 public class ShopCatalog {
 

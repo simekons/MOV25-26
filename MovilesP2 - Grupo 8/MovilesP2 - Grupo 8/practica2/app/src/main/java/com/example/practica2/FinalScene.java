@@ -161,7 +161,6 @@ public class FinalScene implements IScene {
                     }
                     if(shareButton.isTouched(e.x, e.y) && win)
                     {
-                        // Compartimos la captura de pantalla.
                         iEngine.getAndroidShare().screenshot();
                     }
                     break;

@@ -38,8 +38,9 @@ public class GameLoader {
     // Ruta del archivo.
     private static String path;
 
-    // Colore de los botones.
+    // Colores de los botones.
     private int colorUnlocked, colorLocked;
+    private int backgroundColor, buttonColor, buttonColor2;
 
     /**
      * CONSTRUCTORA.
@@ -194,7 +195,10 @@ public class GameLoader {
                 int cost = obj.getInt("cost");
                 String description = obj.getString("description");
                 String image = obj.getString("image");
-                items.add(new ShopItemData( id, type, cost, description, image));
+                int backgroundColor = parseColor(obj, "backgroundColor");
+                int buttonColor = parseColor(obj, "buttonColor");
+                int buttonColor2 = parseColor(obj, "buttonColor2");
+                items.add(new ShopItemData( id, type, cost, description, image, backgroundColor, buttonColor, buttonColor2));
             }
         }
         catch (Exception e) {
@@ -456,16 +460,58 @@ public class GameLoader {
         }
     }
 
+    private int parseColor(JSONObject obj, String key) {
+        String value = obj.optString(key, "0");
 
+        if (value.equals("0"))
+            return 0;
+
+        return (int) Long.parseLong(value.substring(2), 16);
+    }
 
     /*
     * GETTERS
     * */
-    public int getBackgroundColor() { return 0xffffffff; }
-    public int getButtonColor() { return 0xff808080; }
-    public int getButtonColor2() { return 0xff9ce4f5; }
-    public int getPanelColor() { return 0xff79c8d7; }
-    public int getPanelButtonColor() { return 0xff01a9c9; }
+    public int getBackgroundColor()
+    {
+        if(shopManager.getSelectedSkin().getBackgroundColor() != 0)
+            return shopManager.getSelectedSkin().getBackgroundColor();
+        else
+            return 0xffffffff;
+    }
+
+    public int getButtonColor()
+    {
+        if(shopManager.getSelectedSkin().getButtonColor() != 0)
+            return shopManager.getSelectedSkin().getButtonColor();
+        else
+            return 0xff808080;
+    }
+
+    public int getButtonColor2()
+    {
+        if(shopManager.getSelectedSkin().getButtonColor2() != 0)
+            return shopManager.getSelectedSkin().getButtonColor2();
+        else
+            return 0xff9ce4f5;
+    }
+
+    public int getPanelColor()
+    {
+        if(shopManager.getSelectedSkin().getButtonColor2() != 0)
+            return shopManager.getSelectedSkin().getButtonColor2();
+        else
+            return 0xff79c8d7;
+    }
+
+    public int getPanelButtonColor()
+    {
+        if(shopManager.getSelectedSkin().getButtonColor() != 0)
+            return shopManager.getSelectedSkin().getButtonColor();
+        else
+            return 0xff01a9c9;
+    }
+
     public int get_unlocked() { return colorUnlocked; }
     public int get_locked() { return colorLocked; }
     public ShopManager getShopManager() { return shopManager; }
