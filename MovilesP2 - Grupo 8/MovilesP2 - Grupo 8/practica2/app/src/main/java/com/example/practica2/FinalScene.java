@@ -7,6 +7,7 @@ import com.example.engine.IAudio;
 import com.example.engine.IEngine;
 import com.example.engine.IFont;
 import com.example.engine.IGraphics;
+import com.example.engine.IImage;
 import com.example.engine.IInput;
 import com.example.engine.IScene;
 import com.example.engine.ISound;
@@ -57,6 +58,8 @@ public class FinalScene implements IScene {
     private boolean win;
     private boolean adWatched = false;
 
+    private IImage imgDiamond;
+
     // CONSTRUCTORA
     public FinalScene(GameLoader gameLoader, int difficulty, boolean win) {
         this.iEngine = AndroidEngine.get_instance();
@@ -74,10 +77,12 @@ public class FinalScene implements IScene {
         this.fontButton = iGraphics.createFont("fonts/fff.ttf", 15, false, false);
         this.titleFont = iGraphics.createFont("fonts/pixelGotic.ttf", 35, false, false);
 
-        this.adButton = new Button(this.iGraphics, this.fontButton, 205,275,150,50, "Anuncio", this.gameLoader.getButtonColor2());
+        this.adButton = new Button(this.iGraphics, this.fontButton, 255,275,50,50, "x2", this.gameLoader.getButtonColor2());
         this.shareButton = new Button(this.iGraphics, this.fontButton, 370,275,150,50, "Compartir", this.gameLoader.getButtonColor2());
         this.playAgainButton = new Button(this.iGraphics, this.fontButton, 205,200,150,50, "Volver a jugar", this.gameLoader.getButtonColor());
         this.menuButton = new Button(this.iGraphics, this.fontButton, 370 ,200,150,50, "Menu", this.gameLoader.getButtonColor());
+
+        imgDiamond = iGraphics.loadImage("sprites/diamond.png");
 
         this.soundButton = this.iAudio.newSound("music/button.wav");
     }
@@ -93,11 +98,13 @@ public class FinalScene implements IScene {
         iGraphics.drawText(titleFont, mensaje, 300, 100);
         if(win)
         {
+            iGraphics.drawTextNotCentered(fontButton, "+20", 180, 285);
+            iGraphics.drawImage(imgDiamond, 150, 275, 30, 30);
+
             shareButton.render();
             if(!adWatched)
                 adButton.render();
         }
-
 
         playAgainButton.render();
         menuButton.render();

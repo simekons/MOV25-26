@@ -47,8 +47,8 @@ public class MainActivity extends AppCompatActivity {
         gameLoader.loadGenericData();
         //DiamondManager.setDiamonds(450);
 
-        FinalScene finalScene = new FinalScene(gameLoader, 0, true);
-        AdventureScene adventureScene = new AdventureScene(gameLoader);
+//        FinalScene finalScene = new FinalScene(gameLoader, 0, true);
+//        AdventureScene adventureScene = new AdventureScene(gameLoader);
         MenuScene menuScene = new MenuScene(gameLoader);
         androidEngine.setScenes(menuScene);
     }

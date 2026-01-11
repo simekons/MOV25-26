@@ -5,6 +5,7 @@ import android.media.Image;
 import com.example.androidengine.AndroidFont;
 import com.example.androidengine.AndroidGraphics;
 import com.example.androidengine.AndroidImage;
+import com.example.engine.IImage;
 
 public class ShopInfoPanel {
 
@@ -20,6 +21,8 @@ public class ShopInfoPanel {
     private int x, y, width, height;
     private int panelColor, panelButtonColor;
 
+    private IImage imgDiamond;
+
     public ShopInfoPanel(AndroidGraphics g, AndroidFont font,
                          int x, int y, int width, int height, int panelColor, int panelButtonColor) {
         this.iGraphics = g;
@@ -30,6 +33,8 @@ public class ShopInfoPanel {
         this.height = height;
         this.panelColor = panelColor;
         this.panelButtonColor = panelButtonColor;
+
+        imgDiamond = iGraphics.loadImage("sprites/diamond.png");
     }
 
     public void render(ShopItemData item) {
@@ -80,6 +85,7 @@ public class ShopInfoPanel {
 
         iFont.setSize(26);
         iGraphics.drawTextNotCentered(iFont,"Coste: " + item.getCost(), x + 10, cursorY);
+        iGraphics.drawImage(imgDiamond, x + 155, cursorY - 10, 20,20);
         cursorY += 40;
 
         iFont.setSize(26);
