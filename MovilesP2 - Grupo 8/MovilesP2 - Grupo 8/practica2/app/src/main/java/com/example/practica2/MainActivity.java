@@ -1,6 +1,7 @@
 package com.example.practica2;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.SurfaceView;
 import android.widget.FrameLayout;
 
@@ -19,6 +20,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        boolean fromNotification =
+                getIntent().getBooleanExtra("FROM_NOTIFICATION", false);
+
+        if (fromNotification) {
+            androidEngine.reset();
+        }
+
         setContentView(R.layout.activity_main);
 
         // SurfaceView
@@ -41,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
         FinalScene finalScene = new FinalScene(gameLoader, 0, true);
         AdventureScene adventureScene = new AdventureScene(gameLoader);
         MenuScene menuScene = new MenuScene(gameLoader);
-        androidEngine.setScenes(menuScene);
+        androidEngine.setScenes(finalScene);
     }
 
     // Método que delega la gestión de la reanudación al motor.
@@ -55,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        androidEngine.showNotification("Vuelve", "Vuelve a jugar, ¡obtendrás recompensas!",R.drawable.ic_launcher_foreground,getPackageName());
+        androidEngine.programNotification(5L, "Vuelve", "Vuelve a jugar, ¡obtendrás recompensas!",R.drawable.ic_launcher_foreground,getPackageName());
         androidEngine.onPause();
     }
 

@@ -36,6 +36,7 @@ public class ShopScene implements IScene {
     private Map<String, Button> towerButtons = new HashMap<>();
     private Map<String, Button> skinButtons = new HashMap<>();
     private String selectedItemId = null;
+    private int panelColor, panelButtonColor;
 
     public ShopScene(GameLoader gameLoader)
     {
@@ -50,7 +51,10 @@ public class ShopScene implements IScene {
         this.shopManager = this.gameLoader.getShopManager();
         this.exitButton = new Button(this.iGraphics, this.exitImage, 0, 25, 50, 50);
 
-        infoPanel = new ShopInfoPanel(iGraphics, this.buttonFont, 400, 10, 250, 325);
+        panelColor = gameLoader.getPanelColor();
+        panelButtonColor = gameLoader.getPanelButtonColor();
+
+        infoPanel = new ShopInfoPanel(iGraphics, this.buttonFont, 400, 10, 250, 325, panelColor, panelButtonColor);
         initShopButtons();
     }
 
@@ -62,6 +66,7 @@ public class ShopScene implements IScene {
 
     @Override
     public void render() {
+        iGraphics.clear(gameLoader.getBackgroundColor());
 
         this.exitButton.render();
         iGraphics.drawText(buttonFont, "Tienes " + DiamondManager.getDiamonds(), 180, 40);
@@ -187,9 +192,7 @@ public class ShopScene implements IScene {
                                 gameLoader.saveTheme(shopManager.getSelectedSkin().getBackgroundColor(), shopManager.getSelectedSkin().getButtonColor(), shopManager.getSelectedSkin().getButtonColor2());
                             }
                             infoPanel.setItem(
-                                    shopManager.getShopCatalog().getItem(selectedItemId),
-                                    shopManager
-                            );
+                                    shopManager.getShopCatalog().getItem(selectedItemId), shopManager, gameLoader.getPanelColor(), gameLoader.getPanelButtonColor());
                         }
                     }
                     break;
@@ -206,34 +209,11 @@ public class ShopScene implements IScene {
                 iAudio.playSound(clickSound, false);
 
                 ShopItemData item = shopManager.getShopCatalog().getItem(selectedItemId);
-                infoPanel.setItem(item, shopManager);
+                infoPanel.setItem(item, shopManager, gameLoader.getPanelColor(), gameLoader.getPanelButtonColor());
 
                 return true;
             }
         }
         return false;
     }
-
-
-    /*public void drawButtons()
-    {
-        List<ShopItemData> towers = shopManager.getTowerItems();
-        int x = startX;
-        for (ShopItemData item : towers) {
-
-            boolean selected = item.getId().equals(selectedItemId);
-
-            int bgColor = selected ? 0xFFAA00 : 0xFFFFFFFF;
-
-            iGraphics.drawRect(x, y, ITEM_SIZE, ITEM_SIZE, bgColor);
-
-            IImage img = iGraphics.newImage(item.getImagePath());
-            iGraphics.drawImage(img, x + 8, y + 8);
-
-            // guardar rect para input (ver punto 4)
-            //itemRects.put(item.getId(), new Rect(x, y, ITEM_SIZE, ITEM_SIZE));
-
-            x += ITEM_SIZE + ITEM_MARGIN;
-        }
-    }*/
 }

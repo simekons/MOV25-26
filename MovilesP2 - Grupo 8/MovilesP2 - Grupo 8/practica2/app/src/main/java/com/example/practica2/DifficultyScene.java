@@ -53,9 +53,9 @@ public class DifficultyScene implements IScene {
         this.gameLoader = gameLoader;
 
         IFont fontButton = iGraphics.createFont("fonts/pixellari.ttf", 25, false, false);
-        shortButton = new Button(iGraphics, fontButton, 300,150,150,50, "Short", 0xFF808080);
-        longButton = new Button(iGraphics, fontButton, 300,225,150,50, "Long", 0xFF808080);
-        infButton = new Button(iGraphics, fontButton, 300,300,150,50, "Infinity", 0xFF808080);
+        shortButton = new Button(iGraphics, fontButton, 300,150,150,50, "Short", this.gameLoader.getButtonColor());
+        longButton = new Button(iGraphics, fontButton, 300,225,150,50, "Long", this.gameLoader.getButtonColor());
+        infButton = new Button(iGraphics, fontButton, 300,300,150,50, "Infinity", this.gameLoader.getButtonColor());
         titleFont = iGraphics.createFont("fonts/pixelGotic.ttf", 35, false, false);
 
         this.soundButton = this.iAudio.newSound("music/button.wav");
@@ -64,6 +64,8 @@ public class DifficultyScene implements IScene {
     // RENDERIZADO
     @Override
     public void render() {
+        iGraphics.clear(gameLoader.getBackgroundColor());
+
         iGraphics.setColor(0xff000000);
         iGraphics.drawText(titleFont, "DIFFICULTY", 300, 100);
         shortButton.render();

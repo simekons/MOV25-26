@@ -37,6 +37,7 @@ public class FinalScene implements IScene {
     private Button playAgainButton;
     private Button menuButton;
     private Button adButton;
+    private Button shareButton;
 
     // Fuente de título.
     private IFont titleFont;
@@ -73,9 +74,10 @@ public class FinalScene implements IScene {
         this.fontButton = iGraphics.createFont("fonts/fff.ttf", 15, false, false);
         this.titleFont = iGraphics.createFont("fonts/pixelGotic.ttf", 35, false, false);
 
-        this.adButton = new Button(this.iGraphics, this.fontButton, 300,150,150,50, "Anuncio", 0xFF808080);
-        this.playAgainButton = new Button(this.iGraphics, this.fontButton, 300,225,150,50, "Volver a jugar", 0xFF808080);
-        this.menuButton = new Button(this.iGraphics, this.fontButton, 300,300,150,50, "Menu", 0xFF808080);
+        this.adButton = new Button(this.iGraphics, this.fontButton, 205,275,150,50, "Anuncio", this.gameLoader.getButtonColor2());
+        this.shareButton = new Button(this.iGraphics, this.fontButton, 370,275,150,50, "Compartir", this.gameLoader.getButtonColor2());
+        this.playAgainButton = new Button(this.iGraphics, this.fontButton, 205,200,150,50, "Volver a jugar", this.gameLoader.getButtonColor());
+        this.menuButton = new Button(this.iGraphics, this.fontButton, 370 ,200,150,50, "Menu", this.gameLoader.getButtonColor());
 
         this.soundButton = this.iAudio.newSound("music/button.wav");
     }
@@ -83,13 +85,19 @@ public class FinalScene implements IScene {
     // RENDER
     @Override
     public void render() {
+        iGraphics.clear(gameLoader.getBackgroundColor());
+
         iGraphics.setColor(0xff000000);
         String mensaje = "";
         mensaje = (win == true) ? "VICTORIA" : "DERROTA";
         iGraphics.drawText(titleFont, mensaje, 300, 100);
         if(win)
+        {
+            shareButton.render();
             if(!adWatched)
                 adButton.render();
+        }
+
 
         playAgainButton.render();
         menuButton.render();
@@ -124,6 +132,11 @@ public class FinalScene implements IScene {
                             gameLoader.saveDiamonds(DiamondManager.getDiamonds());
                             adWatched = true;
                         }
+                    }
+                    if(shareButton.isTouched(e.x, e.y))
+                    {
+                        // Compartimos la captura de pantalla.
+                        iEngine.getAndroidShare().screenshot();
                     }
                     break;
                 default:
