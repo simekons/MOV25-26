@@ -4,25 +4,50 @@ import com.example.androidengine.AndroidFont;
 import com.example.androidengine.AndroidGraphics;
 import com.example.androidengine.AndroidImage;
 
+/**
+ * LevelButton es la clase que implementa los botones de niveles.
+ */
 public class LevelButton
 {
-
+    // Gráficos.
     private AndroidGraphics graphics;
 
+    // Fuentes.
     private AndroidFont font;
+
+    // Imágenes.
     private AndroidImage image;
 
+    // Estado de los niveles.
     private AdventureScene.LevelState levelState;
 
+    // Texto.
     private String text;
 
+    // Variables de los botones
     private int color;
     private int textColor;
     private int level;
-    private int world;
     private float x, y, originalY, width, height;
 
-    // Constructora de los botones desbloqueados del modo aventura
+    // Mundo actual.
+    private int world;
+
+    /**
+     * CONSTRUCTORA (desbloqueados).
+     * @param graphics
+     * @param font
+     * @param x
+     * @param y
+     * @param width
+     * @param height
+     * @param text
+     * @param color
+     * @param textColor
+     * @param levelState
+     * @param world
+     * @param level
+     */
     public LevelButton(AndroidGraphics graphics, AndroidFont font, float x, float y, float width, float height, String text, int color, int textColor, AdventureScene.LevelState levelState, int world, int level)
     {
         this.graphics = graphics;
@@ -40,7 +65,19 @@ public class LevelButton
         this.level = level;
     }
 
-    // Constructora de los botones bloqueados del modo aventura
+    /**
+     * CONSTRUCTORA (bloqueados).
+      * @param graphics
+     * @param image
+     * @param x
+     * @param y
+     * @param width
+     * @param height
+     * @param color
+     * @param levelState
+     * @param world
+     * @param level
+     */
     public LevelButton(AndroidGraphics graphics, AndroidImage image, float x, float y, float width, float height, int color, AdventureScene.LevelState levelState, int world, int level)
     {
         this.graphics = graphics;
@@ -56,6 +93,9 @@ public class LevelButton
         this.level = level;
     }
 
+    /**
+     * Método de RENDERIZADO.
+     */
     public void render()
     {
         graphics.setColor(color);
@@ -70,17 +110,19 @@ public class LevelButton
         }
     }
 
-    public boolean isTouched(int touchX, int touchY)
-    {
-        return touchX >= x && touchX <= (x + width) && touchY >= y && touchY <= (y + height);
-    }
-
+    /**
+     * GETTERS.
+     */
+    public boolean isTouched(int touchX, int touchY) { return touchX >= x && touchX <= (x + width) && touchY >= y && touchY <= (y + height); }
     public AdventureScene.LevelState getLevelState() { return this.levelState; }
     public int getLevel() { return this.level; }
     public int getWorld() { return this.world; }
     public float getY() { return this.y; }
     public float getOriginalY() { return originalY; }
 
+    /**
+     * SETTERS.
+     */
     public void setColor(int color) { this.color = color; }
     public void setY(float newY) { this.y = newY; }
 }

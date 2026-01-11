@@ -7,22 +7,38 @@ import com.example.androidengine.AndroidGraphics;
 import com.example.androidengine.AndroidImage;
 import com.example.engine.IImage;
 
+/**
+ * ShopInfoPanel
+ */
 public class ShopInfoPanel {
 
+    // Gráficos de Android.
     private AndroidGraphics iGraphics;
+
+    // Fuente.
     private AndroidFont iFont;
 
+    // Botones.
     private Button actionButton;
 
+    // Variables de ítems.
     private String currentItemId;
-
     private int currentItemCost;
-
     private int x, y, width, height;
     private int panelColor, panelButtonColor;
-
     private IImage imgDiamond;
 
+    /**
+     * CONSTRUCTORA.
+     * @param g
+     * @param font
+     * @param x
+     * @param y
+     * @param width
+     * @param height
+     * @param panelColor
+     * @param panelButtonColor
+     */
     public ShopInfoPanel(AndroidGraphics g, AndroidFont font,
                          int x, int y, int width, int height, int panelColor, int panelButtonColor) {
         this.iGraphics = g;
@@ -37,6 +53,10 @@ public class ShopInfoPanel {
         imgDiamond = iGraphics.loadImage("sprites/diamond.png");
     }
 
+    /**
+     * Método de RENDERIZADO.
+     * @param item
+     */
     public void render(ShopItemData item) {
         if (item == null) return;
 
@@ -101,6 +121,15 @@ public class ShopInfoPanel {
             actionButton.render();
         }
     }
+
+    /**
+     * Método que escribe un texto muy largo en varias líneas si precisase.
+     * @param text
+     * @param startX
+     * @param startY
+     * @param maxChars
+     * @param lineHeight
+     */
     private void drawTextWrappedByChars(String text, int startX, int startY, int maxChars, int lineHeight) {
         text = text.replace("\n", ""); // por si acaso
 
@@ -126,6 +155,9 @@ public class ShopInfoPanel {
         }
     }
 
+    /**
+     * SETTERS.
+     */
     public void setItem(ShopItemData item, ShopManager shopManager, int panelColor, int panelButtonColor) {
         if (item == null) {
             currentItemId = null;
@@ -164,6 +196,9 @@ public class ShopInfoPanel {
         actionButton = new Button(iGraphics, iFont, x + 125, buttonY, width - 80, 45, text, this.panelButtonColor);
     }
 
+    /**
+     * GETTERS.
+     */
     public Button getActionButton() { return this.actionButton; }
 
     public int itemCost() { return currentItemCost; }

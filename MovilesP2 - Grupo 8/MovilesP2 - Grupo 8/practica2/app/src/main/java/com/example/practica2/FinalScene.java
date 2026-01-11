@@ -14,9 +14,10 @@ import com.example.engine.ISound;
 
 import java.util.List;
 
-/*
-* FinalScene implementa la escena de victoria.
-*/
+
+/**
+ * FinalScene implementa la escena de victoria.
+ */
 public class FinalScene implements IScene {
 
     // Motor.
@@ -60,7 +61,12 @@ public class FinalScene implements IScene {
 
     private IImage imgDiamond;
 
-    // CONSTRUCTORA
+    /**
+     * CONSTRUCTORA.
+     * @param gameLoader
+     * @param difficulty
+     * @param win
+     */
     public FinalScene(GameLoader gameLoader, int difficulty, boolean win) {
         this.iEngine = AndroidEngine.get_instance();
         this.iGraphics = iEngine.getGraphics();
@@ -87,7 +93,9 @@ public class FinalScene implements IScene {
         this.soundButton = this.iAudio.newSound("music/button.wav");
     }
 
-    // RENDER
+    /**
+     * Método de RENDERIZADO.
+     */
     @Override
     public void render() {
         iGraphics.clear(gameLoader.getBackgroundColor());
@@ -110,11 +118,17 @@ public class FinalScene implements IScene {
         menuButton.render();
     }
 
-    // UPDATE
+    /**
+     * Método de UPDATE.
+     * @param deltaTime
+     */
     @Override
     public void update(float deltaTime) { }
 
-    // INPUT
+    /**
+     * Método que GESTIONA el INPUT.
+     * @param events
+     */
     @Override
     public void handleInput(List<IInput.TouchEvent> events) {
         for(IInput.TouchEvent e : events)

@@ -14,8 +14,8 @@ import com.google.android.gms.ads.AdView;
 
 import java.util.List;
 
-/*
- * MenuScene es la escena de menú.
+/**
+ * MenúScene implementa la escena del menú.
  */
 public class MenuScene implements IScene {
 
@@ -59,7 +59,10 @@ public class MenuScene implements IScene {
 
     private IImage imgDiamond;
 
-    // CONSTRUCTORA
+    /**
+     * CONSTRUCTORA.
+     * @param gameLoader
+     */
     public MenuScene(GameLoader gameLoader){
         this.iEngine = AndroidEngine.get_instance();
         this.iGraphics = this.iEngine.getGraphics();
@@ -80,7 +83,9 @@ public class MenuScene implements IScene {
         this.soundButton = this.iAudio.newSound("music/button.wav");
     }
 
-    // RENDERIZADO
+    /**
+     * Método de RENDERIZADO.
+     */
     @Override
     public void render() {
         iGraphics.clear(gameLoader.getBackgroundColor());
@@ -96,7 +101,10 @@ public class MenuScene implements IScene {
         iGraphics.drawTextNotCentered(fontButton, String.valueOf(DiamondManager.getDiamonds()), 375, 285);
     }
 
-    // Update.
+    /**
+     * Método de UPDATE.
+     * @param deltaTime
+     */
     @Override
     public void update(float deltaTime) {
         if(startGame){
@@ -110,7 +118,10 @@ public class MenuScene implements IScene {
         }
     }
 
-    // Input.
+    /**
+     * Método que GESTIONA el input.
+     * @param events
+     */
     @Override
     public void handleInput(List<IInput.TouchEvent> events) {
         for(IInput.TouchEvent e : events)
