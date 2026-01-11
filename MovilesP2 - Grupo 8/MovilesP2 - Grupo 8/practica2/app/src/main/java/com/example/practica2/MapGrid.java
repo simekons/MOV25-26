@@ -69,14 +69,14 @@ public class MapGrid {
 
         this.cells = new Cell[rows][columns];
 
-        //this.backgroundImage = this.graphics.loadImage(mapData.getBackground());
+        this.backgroundImage = this.graphics.loadImage(mapData.getBackground());
         createCellsFromMap(mapData.getMap());
     }
 
     // RENDERIZADO
     public void render() {
-        //this.graphics.drawImage(this.backgroundImage, (int)startingPoint.getX() + (int)this.screenWidth / 2 , 0, (int)this.screenWidth, (int)this.screenHeight);
-        //this.graphics.drawImage(this.backgroundImage, (int)startingPoint.getX() + (int)this.screenWidth / 2 , (int)this.screenHeight, (int)this.screenWidth, (int)this.screenHeight);
+        this.graphics.drawImage(this.backgroundImage, (int)startingPoint.getX() + (int)this.screenWidth / 2 , 0, (int)this.screenWidth, (int)this.screenHeight);
+        this.graphics.drawImage(this.backgroundImage, (int)startingPoint.getX() + (int)this.screenWidth / 2 , (int)this.screenHeight, (int)this.screenWidth, (int)this.screenHeight);
         for (int row = 0; row < rows; row++) {
             for (int col = 0; col < columns; col++) {
                 Cell cell = cells[row][col];

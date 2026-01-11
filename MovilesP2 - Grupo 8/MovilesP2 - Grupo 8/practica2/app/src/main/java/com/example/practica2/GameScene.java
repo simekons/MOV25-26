@@ -80,7 +80,7 @@ public class GameScene implements IScene {
     private int money;
 
     // Vidas actuales.
-    private int lives = 10;
+    private int lives = 2;
 
     // Tipo de torre.
     private TowerType type = null;
@@ -162,7 +162,7 @@ public class GameScene implements IScene {
             towerButtons.add(new TowerButton(graphics, fontButton, x, 360, 50, 50, 250, TowerType.Star, 0xFFFFFFFF, 0xFF000000));
             x -= 60;
         }
-        if(false){
+        if(true){
             towerButtons.add(new TowerButton(graphics, fontButton, x, 360, 50, 50, 200, TowerType.Stun, 0xFFFFFFFF, 0xFF000000));
             x -= 60;
         }
@@ -237,7 +237,6 @@ public class GameScene implements IScene {
     public void update(float deltaTime) {
 
         timer += deltaTime;
-
 
         if (this.levelData != null){
             enemiesPerWave = this.levelData.getWaveAmounts().get(this.wave);
@@ -326,7 +325,7 @@ public class GameScene implements IScene {
     private void addEnemy(int wave) {
         int vida = 30 + (wave * 15);
         int defensa = 0 + (wave * 2);
-        int speed = 50;
+        int speed = 150;
         EnemyResist resist = EnemyResist.Nada;
 
         if (this.wave >= 2) {
@@ -358,7 +357,9 @@ public class GameScene implements IScene {
     private void completeLevel() {
         if (levelData == null) return;
 
-        int world = levelData.getWorld();
+        if (lives < 1) return;
+
+        int world = levelData.getWorld() - 1;
         int lvlIndex = levelData.getLevel() - 1;
         int levelsPerWorld = 14;
 
@@ -368,7 +369,7 @@ public class GameScene implements IScene {
 
         globalLevelStates.set(globalIndex, AdventureScene.LevelState.UNLOCKED_COMPLETED);
 
-        if (lvlIndex + 1 < levelsPerWorld) {
+        if (lvlIndex + 1 < globalLevelStates.size()) {
             int nextGlobalIndex = globalIndex + 1;
             if (globalLevelStates.get(nextGlobalIndex) == AdventureScene.LevelState.LOCKED) {
                 globalLevelStates.set(nextGlobalIndex, AdventureScene.LevelState.UNLOCKED_INCOMPLETE);
@@ -382,6 +383,7 @@ public class GameScene implements IScene {
 
     // Gestor de oleadas.
     private void waves() {
+
 
         switch (this.difficulty) {
             case 0:

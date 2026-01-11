@@ -82,7 +82,13 @@ public class GameLoader {
     public LevelData loadLevelFromAssets(int _world, int _level)
     {
         String world = "world" + _world;
-        String level = "level_" + _world + "_0" + _level;
+        String level = "";
+        if (_level < 10){
+            level = "level_" + _world + "_0" + _level;
+        }
+        else {
+            level = "level_" + _world + "_" + _level;
+        }
         String path = "levels/" + world + "/" + level + ".json";
 
         JSONObject jsonObject = readJSONFromAssets(path);
@@ -209,7 +215,6 @@ public class GameLoader {
         int totalLevels = totalWorlds * levelsPerWorld;
 
         if (json == null || json.length() == 0) {
-
             for (int i = 0; i < totalLevels; i++) {
                 if (i == 0)
                     levelStates.add(AdventureScene.LevelState.UNLOCKED_INCOMPLETE);
@@ -223,13 +228,13 @@ public class GameLoader {
 
         for (int i = 0; i < totalLevels; i++) {
             String key = "level_" + i;
-            String value = json.optString(key, "Locked");
+            String value = json.optString(key, "LOCKED");
 
             switch (value) {
-                case "UnlockedIncomplete":
+                case "UNLOCKED_INCOMPLETE":
                     levelStates.add(AdventureScene.LevelState.UNLOCKED_INCOMPLETE);
                     break;
-                case "UnlockedCompleted":
+                case "UNLOCKED_COMPLETED":
                     levelStates.add(AdventureScene.LevelState.UNLOCKED_COMPLETED);
                     break;
                 default:

@@ -297,13 +297,9 @@ public class AdventureScene implements IScene {
         levelStates.clear();
 
         int baseIndex = world * levelsPerWorld; // solo este mundo
-        for (int i = 0; i < levelsPerWorld; i++) {
-            int globalIndex = baseIndex + i;
-            if (globalIndex < globalLevelStates.size()) {
-                levelStates.add(globalLevelStates.get(globalIndex));
-            } else {
-                levelStates.add(LevelState.LOCKED);
-            }
+
+        for (int i = baseIndex; i < globalLevelStates.size(); i++) {
+            levelStates.add(globalLevelStates.get(i));
         }
         createLevelsButtons();
         setStyleLevelButtons();
@@ -313,11 +309,11 @@ public class AdventureScene implements IScene {
     public void handleLevelButtons(AndroidInput.TouchEvent e)
     {
         for (LevelButton lb : levelButtons) {
-            if (lb.isTouched(e.x, e.y) && lb.getLevelState() == LevelState.UNLOCKED_INCOMPLETE) {
+            if (lb.isTouched(e.x, e.y) && lb.getLevelState() != LevelState.LOCKED ) {
                 this.audio.playSound(clickButton, false);
 
                 int world = lb.getWorld();
-                int level = lb.getLevel();
+                int level = lb.getLevel() + 1;
                 // Carga los niveles del almacenamiento por si el nivel está guardado
                 LevelData levelData = gameLoader.loadLevelFromFiles(world, level);
                 // Si el nivel no está guardado, lo carga de los assets

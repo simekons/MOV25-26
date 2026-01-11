@@ -37,7 +37,7 @@ public class LevelButton
         this.textColor = textColor;
         this.levelState = levelState;
         this.world = world;
-        this.level = (level % 5) + 1;
+        this.level = level;
     }
 
     // Constructora de los botones bloqueados del modo aventura
@@ -53,7 +53,7 @@ public class LevelButton
         this.color = color;
         this.levelState = levelState;
         this.world = world;
-        this.level = (level % 5) + 1;
+        this.level = level;
     }
 
     public void render()
