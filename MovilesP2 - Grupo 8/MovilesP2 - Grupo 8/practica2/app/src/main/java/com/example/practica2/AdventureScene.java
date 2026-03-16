@@ -137,7 +137,8 @@ public class AdventureScene implements IScene {
 
         this.lastTouchY = -1;
         this.scrollOffset = 0;
-        this.maxScrollOffset = 60;
+        int rows = (levelsPerWorld + 4) / 5;
+        this.maxScrollOffset = 50;
         this.minScrollOffset = 0;
         this.isScrolling = false;
     }
@@ -155,7 +156,6 @@ public class AdventureScene implements IScene {
         this.worldName = this.worlds.get(this.currentWorld).first;
 
         this.levelsPerWorld = this.worlds.get(this.currentWorld).second;
-        // this.levelsPerWorld = gameLoader.loadLevelStates().size() /
 
         // ruta del style.json de cada mundo
         this.gameLoader.loadStyle(currentWorld);
@@ -225,14 +225,8 @@ public class AdventureScene implements IScene {
         }
 
         // Color según el mundo
-        switch(currentWorld){
-            case 0:
-                this.graphics.setColor(0xff116D3A);
-                break;
-            case 1:
-                this.graphics.setColor(0xffffdd77);
-                break;
-        }
+
+        this.graphics.setColor(this.gameLoader.get_worldcolor());
         this.graphics.fillRectangle(150, 5, 300, 60);
 
         // Botones de niveles
@@ -245,12 +239,6 @@ public class AdventureScene implements IScene {
         // Flechas de cambio entre mundos
         leftArrow.render();
         rightArrow.render();
-
-        // Nombre del mundo
-        String[] worldNames = {
-                "Mundo 1 - Bosque",
-                "Mundo 2 - Desierto"
-        };
 
         this.worldName = "Mundo " + String.valueOf(this.currentWorld + 1) + " - " + this.worlds.get(this.currentWorld).first;
         graphics.drawText(worldFont, this.worldName, 300, 50);
@@ -297,10 +285,12 @@ public class AdventureScene implements IScene {
                     }
 
                     if (rightArrow.isTouched(e.x, e.y)) {
-                        if (currentWorld < 2 - 1) {
-                            currentWorld++;
+                        currentWorld++;
+                        if (currentWorld < this.gameLoader.get_totalWorlds()) {
                             loadLevelStatesForCurrentWorld(this.currentWorld);
                         }
+                        else
+                            currentWorld--;
                     }
                     handleLevelButtons(e);
                     break;
@@ -327,7 +317,6 @@ public class AdventureScene implements IScene {
      * @param world
      */
     public void loadLevelStatesForCurrentWorld(int world) {
-
         this.levelsPerWorld = this.worlds.get(this.currentWorld).second;
 
         // Cargar todos los estados globales desde GameLoader
@@ -335,9 +324,12 @@ public class AdventureScene implements IScene {
 
         levelStates.clear();
 
-        int baseIndex = world * this.levelsPerWorld; // solo este mundo
+        int baseIndex = 0;
+        for (int i = 0; i < world; i++){
+            baseIndex += this.worlds.get(i).second;
+        }
 
-        for (int i = baseIndex; i < globalLevelStates.size(); i++) {
+        for (int i = baseIndex; i < baseIndex + levelsPerWorld; i++) {
             levelStates.add(globalLevelStates.get(i));
         }
         createLevelsButtons();

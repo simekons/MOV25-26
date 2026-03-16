@@ -57,6 +57,7 @@ public class FinalScene implements IScene {
     private int diamondsPerLevel;
 
     private boolean win;
+    private boolean firstTime = true;
     private boolean adWatched = false;
 
     private IImage imgDiamond;
@@ -67,7 +68,7 @@ public class FinalScene implements IScene {
      * @param difficulty
      * @param win
      */
-    public FinalScene(GameLoader gameLoader, int difficulty, boolean win) {
+    public FinalScene(GameLoader gameLoader, int difficulty, boolean win, boolean firstTime) {
         this.iEngine = AndroidEngine.get_instance();
         this.iGraphics = iEngine.getGraphics();
         this.iAudio = iEngine.getAudio();
@@ -80,7 +81,9 @@ public class FinalScene implements IScene {
         this.win = win;
         this.diamondsPerLevel = DiamondManager.getDiamondsPerLevel();
 
-        if(win){
+        this.firstTime = firstTime;
+
+        if(win && this.firstTime){
             DiamondManager.addDiamonds(diamondsPerLevel);
             this.gameLoader.saveDiamonds(DiamondManager.getDiamonds());
         }
@@ -111,12 +114,13 @@ public class FinalScene implements IScene {
         iGraphics.drawText(titleFont, mensaje, 300, 100);
         if(win)
         {
-            iGraphics.drawTextNotCentered(fontButton, "+20", 180, 285);
-            iGraphics.drawImage(imgDiamond, 150, 275, 30, 30);
-
+            if (firstTime){
+                iGraphics.drawTextNotCentered(fontButton, "+20", 180, 285);
+                iGraphics.drawImage(imgDiamond, 150, 275, 30, 30);
+                if(!adWatched)
+                    adButton.render();
+            }
             shareButton.render();
-            if(!adWatched)
-                adButton.render();
         }
 
         playAgainButton.render();
@@ -149,7 +153,7 @@ public class FinalScene implements IScene {
                     {
                         this.iEngine.setScenes(new MenuScene(gameLoader));
                     }
-                    if(adButton.isTouched(e.x, e.y) && win)
+                    if(adButton.isTouched(e.x, e.y) && win && this.firstTime)
                     {
                         if(!adWatched)
                         {

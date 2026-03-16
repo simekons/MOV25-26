@@ -1,5 +1,6 @@
 {
   "colorPassed": "0xff399847",
   "colorUnlocked": "0xFFA1BF37", 
-  "colorLocked": "0xFFA1BF37"
+  "colorLocked": "0xFFA1BF37",
+  "worldColor": "0xff116D3A"
 }

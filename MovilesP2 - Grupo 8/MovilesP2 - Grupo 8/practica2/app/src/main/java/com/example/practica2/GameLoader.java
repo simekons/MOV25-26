@@ -39,7 +39,7 @@ public class GameLoader {
     private static String path;
 
     // Colores de los botones.
-    private int colorUnlocked, colorLocked;
+    private int colorUnlocked, colorLocked, worldColor;
     private int backgroundColor, buttonColor, buttonColor2;
 
     /**
@@ -156,6 +156,7 @@ public class GameLoader {
 
             colorUnlocked = (int) Long.parseLong(jsonObject.getString("colorPassed").substring(2), 16);
             colorLocked = (int) Long.parseLong(jsonObject.getString("colorLocked").substring(2), 16);
+            this.worldColor = (int) Long.parseLong(jsonObject.getString("worldColor").substring(2), 16);
         }
         catch (Exception e) {
 
@@ -259,14 +260,10 @@ public class GameLoader {
 
             for (int i = 0; i < wavesJson.length(); i++) {
                 JSONObject waveObj = wavesJson.getJSONObject(i);
-
-                if (waveObj.has("goblin")) {
-                    waveTypes.add("goblin");
-                    waveAmounts.add(waveObj.getInt("goblin"));
-                } else if (waveObj.has("orc")) {
-                    waveTypes.add("orc");
-                    waveAmounts.add(waveObj.getInt("orc"));
-                }
+                Iterator<String> keys = waveObj.keys();
+                String enemyType = keys.next();
+                waveTypes.add(enemyType);
+                waveAmounts.add(waveObj.getInt(enemyType));
             }
 
             int reward = jsonObject.getInt("reward");
@@ -308,10 +305,6 @@ public class GameLoader {
         JSONObject json = file.loadDataWithHash("levelsState.json");
 
         levelStates.clear();
-
-        int totalWorlds = 2;
-        int levelsPerWorld = 14;
-        int totalLevels = totalWorlds * levelsPerWorld;
 
         if (json == null || json.length() == 0) {
             for (int i = 0; i < totalLevels; i++) {
@@ -474,7 +467,7 @@ public class GameLoader {
     * */
     public int getBackgroundColor()
     {
-        if(shopManager.getSelectedSkin().getBackgroundColor() != 0)
+        if(shopManager.getSelectedSkin() != null && shopManager.getSelectedSkin().getBackgroundColor() != 0)
             return shopManager.getSelectedSkin().getBackgroundColor();
         else
             return 0xffffffff;
@@ -482,7 +475,7 @@ public class GameLoader {
 
     public int getButtonColor()
     {
-        if(shopManager.getSelectedSkin().getButtonColor() != 0)
+        if(shopManager.getSelectedSkin() != null && shopManager.getSelectedSkin().getButtonColor() != 0)
             return shopManager.getSelectedSkin().getButtonColor();
         else
             return 0xff808080;
@@ -490,7 +483,7 @@ public class GameLoader {
 
     public int getButtonColor2()
     {
-        if(shopManager.getSelectedSkin().getButtonColor2() != 0)
+        if(shopManager.getSelectedSkin() != null && shopManager.getSelectedSkin().getButtonColor2() != 0)
             return shopManager.getSelectedSkin().getButtonColor2();
         else
             return 0xff9ce4f5;
@@ -498,7 +491,7 @@ public class GameLoader {
 
     public int getPanelColor()
     {
-        if(shopManager.getSelectedSkin().getButtonColor2() != 0)
+        if(shopManager.getSelectedSkin() != null && shopManager.getSelectedSkin().getButtonColor2() != 0)
             return shopManager.getSelectedSkin().getButtonColor2();
         else
             return 0xff79c8d7;
@@ -506,7 +499,7 @@ public class GameLoader {
 
     public int getPanelButtonColor()
     {
-        if(shopManager.getSelectedSkin().getButtonColor() != 0)
+        if(shopManager.getSelectedSkin() != null && shopManager.getSelectedSkin().getButtonColor() != 0)
             return shopManager.getSelectedSkin().getButtonColor();
         else
             return 0xff01a9c9;
@@ -514,6 +507,8 @@ public class GameLoader {
 
     public int get_unlocked() { return colorUnlocked; }
     public int get_locked() { return colorLocked; }
+
+    public int get_worldcolor() { return this.worldColor; }
     public ShopManager getShopManager() { return shopManager; }
 
     public int get_totalLevels() { return this.totalLevels; }
