@@ -20,7 +20,8 @@ public class ShopItemData {
      */
     public enum ShopItemType {
         TOWER,
-        SKIN
+        SKIN,
+        FONDO
     }
 
     /**

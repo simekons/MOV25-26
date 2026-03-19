@@ -83,6 +83,9 @@ public class ShopManager {
         } else if (item.getType() == ShopItemData.ShopItemType.SKIN) {
             playerShopState.selectSkin(item.getId());
         }
+        else if (item.getType() == ShopItemData.ShopItemType.FONDO){
+            playerShopState.selectColor(item.getId());
+        }
     }
 
     /**
@@ -100,6 +103,10 @@ public class ShopManager {
     // Devuelve todos los items skins de torres de la tienda
     public List<ShopItemData> getSkinItems() {
         return catalog.getItemsByType(ShopItemData.ShopItemType.SKIN);
+    }
+
+    public List<ShopItemData> getColorItems() {
+        return catalog.getItemsByType(ShopItemData.ShopItemType.FONDO);
     }
 
     // Devuelve si el item ha sido comprado
@@ -121,6 +128,10 @@ public class ShopManager {
     // Devuelve la skin seleccionada
     public ShopItemData getSelectedSkin() {
         return catalog.getItem(playerShopState.getSelectedSkinId());
+    }
+
+    public ShopItemData getSelectedColor() {
+        return catalog.getItem(playerShopState.getSelectedColorId());
     }
 
     public ShopCatalog getShopCatalog() { return this.catalog; }

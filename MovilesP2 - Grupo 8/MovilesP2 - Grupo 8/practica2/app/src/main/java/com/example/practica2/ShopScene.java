@@ -6,6 +6,7 @@ import com.example.androidengine.AndroidFile;
 import com.example.androidengine.AndroidFont;
 import com.example.androidengine.AndroidGraphics;
 import com.example.androidengine.AndroidImage;
+import com.example.androidengine.AndroidInput;
 import com.example.androidengine.AndroidSound;
 import com.example.engine.IFont;
 import com.example.engine.IImage;
@@ -55,11 +56,20 @@ public class ShopScene implements IScene {
     private Button exitButton;
     private Map<String, Button> towerButtons = new HashMap<>();
     private Map<String, Button> skinButtons = new HashMap<>();
+    private Map<String, Button> colorButtons = new HashMap<>();
 
     // Variables de los botones.
     private String selectedItemId = null;
     private int panelColor, panelButtonColor;
 
+    private int lastTouchY;
+    private int scrollOffset;
+    private int maxScrollOffset;
+    private int minScrollOffset;
+    private boolean isScrolling;
+
+    private float y1, y2, y3;
+    private float og_y1, og_y2, og_y3;
     /**
      * CONSTRUCTORA.
      * @param gameLoader
@@ -71,7 +81,14 @@ public class ShopScene implements IScene {
         this.iAudio = this.iEngine.getAudio();
         this.iFile = this.iEngine.getFile();
         this.gameLoader = gameLoader;
-
+        this.lastTouchY = -1;
+        this.scrollOffset = 0;
+        this.maxScrollOffset = 50;
+        this.minScrollOffset = 0;
+        this.isScrolling = false;
+        og_y1 = y1 = 150;
+        og_y2 = y2 = 280;
+        og_y3 = y3 = 410;
         loadAssets();
 
         this.shopManager = this.gameLoader.getShopManager();
@@ -110,7 +127,9 @@ public class ShopScene implements IScene {
 
         iGraphics.setColor(0xFF000000);
         buttonFont.setSize(30);
-        iGraphics.drawText(buttonFont, "Nuevas torres", 100, 95);
+
+        // 95, 225, 355
+        iGraphics.drawText(buttonFont, "Nuevas torres", 100, y1 - 55);
         buttonFont.setSize(35);
 
         for (Map.Entry<String, Button> entry : towerButtons.entrySet()) {
@@ -126,10 +145,26 @@ public class ShopScene implements IScene {
 
         iGraphics.setColor(0xFF000000);
         buttonFont.setSize(30);
-        iGraphics.drawText(buttonFont, "Apariencias de torres", 147, 225);
+        iGraphics.drawText(buttonFont, "Apariencias de torres", 147, y2 - 55);
         buttonFont.setSize(35);
 
         for (Map.Entry<String, Button> entry : skinButtons.entrySet()) {
+            String itemId = entry.getKey();
+            Button b = entry.getValue();
+
+            boolean selected = itemId.equals(selectedItemId);
+
+            b.setSelected(selected);
+
+            b.render();
+        }
+
+        iGraphics.setColor(0xFF000000);
+        buttonFont.setSize(30);
+        iGraphics.drawText(buttonFont, "Apariencias de fondo", 147, y3 - 55);
+        buttonFont.setSize(35);
+
+        for (Map.Entry<String, Button> entry : colorButtons.entrySet()) {
             String itemId = entry.getKey();
             Button b = entry.getValue();
 
@@ -160,6 +195,7 @@ public class ShopScene implements IScene {
     {
         List<ShopItemData> towers = shopManager.getTowerItems();
         List<ShopItemData> skins = shopManager.getSkinItems();
+        List<ShopItemData> colors = shopManager.getColorItems();
 
         int startX = 45;
         int startY = 150;
@@ -205,6 +241,21 @@ public class ShopScene implements IScene {
 
             x += size + margin;
         }
+
+
+        startX = 45;
+        startY = 410;
+
+        x = startX;
+
+        for (ShopItemData item : shopManager.getColorItems()){
+            AndroidImage img = iGraphics.loadImage(item.getImagePath());
+
+            Button b = new Button(iGraphics, img, x, startY, size, size, true, shopManager.isPurchased(item.getId()));
+            colorButtons.put(item.getId(), b);
+
+            x+= size + margin;
+        }
     }
 
     /**
@@ -218,6 +269,8 @@ public class ShopScene implements IScene {
             switch (e.type)
             {
                 case TOUCH_UP:
+                    lastTouchY = -1;
+                    isScrolling = false;
                     if(exitButton.imageIsTouched(e.x, e.y))
                     {
                         this.iAudio.playSound(clickSound, false);
@@ -225,9 +278,10 @@ public class ShopScene implements IScene {
                     }
                     if (checkButtons(towerButtons, e)) return;
                     if (checkButtons(skinButtons, e)) return;
+                    if (checkButtons(colorButtons, e)) return;
                     if(infoPanel.getActionButton() != null)
                     {
-                        if (infoPanel.getActionButton().isTouched(e.x, e.y)) {
+                        if (infoPanel.getActionButton().isTouched(e.x, e.y)) { // si se compra
                             int diamonds = DiamondManager.getDiamonds();
                             if(diamonds < infoPanel.itemCost())
                                 return;
@@ -243,6 +297,32 @@ public class ShopScene implements IScene {
                             }
                             infoPanel.setItem(shopManager.getShopCatalog().getItem(selectedItemId), shopManager, gameLoader.getPanelColor(), gameLoader.getPanelButtonColor());
                         }
+                    }
+                    break;// Activa scroll
+                case TOUCH_DOWN:
+                    lastTouchY = e.y;
+                    isScrolling = true;
+                    break;
+                case TOUCH_MOVE:
+                    if (isScrolling) {
+                        int deltaY = lastTouchY - e.y;
+                        lastTouchY = e.y;
+
+                        scrollOffset += deltaY;
+                        scrollOffset = Math.max(minScrollOffset, Math.min(maxScrollOffset, scrollOffset));
+
+                        for (Map.Entry<String, Button> b : towerButtons.entrySet()){
+                            b.getValue().setY(og_y1 - scrollOffset);
+                        }
+                        for (Map.Entry<String, Button> b : skinButtons.entrySet()){
+                            b.getValue().setY(og_y2 - scrollOffset);
+                        }
+                        for (Map.Entry<String, Button> b : colorButtons.entrySet()){
+                            b.getValue().setY(og_y3 - scrollOffset);
+                        }
+                        y1 = og_y1 - scrollOffset;
+                        y2 = og_y2 - scrollOffset;
+                        y3 = og_y3 - scrollOffset;
                     }
                     break;
                 default:

@@ -15,6 +15,7 @@ public class PlayerShopState {
     // Variables de selección.
     private String selectedTowerId;
     private String selectedSkinId;
+    private String selectedColorId;
 
     /**
      * Método que devuelve si está comprado o no un ítem.
@@ -49,10 +50,17 @@ public class PlayerShopState {
         selectedSkinId = itemId;
     }
 
+    public void selectColor(String itemId){
+        selectedColorId = itemId;
+    }
+
+
     /**
      * GETTERS.
      */
     public String getSelectedTowerId() { return selectedTowerId; }
     public String getSelectedSkinId() { return selectedSkinId; }
+
+    public String getSelectedColorId() { return selectedColorId; }
     public Set<String> getPurchasedItems() { return Collections.unmodifiableSet(purchasedItems); }
 }

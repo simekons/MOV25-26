@@ -205,6 +205,7 @@ public class Button {
     public float getX() { return this.x; }
     public float getY() { return this.y; }
 
+    public void setY(float y) { this.y = y;}
     /**
      * SETTERS.
      * @param s

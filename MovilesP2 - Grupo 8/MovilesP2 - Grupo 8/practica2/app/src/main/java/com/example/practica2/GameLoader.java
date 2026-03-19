@@ -218,7 +218,7 @@ public class GameLoader {
             path = "gameData.json";
             JSONObject jsonObject = file.loadDataWithHash(path);
             int diamonds = jsonObject.optInt("diamonds", 0);
-            DiamondManager.setDiamonds(diamonds);
+            DiamondManager.setDiamonds(10000);
         } catch (Exception e) {
 
         }
@@ -355,6 +355,7 @@ public class GameLoader {
 
             state.selectTower(json.optString("selectedTower", null));
             state.selectSkin(json.optString("selectedSkin", null));
+            state.selectColor(json.optString("selectedColor", null));
 
         } catch (Exception e) {
 
@@ -429,6 +430,9 @@ public class GameLoader {
             if (json.has("selectedSkin")) {
                 state.selectSkin(json.getString("selectedSkin"));
             }
+            if (json.has("selectedColor")){
+                state.selectColor(json.getString("selectedColor"));
+            }
 
         } catch (Exception e) {
 
@@ -467,40 +471,40 @@ public class GameLoader {
     * */
     public int getBackgroundColor()
     {
-        if(shopManager.getSelectedSkin() != null && shopManager.getSelectedSkin().getBackgroundColor() != 0)
-            return shopManager.getSelectedSkin().getBackgroundColor();
+        if(shopManager.getSelectedColor() != null && shopManager.getSelectedColor().getBackgroundColor() != 0)
+            return shopManager.getSelectedColor().getBackgroundColor();
         else
             return 0xffffffff;
     }
 
     public int getButtonColor()
     {
-        if(shopManager.getSelectedSkin() != null && shopManager.getSelectedSkin().getButtonColor() != 0)
-            return shopManager.getSelectedSkin().getButtonColor();
+        if(shopManager.getSelectedColor() != null && shopManager.getSelectedColor().getButtonColor() != 0)
+            return shopManager.getSelectedColor().getButtonColor();
         else
             return 0xff808080;
     }
 
     public int getButtonColor2()
     {
-        if(shopManager.getSelectedSkin() != null && shopManager.getSelectedSkin().getButtonColor2() != 0)
-            return shopManager.getSelectedSkin().getButtonColor2();
+        if(shopManager.getSelectedColor() != null && shopManager.getSelectedColor().getButtonColor2() != 0)
+            return shopManager.getSelectedColor().getButtonColor2();
         else
             return 0xff9ce4f5;
     }
 
     public int getPanelColor()
     {
-        if(shopManager.getSelectedSkin() != null && shopManager.getSelectedSkin().getButtonColor2() != 0)
-            return shopManager.getSelectedSkin().getButtonColor2();
+        if(shopManager.getSelectedColor() != null && shopManager.getSelectedColor().getButtonColor2() != 0)
+            return shopManager.getSelectedColor().getButtonColor2();
         else
             return 0xff79c8d7;
     }
 
     public int getPanelButtonColor()
     {
-        if(shopManager.getSelectedSkin() != null && shopManager.getSelectedSkin().getButtonColor() != 0)
-            return shopManager.getSelectedSkin().getButtonColor();
+        if(shopManager.getSelectedColor() != null && shopManager.getSelectedColor().getButtonColor() != 0)
+            return shopManager.getSelectedColor().getButtonColor();
         else
             return 0xff01a9c9;
     }

@@ -59,6 +59,36 @@
       "backgroundColor": "0",
       "buttonColor": "0",
       "buttonColor2": "0"
+    },
+    {
+      "id": "colorRojo",
+      "type": "FONDO",
+      "cost": 100,
+      "description": "Nuevo color para el fondo de la aplicación y los botones.",
+      "image": "sprites/rojo.png",
+      "backgroundColor": "0xfff596a5",
+      "buttonColor": "0xffeb0a2d",
+      "buttonColor2": "0xfffcccd4"
+    },
+    {
+      "id": "colorVerde",
+      "type": "FONDO",
+      "cost": 100,
+      "description": "Nuevo color para el fondo de la aplicación y los botones.",
+      "image": "sprites/verde.png",
+      "backgroundColor": "0xffb7e4c7",
+      "buttonColor": "0xff2d6a4f",
+      "buttonColor2": "0xffd8f3dc"
+    },
+    {
+      "id": "colorAzul",
+      "type": "FONDO",
+      "cost": 100,
+      "description": "Nuevo color para el fondo de la aplicación y los botones.",
+      "image": "sprites/azul.png",
+      "backgroundColor": "0xffcde7ff",
+      "buttonColor": "0xff1d4ed8",
+      "buttonColor2": "0xffe0f2fe"
     }
   ]
 }
