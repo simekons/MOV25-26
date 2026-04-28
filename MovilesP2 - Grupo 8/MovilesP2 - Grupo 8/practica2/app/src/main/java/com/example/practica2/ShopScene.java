@@ -80,11 +80,12 @@ public class ShopScene implements IScene {
         this.iGraphics = this.iEngine.getGraphics();
         this.iAudio = this.iEngine.getAudio();
         this.iFile = this.iEngine.getFile();
+        this.iEngine.getAds().setBannerVisible(false);
         this.gameLoader = gameLoader;
         this.lastTouchY = -1;
         this.scrollOffset = 0;
         this.maxScrollOffset = 50;
-        this.minScrollOffset = 0;
+        this.minScrollOffset = 25;
         this.isScrolling = false;
         og_y1 = y1 = 150;
         og_y2 = y2 = 280;
@@ -129,7 +130,8 @@ public class ShopScene implements IScene {
         buttonFont.setSize(30);
 
         // 95, 225, 355
-        iGraphics.drawText(buttonFont, "Nuevas torres", 100, y1 - 55);
+        if(y1 > 100)
+            iGraphics.drawText(buttonFont, "Nuevas torres", 100, y1 - 55);
         buttonFont.setSize(35);
 
         for (Map.Entry<String, Button> entry : towerButtons.entrySet()) {
@@ -137,8 +139,10 @@ public class ShopScene implements IScene {
             Button b = entry.getValue();
 
             boolean selected = itemId.equals(selectedItemId);
+            boolean purchased = shopManager.isPurchased(itemId);
 
             b.setSelected(selected);
+            b.setPurchased(purchased);
 
             b.render();
         }
@@ -153,8 +157,10 @@ public class ShopScene implements IScene {
             Button b = entry.getValue();
 
             boolean selected = itemId.equals(selectedItemId);
+            boolean purchased = shopManager.isPurchased(itemId);
 
             b.setSelected(selected);
+            b.setPurchased(purchased);
 
             b.render();
         }
@@ -169,8 +175,10 @@ public class ShopScene implements IScene {
             Button b = entry.getValue();
 
             boolean selected = itemId.equals(selectedItemId);
+            boolean purchased = shopManager.isPurchased(itemId);
 
             b.setSelected(selected);
+            b.setPurchased(purchased);
 
             b.render();
         }
@@ -293,6 +301,10 @@ public class ShopScene implements IScene {
                             }
                             else if (!shopManager.isSelected(selectedItemId)) {
                                 shopManager.selectItem(selectedItemId);
+                                gameLoader.savePlayerShopState(shopManager.getPlayerShopState());
+                            }
+                            else {
+                                shopManager.toggleSelectItem(selectedItemId);
                                 gameLoader.savePlayerShopState(shopManager.getPlayerShopState());
                             }
                             infoPanel.setItem(shopManager.getShopCatalog().getItem(selectedItemId), shopManager, gameLoader.getPanelColor(), gameLoader.getPanelButtonColor());

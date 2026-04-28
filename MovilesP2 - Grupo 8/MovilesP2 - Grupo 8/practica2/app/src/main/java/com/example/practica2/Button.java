@@ -211,4 +211,5 @@ public class Button {
      * @param s
      */
     public void setSelected(boolean s) { selected = s; }
+    public void setPurchased(boolean p) { isPurchased = p; }
 }

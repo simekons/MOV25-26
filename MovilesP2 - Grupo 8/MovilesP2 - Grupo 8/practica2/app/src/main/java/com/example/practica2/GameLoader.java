@@ -397,6 +397,7 @@ public class GameLoader {
 
             json.put("selectedTower", state.getSelectedTowerId());
             json.put("selectedSkin", state.getSelectedSkinId());
+            json.put("selectedColor", state.getSelectedColorId());
 
             file.saveDataWithHash(path, json);
 

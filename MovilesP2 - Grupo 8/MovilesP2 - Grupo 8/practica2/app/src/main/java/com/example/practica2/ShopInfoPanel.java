@@ -178,8 +178,11 @@ public class ShopInfoPanel {
         if (!shopManager.isPurchased(item.getId())) {
             text = "Comprar";
         }
+        else if (shopManager.isSelected(item.getId())) {
+            text = "Quitar";
+        }
         else {
-            text = "Agregado";
+            text = "Seleccionar";
         }
 
         actionButton = new Button(iGraphics, iFont, x + 125, buttonY, width - 80, 45, text, this.panelButtonColor);

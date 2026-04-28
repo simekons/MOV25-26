@@ -88,6 +88,33 @@ public class ShopManager {
         }
     }
 
+    public boolean toggleSelectItem(String itemId) {
+        if (!catalog.exists(itemId)) return false;
+        if (!playerShopState.isPurchased(itemId)) return false;
+
+        ShopItemData item = catalog.getItem(itemId);
+
+        if (isSelected(itemId)) {
+            deselect(item);
+        } else {
+            autoSelect(item);
+        }
+
+        return true;
+    }
+
+    private void deselect(ShopItemData item) {
+        if (item.getType() == ShopItemData.ShopItemType.TOWER) {
+            playerShopState.selectTower(null);
+        }
+        else if (item.getType() == ShopItemData.ShopItemType.SKIN) {
+            playerShopState.selectSkin(null);
+        }
+        else if (item.getType() == ShopItemData.ShopItemType.FONDO) {
+            playerShopState.selectColor(null);
+        }
+    }
+
     /**
      * GETTERS.
      */
@@ -117,7 +144,8 @@ public class ShopManager {
     // Devuelve si el item está seleccionado
     public boolean isSelected(String itemId) {
         return itemId.equals(playerShopState.getSelectedTowerId()) ||
-                itemId.equals(playerShopState.getSelectedSkinId());
+                itemId.equals(playerShopState.getSelectedSkinId()) ||
+                itemId.equals(playerShopState.getSelectedColorId());
     }
 
     // Devuelve la torre seleccionada

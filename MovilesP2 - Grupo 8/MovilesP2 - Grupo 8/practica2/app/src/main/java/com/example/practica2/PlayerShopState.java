@@ -17,6 +17,9 @@ public class PlayerShopState {
     private String selectedSkinId;
     private String selectedColorId;
 
+    //private Set<String> selectedTowerIds = new HashSet<>();
+    //private Set<String> selectedSkinIds = new HashSet<>();
+
     /**
      * Método que devuelve si está comprado o no un ítem.
      * @param itemId
@@ -38,17 +41,15 @@ public class PlayerShopState {
      * Método que selecciona una torre.
      * @param itemId
      */
-    public void selectTower(String itemId) {
-        selectedTowerId = itemId;
-    }
+    public void selectTower(String itemId) { selectedTowerId = itemId; }
+    //public void selectTower(String itemId) { selectedTowerIds.add(itemId); }
 
     /**
      * Método que selecciona un aspecto.
      * @param itemId
      */
-    public void selectSkin(String itemId) {
-        selectedSkinId = itemId;
-    }
+    public void selectSkin(String itemId) { selectedSkinId = itemId; }
+    //public void selectSkin(String itemId) { selectedSkinIds.add(itemId); }
 
     public void selectColor(String itemId){
         selectedColorId = itemId;
@@ -60,7 +61,7 @@ public class PlayerShopState {
      */
     public String getSelectedTowerId() { return selectedTowerId; }
     public String getSelectedSkinId() { return selectedSkinId; }
-
     public String getSelectedColorId() { return selectedColorId; }
+
     public Set<String> getPurchasedItems() { return Collections.unmodifiableSet(purchasedItems); }
 }
