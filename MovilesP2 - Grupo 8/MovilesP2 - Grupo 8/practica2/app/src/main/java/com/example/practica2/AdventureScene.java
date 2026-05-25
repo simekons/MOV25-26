@@ -137,8 +137,7 @@ public class AdventureScene implements IScene {
 
         this.lastTouchY = -1;
         this.scrollOffset = 0;
-        int rows = (levelsPerWorld + 4) / 5;
-        this.maxScrollOffset = 50;
+        this.maxScrollOffset = 0;
         this.minScrollOffset = 0;
         this.isScrolling = false;
     }
@@ -156,6 +155,8 @@ public class AdventureScene implements IScene {
         this.worldName = this.worlds.get(this.currentWorld).first;
 
         this.levelsPerWorld = this.worlds.get(this.currentWorld).second;
+        int rows = (this.levelsPerWorld + 4) / 5;
+        this.maxScrollOffset = Math.max(0, (rows - 5) * (this.buttonDimension + 20));
 
         // ruta del style.json de cada mundo
         this.gameLoader.loadStyle(currentWorld);
@@ -240,7 +241,7 @@ public class AdventureScene implements IScene {
         leftArrow.render();
         rightArrow.render();
 
-        this.worldName = "Mundo " + String.valueOf(this.currentWorld + 1) + " - " + this.worlds.get(this.currentWorld).first;
+        this.worldName = this.worlds.get(this.currentWorld).first;
         graphics.drawText(worldFont, this.worldName, 300, 50);
     }
 
