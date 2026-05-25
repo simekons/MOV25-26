@@ -156,7 +156,7 @@ public class AdventureScene implements IScene {
 
         this.levelsPerWorld = this.worlds.get(this.currentWorld).second;
         int rows = (this.levelsPerWorld + 4) / 5;
-        this.maxScrollOffset = Math.max(0, (rows - 5) * (this.buttonDimension + 20));
+        this.maxScrollOffset = Math.max(0, (rows - 2) * (this.buttonDimension + 20));
 
         // ruta del style.json de cada mundo
         this.gameLoader.loadStyle(currentWorld);
