@@ -71,6 +71,10 @@ public class MainActivity extends AppCompatActivity {
         GameLoader gameLoader = new GameLoader(androidEngine.getFile());
         gameLoader.loadGenericData();
 
+        // Programamos la notificación desde la lógica principal (MainActivity).
+        androidEngine.scheduleNotification(5L, "Vuelve",
+            "¡Vuelve a jugar y obtén recompensas!", R.drawable.ic_launcher_foreground);
+
         MenuScene menuScene = new MenuScene(gameLoader);
         androidEngine.setScenes(menuScene);
     }
@@ -90,7 +94,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        androidEngine.programNotification(60L, "Vuelve", "Vuelve a jugar, ¡obtendrás recompensas!",R.drawable.ic_launcher_foreground,getPackageName());
         androidEngine.onPause();
     }
 

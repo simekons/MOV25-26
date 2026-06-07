@@ -10,4 +10,7 @@ public interface IEngine
     void setScenes(IScene scene);
 
     IFile getFile();
+
+    // Programa una notificación local para lanzarse tras 'seconds' segundos
+    void scheduleNotification(long seconds, String title, String text, int icon);
 }

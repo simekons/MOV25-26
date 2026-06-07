@@ -56,6 +56,12 @@ public class AndroidEngine implements Runnable {
     private boolean running = false;
     private static String channelId = "Notification";
 
+    // Datos de la notificación programada por la lógica del juego.
+    private long notifSeconds = 0;
+    private String notifTitle = null;
+    private String notifText = null;
+    private int notifIcon = 0;
+
     /**
      * Instancia de AndroidEngine.
      * @param sw
@@ -89,18 +95,29 @@ public class AndroidEngine implements Runnable {
     }
 
     /**
-     * Método que programa una notificación.
+     * Almacena los parámetros de la notificación programada desde la lógica del juego.
+     * La notificación se lanzará automáticamente cuando el motor pause.
+     */
+    public void scheduleNotification(long seconds, String title, String text, int icon) {
+        this.notifSeconds = seconds;
+        this.notifTitle   = title;
+        this.notifText    = text;
+        this.notifIcon    = icon;
+    }
+
+    /**
+     * Método que programa una notificación mediante WorkManager.
      * @param time
      * @param title
      * @param desc
      * @param icon
      * @param mainName
      */
-    public void programNotification(Long time, String title, String desc, int icon, String mainName){
+    private void programNotification(Long time, String title, String desc, int icon, String mainName){
 
 
         if (Build.VERSION. SDK_INT >= Build.VERSION_CODES. O) {
-            CharSequence name = "notification";
+            CharSequence name = "Notificacion Programada";
             String description = "description";
             int importance = NotificationManager. IMPORTANCE_DEFAULT;
             NotificationChannel channel = new NotificationChannel(channelId, name, importance) ;
@@ -216,9 +233,14 @@ public class AndroidEngine implements Runnable {
 
     /**
      * Método que gestiona el pausado.
+     * Lanza la notificación programada por la lógica del juego (si hay alguna).
      */
     public void onPause()
     {
+        if (notifTitle != null) {
+            programNotification(notifSeconds, notifTitle, notifText, notifIcon,
+                    activity.getClass().getName());
+        }
         if (this.running) {
             this.running = false;
             while (true) {

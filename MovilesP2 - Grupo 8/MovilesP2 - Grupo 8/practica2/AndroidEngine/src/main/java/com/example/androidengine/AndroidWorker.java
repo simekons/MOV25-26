@@ -47,7 +47,13 @@ public class AndroidWorker extends Worker {
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getApplicationContext());
 
-        Intent intent = getApplicationContext().getPackageManager().getLaunchIntentForPackage(nameClass);
+        Intent intent;
+        try {
+            Class<?> activityClass = Class.forName(nameClass);
+            intent = new Intent(getApplicationContext(), activityClass);
+        } catch (ClassNotFoundException e) {
+            return Result.failure();
+        }
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.putExtra("FROM_NOTIFICATION", true);
 
@@ -65,6 +71,7 @@ public class AndroidWorker extends Worker {
                 .setContentText( description )
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setContentIntent(contentIntent)
+                .setAutoCancel(true)
                 .setChannelId(CHANNEL_ID);
 
         getApplicationContext().checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS);
