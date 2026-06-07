@@ -5,8 +5,10 @@ import android.util.Pair;
 import com.example.androidengine.AndroidAudio;
 import com.example.androidengine.AndroidEngine;
 import com.example.androidengine.AndroidFile;
+import com.example.androidengine.AndroidFont;
 import com.example.androidengine.AndroidGraphics;
 import com.example.androidengine.AndroidImage;
+import com.example.androidengine.AndroidSound;
 import com.example.engine.IAudio;
 import com.example.engine.IFont;
 import com.example.engine.IGraphics;
@@ -36,8 +38,6 @@ public class GameScene implements IScene {
     // Audio.
     private AndroidAudio audio;
 
-    private AndroidFile androidFile;
-
     // Mapa de juego.
     private MapGrid mapGrid;
 
@@ -57,9 +57,9 @@ public class GameScene implements IScene {
 
     // Array de torres.
     private ArrayList<Tower> towers;
-    private IImage imgRayo = null;
-    private IImage imgFuego = null;
-    private IImage imgHielo = null;
+    private AndroidImage imgRayo = null;
+    private AndroidImage imgFuego = null;
+    private AndroidImage imgHielo = null;
 
     // Torre activa.
     private Tower activeTower;
@@ -99,19 +99,20 @@ public class GameScene implements IScene {
     private List<TowerButton> towerButtons;
 
     // Imágenes de dinero/vida.
-    private IImage coinimg;
-    private IImage heartimg;
+    private AndroidImage coinimg;
+    private AndroidImage heartimg;
 
     // Botones de mejoras.
     private UpgradeButton sword, bow, clock;
-    private IImage sword_img, bow_img, clock_img;
+    private AndroidImage sword_img, bow_img, clock_img;
 
     // Sonidos.
-    private ISound turret, upgrade;
+    private AndroidSound turret, upgrade, click;
 
     // Fuente.
-    private IFont moneyText;
+    private AndroidFont moneyText;
 
+    // GameLoader
     private GameLoader gameLoader;
 
     // Dificultad.
@@ -120,6 +121,11 @@ public class GameScene implements IScene {
     // Oleada.
     private int wave = 0;
 
+    // Variables de salida
+    private Button exitButton;
+    private AndroidImage exitImage;
+
+    // Información del nivel
     private LevelData levelData;
 
     /**
@@ -177,7 +183,6 @@ public class GameScene implements IScene {
         this.iEngine = AndroidEngine.get_instance();
         this.graphics = this.iEngine.getGraphics();
         this.audio = this.iEngine.getAudio();
-        this.androidFile = this.iEngine.getFile();
         this.gameLoader = gameLoader;
 
         this.iEngine.getAds().setBannerVisible(false);
@@ -187,7 +192,9 @@ public class GameScene implements IScene {
 
         this.enemies = new ArrayList<>();
 
-        IFont fontButton = graphics.createFont("fonts/fff.ttf", 10, false, false);
+        AndroidFont fontButton = graphics.createFont("fonts/fff.ttf", 10, false, false);
+        this.exitImage = this.graphics.loadImage("sprites/exit.png");
+        this.exitButton = new Button(graphics, this.exitImage, 25, 25, 50, 50);
 
         PlayerShopState state = gameLoader.getPlayerShopState();
 
@@ -199,15 +206,15 @@ public class GameScene implements IScene {
             skins.put(item.getId(), item);
         }
 
-        if (state.isPurchased("skinRayo") && skins.get("skinRayo") != null) {
+        if (state.isSkinSelected("skinRayo") && skins.get("skinRayo") != null) {
             imgRayo = graphics.loadImage(skins.get("skinRayo").getImagePath());
         }
 
-        if (state.isPurchased("skinFuego") && skins.get("skinFuego") != null) {
+        if (state.isSkinSelected("skinFuego") && skins.get("skinFuego") != null) {
             imgFuego = graphics.loadImage(skins.get("skinFuego").getImagePath());
         }
 
-        if (state.isPurchased("skinHielo") && skins.get("skinHielo") != null) {
+        if (state.isSkinSelected("skinHielo") && skins.get("skinHielo") != null) {
             imgHielo = graphics.loadImage(skins.get("skinHielo").getImagePath());
         }
 
@@ -217,15 +224,15 @@ public class GameScene implements IScene {
 
         int x = 385;
 
-        if(state.isPurchased("towerStar")){
+        if(state.isTowerSelected("towerStar")){
             towerButtons.add(new TowerButton(graphics, fontButton, x, 360, 50, 50, 250, TowerType.Star, 0xFFFFFFFF, 0xFF000000, null));
             x -= 60;
         }
-        if(state.isPurchased("towerStun")){
+        if(state.isTowerSelected("towerStun")){
             towerButtons.add(new TowerButton(graphics, fontButton, x, 360, 50, 50, 200, TowerType.Stun, 0xFFFFFFFF, 0xFF000000, null));
             x -= 60;
         }
-        if(state.isPurchased("towerPoison")){
+        if(state.isTowerSelected("towerPoison")){
             towerButtons.add(new TowerButton(graphics, fontButton, x, 360, 50, 50, 120, TowerType.Poison, 0xFFFFFFFF, 0xFF000000, null));
         }
 
@@ -239,8 +246,8 @@ public class GameScene implements IScene {
      * Método que carga los recursos necesarios.
      */
     public void loadAssets() {
-        this.goblin = (AndroidImage) this.graphics.loadImage("sprites/goblin.png");
-        this.orc = (AndroidImage) this.graphics.loadImage("sprites/orc.png");
+        this.goblin = this.graphics.loadImage("sprites/goblin.png");
+        this.orc = this.graphics.loadImage("sprites/orc.png");
         this.bow_img = this.graphics.loadImage("sprites/bow.png");
         this.sword_img = this.graphics.loadImage("sprites/sword.png");
         this.clock_img = this.graphics.loadImage("sprites/clock.png");
@@ -251,6 +258,7 @@ public class GameScene implements IScene {
         this.turret = this.audio.newSound("music/turret.wav");
 
         this.upgrade = this.audio.newSound("music/upgrade.wav");
+        this.click = this.audio.newSound("music/button.wav");
 
         moneyText = graphics.createFont("fonts/fff.ttf", 15, false, false);
     }
@@ -263,6 +271,8 @@ public class GameScene implements IScene {
         // Banda de abajo
 
         mapGrid.render();
+
+        this.exitButton.render();
 
         graphics.setColor(0xFFC0C0C0);
         graphics.fillRectangle(0, 320, 600, 80);
@@ -376,6 +386,11 @@ public class GameScene implements IScene {
     public void handleInput(List<IInput.TouchEvent> events) {
         for (IInput.TouchEvent e : events) {
             if (e.type == IInput.TouchEvent.TouchEventType.TOUCH_UP) {
+                if(exitButton.imageIsTouched(e.x, e.y))
+                {
+                    this.audio.playSound(click, false);
+                    this.iEngine.setScenes(new MenuScene(gameLoader));
+                }
                 if (handleTowerSelection(e)) return;
 
                 if (!upgrades) {
@@ -432,8 +447,6 @@ public class GameScene implements IScene {
     private void completeLevel() {
         if (levelData == null)
             return;
-
-        // if (lives < 1) return;
 
         ArrayList<Pair<String, Integer>> worlds = this.gameLoader.get_levels();
 
@@ -538,7 +551,7 @@ public class GameScene implements IScene {
     private boolean handleTowerPlacement(IInput.TouchEvent e) {
         if (type == null) return false;
 
-        IImage img = null;
+        AndroidImage img = null;
 
         switch (type)
         {

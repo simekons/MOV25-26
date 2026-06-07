@@ -1,5 +1,8 @@
 package com.example.practica2;
 
+import com.example.androidengine.AndroidAudio;
+import com.example.androidengine.AndroidGraphics;
+import com.example.androidengine.AndroidImage;
 import com.example.engine.IAudio;
 import com.example.engine.IGraphics;
 import com.example.engine.IImage;
@@ -20,7 +23,7 @@ public class TowerHielo extends Tower {
     // Enemigos ralentizados.
     private Set<Enemy> slowedEnemies = new HashSet<>();
 
-    private IImage img;
+    private AndroidImage img;
 
     /**
      * CONSTRUCTORA.
@@ -33,7 +36,7 @@ public class TowerHielo extends Tower {
      * @param cell
      * @param img
      */
-    public TowerHielo(IGraphics iGraphics, IAudio iAudio, int row, int column, float size, int cost, Cell cell, IImage img) {
+    public TowerHielo(AndroidGraphics iGraphics, AndroidAudio iAudio, int row, int column, float size, int cost, Cell cell, AndroidImage img) {
         super(iGraphics, row, column, size, cost, cell);
         this.damage = 7;
         this.range = 60;

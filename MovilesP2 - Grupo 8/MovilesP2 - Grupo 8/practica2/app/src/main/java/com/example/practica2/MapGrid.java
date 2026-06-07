@@ -3,6 +3,7 @@ package com.example.practica2;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.example.androidengine.AndroidAudio;
 import com.example.androidengine.AndroidGraphics;
 import com.example.androidengine.AndroidImage;
 import com.example.engine.IAudio;
@@ -190,7 +191,7 @@ public class MapGrid {
      * @param img
      * @return
      */
-    public Tower placeTowerAt(float x, float y, TowerType type, IGraphics iGraphics, IAudio iAudio, IImage img) {
+    public Tower placeTowerAt(float x, float y, TowerType type, AndroidGraphics iGraphics, AndroidAudio iAudio, AndroidImage img) {
         Cell cell = getCellAtPosition(x, y);
 
         if (cell == null || cell.getPath() || cell.getTower() || !cell.isAvailable())

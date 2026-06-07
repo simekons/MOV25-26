@@ -1,5 +1,8 @@
 package com.example.practica2;
 
+import com.example.androidengine.AndroidAudio;
+import com.example.androidengine.AndroidGraphics;
+import com.example.androidengine.AndroidSound;
 import com.example.engine.IAudio;
 import com.example.engine.IGraphics;
 import com.example.engine.ISound;
@@ -12,10 +15,10 @@ import java.util.List;
 public class TowerPoison extends Tower {
 
     // Audio.
-    private IAudio iAudio;
+    private AndroidAudio iAudio;
 
     // Sonido.
-    private ISound thunder;
+    private AndroidSound thunder;
 
     /**
      * CONSTRUCTORA.
@@ -27,7 +30,7 @@ public class TowerPoison extends Tower {
      * @param cost
      * @param cell
      */
-    public TowerPoison(IGraphics iGraphics, IAudio iAudio, int row, int column, float size, int cost, Cell cell) {
+    public TowerPoison(AndroidGraphics iGraphics, AndroidAudio iAudio, int row, int column, float size, int cost, Cell cell) {
         super(iGraphics, row, column, size, cost, cell);
         this.damage = 3;
         this.range = 50;

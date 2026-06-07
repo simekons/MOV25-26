@@ -1,5 +1,8 @@
 package com.example.practica2;
 
+import com.example.androidengine.AndroidFont;
+import com.example.androidengine.AndroidGraphics;
+import com.example.androidengine.AndroidImage;
 import com.example.engine.IFont;
 import com.example.engine.IGraphics;
 import com.example.engine.IImage;
@@ -10,13 +13,13 @@ import com.example.engine.IImage;
 public class Button {
 
     // Gráficos.
-    private IGraphics iGraphics;
+    private AndroidGraphics iGraphics;
 
     // Fuente.
-    private IFont iFont;
+    private AndroidFont iFont;
 
     // Imagen de botón.
-    private IImage iImage;
+    private AndroidImage iImage;
 
     // Texto de botón.
     private String text;
@@ -32,6 +35,7 @@ public class Button {
     private boolean isShopItem = false;
     private boolean isPurchased = false;
     private boolean selected = false;
+    private boolean stateSelected = false;
 
     private IImage imgLock = null;
 
@@ -46,7 +50,7 @@ public class Button {
      * @param text
      * @param color
      */
-    public Button(IGraphics graphics, IFont font, float x, float y, float width, float height, String text, int color)
+    public Button(AndroidGraphics graphics, AndroidFont font, float x, float y, float width, float height, String text, int color)
     {
         iGraphics = graphics;
         iFont = font;
@@ -68,7 +72,7 @@ public class Button {
      * @param width
      * @param height
      */
-    public Button(IGraphics graphics, IImage image, float x, float y, float width, float height)
+    public Button(AndroidGraphics graphics, AndroidImage image, float x, float y, float width, float height)
     {
         iGraphics = graphics;
         iImage = image;
@@ -89,7 +93,7 @@ public class Button {
      * @param isItem
      * @param isPurchased
      */
-    public Button(IGraphics graphics, IImage image, float x, float y, float width, float height, Boolean isItem, Boolean isPurchased)
+    public Button(AndroidGraphics graphics, AndroidImage image, float x, float y, float width, float height, Boolean isItem, Boolean isPurchased)
     {
         iGraphics = graphics;
         iImage = image;
@@ -113,7 +117,7 @@ public class Button {
      * @param isItem
      * @param isPurchased
      */
-    public Button(IGraphics graphics, TowerType type, float x, float y, float width, float height, Boolean isItem, Boolean isPurchased)
+    public Button(AndroidGraphics graphics, TowerType type, float x, float y, float width, float height, Boolean isItem, Boolean isPurchased)
     {
         iGraphics = graphics;
         tower = type;
@@ -164,9 +168,20 @@ public class Button {
         {
             if(!isPurchased)
                 iGraphics.drawImage(imgLock, (int)(x - (width / 2) + 8), (int)(y - (height / 2) + 8), 15,15);
-            iGraphics.setColor(selected ? 0xFF00FF00 : 0xFF000000);
 
-            iGraphics.drawRect(x - width/2, y - height/2, width, height);
+            float left = x - width / 2;
+            float top = y - height / 2;
+
+            if (selected) {
+                iGraphics.setColor(0xFF00FF00);
+                iGraphics.drawRect(left, top, width, height);
+            } else if (stateSelected) {
+                iGraphics.setColor(0xFFFF0000);
+                iGraphics.drawRect(left, top, width, height);
+            } else {
+                iGraphics.setColor(0xFF000000);
+                iGraphics.drawRect(left, top, width, height);
+            }
         }
     }
 
@@ -211,5 +226,6 @@ public class Button {
      * @param s
      */
     public void setSelected(boolean s) { selected = s; }
+    public void setStateSelected(boolean s) { stateSelected = s; }
     public void setPurchased(boolean p) { isPurchased = p; }
 }

@@ -22,7 +22,6 @@ public class ShopInfoPanel {
     private Button actionButton;
 
     // Variables de ítems.
-    private String currentItemId;
     private int currentItemCost;
     private int x, y, width, height;
     private int panelColor, panelButtonColor;
@@ -160,7 +159,6 @@ public class ShopInfoPanel {
      */
     public void setItem(ShopItemData item, ShopManager shopManager, int panelColor, int panelButtonColor) {
         if (item == null) {
-            currentItemId = null;
             actionButton = null;
             return;
         }
@@ -168,7 +166,6 @@ public class ShopInfoPanel {
         this.panelColor = panelColor;
         this.panelButtonColor = panelButtonColor;
 
-        currentItemId = item.getId();
         currentItemCost = item.getCost();
 
         int buttonY = y + height - 40;

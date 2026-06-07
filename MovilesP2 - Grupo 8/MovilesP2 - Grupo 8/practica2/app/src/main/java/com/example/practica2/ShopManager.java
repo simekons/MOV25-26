@@ -64,11 +64,6 @@ public class ShopManager {
 
         ShopItemData item = catalog.getItem(itemId);
         autoSelect(item);
-        /*if (item.getType() == ShopItemData.ShopItemType.TOWER) {
-            playerShopState.selectTower(itemId);
-        } else if (item.getType() == ShopItemData.ShopItemType.SKIN) {
-            playerShopState.selectSkin(itemId);
-        }*/
 
         return true;
     }
@@ -88,6 +83,26 @@ public class ShopManager {
         }
     }
 
+    /**
+     * Método que deselecciona un ítem al comprarlo.
+     * @param item
+     */
+    private void deselect(ShopItemData item) {
+        if (item.getType() == ShopItemData.ShopItemType.TOWER) {
+            playerShopState.deselectTower(item.getId());
+        }
+        else if (item.getType() == ShopItemData.ShopItemType.SKIN) {
+            playerShopState.deselectSkin(item.getId());
+        }
+        else if (item.getType() == ShopItemData.ShopItemType.FONDO) {
+            playerShopState.selectColor(null);
+        }
+    }
+
+    /**
+     * Método que gestiona la selección/deselección de un ítem al comprarlo.
+     * @param itemId
+     */
     public boolean toggleSelectItem(String itemId) {
         if (!catalog.exists(itemId)) return false;
         if (!playerShopState.isPurchased(itemId)) return false;
@@ -103,25 +118,9 @@ public class ShopManager {
         return true;
     }
 
-    private void deselect(ShopItemData item) {
-        if (item.getType() == ShopItemData.ShopItemType.TOWER) {
-            playerShopState.selectTower(null);
-        }
-        else if (item.getType() == ShopItemData.ShopItemType.SKIN) {
-            playerShopState.selectSkin(null);
-        }
-        else if (item.getType() == ShopItemData.ShopItemType.FONDO) {
-            playerShopState.selectColor(null);
-        }
-    }
-
     /**
      * GETTERS.
      */
-    public Collection<ShopItemData> getAllItems() {
-        return catalog.getAllItems();
-    }
-
     // Devuelve todos los items torres de la tienda
     public List<ShopItemData> getTowerItems() {
         return catalog.getItemsByType(ShopItemData.ShopItemType.TOWER);
@@ -132,6 +131,7 @@ public class ShopManager {
         return catalog.getItemsByType(ShopItemData.ShopItemType.SKIN);
     }
 
+    // Devuelve todos los items temas de colores de la tienda
     public List<ShopItemData> getColorItems() {
         return catalog.getItemsByType(ShopItemData.ShopItemType.FONDO);
     }
@@ -143,21 +143,12 @@ public class ShopManager {
 
     // Devuelve si el item está seleccionado
     public boolean isSelected(String itemId) {
-        return itemId.equals(playerShopState.getSelectedTowerId()) ||
-                itemId.equals(playerShopState.getSelectedSkinId()) ||
+        return playerShopState.isTowerSelected(itemId) ||
+                playerShopState.isSkinSelected(itemId) ||
                 itemId.equals(playerShopState.getSelectedColorId());
     }
 
-    // Devuelve la torre seleccionada
-    public ShopItemData getSelectedTower() {
-        return catalog.getItem(playerShopState.getSelectedTowerId());
-    }
-
-    // Devuelve la skin seleccionada
-    public ShopItemData getSelectedSkin() {
-        return catalog.getItem(playerShopState.getSelectedSkinId());
-    }
-
+    // Devuelve el tema de color seleccionado
     public ShopItemData getSelectedColor() {
         return catalog.getItem(playerShopState.getSelectedColorId());
     }

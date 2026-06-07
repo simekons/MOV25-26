@@ -1,5 +1,8 @@
 package com.example.practica2;
 
+import com.example.androidengine.AndroidAudio;
+import com.example.androidengine.AndroidGraphics;
+import com.example.androidengine.AndroidSound;
 import com.example.engine.IAudio;
 import com.example.engine.IGraphics;
 import com.example.engine.ISound;
@@ -18,10 +21,10 @@ public class TowerStar extends Tower {
     private float explosionX = -1, explosionY = -1;
 
     // Audio.
-    private IAudio iAudio;
+    private AndroidAudio iAudio;
 
     // Sonido.
-    private ISound fire;
+    private AndroidSound fire;
 
     private int damageRayo;
 
@@ -35,7 +38,7 @@ public class TowerStar extends Tower {
      * @param cost
      * @param cell
      */
-    public TowerStar(IGraphics iGraphics, IAudio iAudio, int row, int column, float size, int cost, Cell cell) {
+    public TowerStar(AndroidGraphics iGraphics, AndroidAudio iAudio, int row, int column, float size, int cost, Cell cell) {
         super(iGraphics, row, column, size, cost, cell);
         this.damageRayo = 10;
         this.damage = 5;

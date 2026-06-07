@@ -1,5 +1,6 @@
 package com.example.practica2;
 
+import com.example.androidengine.AndroidGraphics;
 import com.example.engine.IGraphics;
 
 import java.util.ArrayList;
@@ -15,7 +16,7 @@ enum TowerType {Rayo, Hielo, Fuego, Star, Stun, Poison}
  */
 public abstract class Tower {
     // Gráficos.
-    protected IGraphics iGraphics;
+    protected AndroidGraphics iGraphics;
 
     // Coordenadas.
     protected float x, y;
@@ -57,7 +58,7 @@ public abstract class Tower {
      * @param cost
      * @param cell
      */
-    public Tower(IGraphics iGraphics, int row, int column, float size, int cost, Cell cell) {
+    public Tower(AndroidGraphics iGraphics, int row, int column, float size, int cost, Cell cell) {
         this.iGraphics = iGraphics;
         this.row = row;
         this.column = column;

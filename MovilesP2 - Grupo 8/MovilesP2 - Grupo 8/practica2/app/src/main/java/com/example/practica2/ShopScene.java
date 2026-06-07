@@ -32,9 +32,6 @@ public class ShopScene implements IScene {
     // Audio en Android.
     private AndroidAudio iAudio;
 
-    // Archivo en Ancroid.
-    private AndroidFile iFile;
-
     // Imágenes.
     private AndroidImage exitImage;
     private AndroidImage imgDiamond;
@@ -62,6 +59,7 @@ public class ShopScene implements IScene {
     private String selectedItemId = null;
     private int panelColor, panelButtonColor;
 
+    // Variables de scroll
     private int lastTouchY;
     private int scrollOffset;
     private int maxScrollOffset;
@@ -79,7 +77,6 @@ public class ShopScene implements IScene {
         this.iEngine = AndroidEngine.get_instance();
         this.iGraphics = this.iEngine.getGraphics();
         this.iAudio = this.iEngine.getAudio();
-        this.iFile = this.iEngine.getFile();
         this.iEngine.getAds().setBannerVisible(false);
         this.gameLoader = gameLoader;
         this.lastTouchY = -1;
@@ -129,7 +126,7 @@ public class ShopScene implements IScene {
         iGraphics.setColor(0xFF000000);
         buttonFont.setSize(30);
 
-        // 95, 225, 355
+        // Render de las torres
         if(y1 > 100)
             iGraphics.drawText(buttonFont, "Nuevas torres", 100, y1 - 55);
         buttonFont.setSize(35);
@@ -138,10 +135,13 @@ public class ShopScene implements IScene {
             String itemId = entry.getKey();
             Button b = entry.getValue();
 
+            // Estado del item (comprado, seleccionado,etc.)
             boolean selected = itemId.equals(selectedItemId);
             boolean purchased = shopManager.isPurchased(itemId);
+            boolean stateSelected = shopManager.isSelected(itemId);
 
             b.setSelected(selected);
+            b.setStateSelected(stateSelected);
             b.setPurchased(purchased);
 
             b.render();
@@ -149,6 +149,8 @@ public class ShopScene implements IScene {
 
         iGraphics.setColor(0xFF000000);
         buttonFont.setSize(30);
+
+        // Render de las skins de las torres
         iGraphics.drawText(buttonFont, "Apariencias de torres", 147, y2 - 55);
         buttonFont.setSize(35);
 
@@ -156,10 +158,13 @@ public class ShopScene implements IScene {
             String itemId = entry.getKey();
             Button b = entry.getValue();
 
+            // Estado del item (comprado, seleccionado,etc.)
             boolean selected = itemId.equals(selectedItemId);
             boolean purchased = shopManager.isPurchased(itemId);
+            boolean stateSelected = shopManager.isSelected(itemId);
 
             b.setSelected(selected);
+            b.setStateSelected(stateSelected);
             b.setPurchased(purchased);
 
             b.render();
@@ -167,6 +172,8 @@ public class ShopScene implements IScene {
 
         iGraphics.setColor(0xFF000000);
         buttonFont.setSize(30);
+
+        // Render de los temas de colores
         iGraphics.drawText(buttonFont, "Apariencias de fondo", 147, y3 - 55);
         buttonFont.setSize(35);
 
@@ -174,10 +181,13 @@ public class ShopScene implements IScene {
             String itemId = entry.getKey();
             Button b = entry.getValue();
 
+            // Estado del item (comprado, seleccionado,etc.)
             boolean selected = itemId.equals(selectedItemId);
             boolean purchased = shopManager.isPurchased(itemId);
+            boolean stateSelected = shopManager.isSelected(itemId);
 
             b.setSelected(selected);
+            b.setStateSelected(stateSelected);
             b.setPurchased(purchased);
 
             b.render();
@@ -241,7 +251,7 @@ public class ShopScene implements IScene {
         startY = 280;
         x = startX;
 
-        for (ShopItemData item : shopManager.getSkinItems()) {
+        for (ShopItemData item : skins) {
             AndroidImage img = iGraphics.loadImage(item.getImagePath());
 
             Button b = new Button(iGraphics, img, x, startY, size, size, true,shopManager.isPurchased(item.getId()));
@@ -256,7 +266,7 @@ public class ShopScene implements IScene {
 
         x = startX;
 
-        for (ShopItemData item : shopManager.getColorItems()){
+        for (ShopItemData item : colors){
             AndroidImage img = iGraphics.loadImage(item.getImagePath());
 
             Button b = new Button(iGraphics, img, x, startY, size, size, true, shopManager.isPurchased(item.getId()));
@@ -279,30 +289,38 @@ public class ShopScene implements IScene {
                 case TOUCH_UP:
                     lastTouchY = -1;
                     isScrolling = false;
+                    // Gestión de salir al menú principal
                     if(exitButton.imageIsTouched(e.x, e.y))
                     {
                         this.iAudio.playSound(clickSound, false);
                         this.iEngine.setScenes(new MenuScene(gameLoader));
                     }
+                    // Gestión de los items
                     if (checkButtons(towerButtons, e)) return;
                     if (checkButtons(skinButtons, e)) return;
                     if (checkButtons(colorButtons, e)) return;
+                    // Gestión del panel de item
                     if(infoPanel.getActionButton() != null)
                     {
-                        if (infoPanel.getActionButton().isTouched(e.x, e.y)) { // si se compra
+                        // Gestión del botón de acción en el panel
+                        if (infoPanel.getActionButton().isTouched(e.x, e.y)) {
+                            // Diamantes suficientes¿?
                             int diamonds = DiamondManager.getDiamonds();
                             if(diamonds < infoPanel.itemCost())
                                 return;
+                            // Compra del item
                             if (!shopManager.isPurchased(selectedItemId)) {
                                 shopManager.buyItem(selectedItemId);
                                 gameLoader.saveDiamonds(diamonds - infoPanel.itemCost());
                                 DiamondManager.subtractDiamonds(infoPanel.itemCost());
                                 gameLoader.savePlayerShopState(shopManager.getPlayerShopState());
                             }
+                            // Selección del item
                             else if (!shopManager.isSelected(selectedItemId)) {
                                 shopManager.selectItem(selectedItemId);
                                 gameLoader.savePlayerShopState(shopManager.getPlayerShopState());
                             }
+                            // Deselección del item
                             else {
                                 shopManager.toggleSelectItem(selectedItemId);
                                 gameLoader.savePlayerShopState(shopManager.getPlayerShopState());
@@ -344,7 +362,7 @@ public class ShopScene implements IScene {
     }
 
     /**
-     * Método que comprueba un botón.
+     * Método que gestiona el focus de un item cuando se hace click.
      * @param buttons
      * @param e
      * @return

@@ -2,6 +2,8 @@ package com.example.practica2;
 
 import android.media.Image;
 
+import com.example.androidengine.AndroidFont;
+import com.example.androidengine.AndroidGraphics;
 import com.example.androidengine.AndroidImage;
 import com.example.engine.IFont;
 import com.example.engine.IGraphics;
@@ -13,10 +15,10 @@ import com.example.engine.IImage;
 public class TowerButton {
 
     // Gráficos.
-    private IGraphics iGraphics;
+    private AndroidGraphics iGraphics;
 
     // Fuente.
-    private IFont iFont;
+    private AndroidFont iFont;
 
     // Texto.
     private String text;
@@ -24,7 +26,7 @@ public class TowerButton {
     // Coordenadas, ancho y alto.
     private float x, y, width, height;
 
-    private IImage img;
+    private AndroidImage img;
 
     // Variables.
     private int buttonColor, textColor, cost;
@@ -49,9 +51,9 @@ public class TowerButton {
      * @param textColor
      * @param img
      */
-    public TowerButton(IGraphics graphics, IFont font,
+    public TowerButton(AndroidGraphics graphics, AndroidFont font,
                        float x, float y, float width, float height,
-                       int cost, TowerType tipo, int buttonColor, int textColor, IImage img) {
+                       int cost, TowerType tipo, int buttonColor, int textColor, AndroidImage img) {
         this.iGraphics = graphics;
         this.iFont = font;
         this.cost = cost;

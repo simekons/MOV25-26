@@ -1,8 +1,13 @@
 package com.example.practica2;
 
 import com.example.androidengine.AndroidAds;
+import com.example.androidengine.AndroidAudio;
 import com.example.androidengine.AndroidEngine;
 import com.example.androidengine.AndroidFile;
+import com.example.androidengine.AndroidFont;
+import com.example.androidengine.AndroidGraphics;
+import com.example.androidengine.AndroidImage;
+import com.example.androidengine.AndroidSound;
 import com.example.engine.IAudio;
 import com.example.engine.IEngine;
 import com.example.engine.IFont;
@@ -24,13 +29,10 @@ public class FinalScene implements IScene {
     private AndroidEngine iEngine;
 
     // Gráficos
-    private IGraphics iGraphics;
+    private AndroidGraphics iGraphics;
 
     // Audio.
-    private IAudio iAudio;
-
-    // Archivos
-    private AndroidFile androidFile;
+    private AndroidAudio iAudio;
 
     // Ads
     private AndroidAds androidAds;
@@ -42,14 +44,12 @@ public class FinalScene implements IScene {
     private Button shareButton;
 
     // Fuente de título.
-    private IFont titleFont;
+    private AndroidFont titleFont;
 
     // Fuente de botones.
-    private IFont fontButton;
+    private AndroidFont fontButton;
 
-    // Sonido de botón.
-    private ISound soundButton;
-
+    // GameLoader
     private GameLoader gameLoader;
 
     // Dificultad previa.
@@ -57,10 +57,10 @@ public class FinalScene implements IScene {
     private int diamondsPerLevel;
 
     private boolean win;
-    private boolean firstTime = true;
+    private boolean firstTime;
     private boolean adWatched = false;
 
-    private IImage imgDiamond;
+    private AndroidImage imgDiamond;
 
     /**
      * CONSTRUCTORA.
@@ -72,7 +72,6 @@ public class FinalScene implements IScene {
         this.iEngine = AndroidEngine.get_instance();
         this.iGraphics = iEngine.getGraphics();
         this.iAudio = iEngine.getAudio();
-        this.androidFile = iEngine.getFile();
         this.androidAds = iEngine.getAds();
 
         this.gameLoader = gameLoader;
@@ -83,11 +82,6 @@ public class FinalScene implements IScene {
 
         this.firstTime = firstTime;
 
-        if(win && this.firstTime){
-            DiamondManager.addDiamonds(diamondsPerLevel);
-            this.gameLoader.saveDiamonds(DiamondManager.getDiamonds());
-        }
-
         this.fontButton = iGraphics.createFont("fonts/fff.ttf", 15, false, false);
         this.titleFont = iGraphics.createFont("fonts/pixelGotic.ttf", 35, false, false);
 
@@ -97,8 +91,6 @@ public class FinalScene implements IScene {
         this.menuButton = new Button(this.iGraphics, this.fontButton, 370 ,200,150,50, "Menu", this.gameLoader.getButtonColor());
 
         imgDiamond = iGraphics.loadImage("sprites/diamond.png");
-
-        this.soundButton = this.iAudio.newSound("music/button.wav");
     }
 
     /**
@@ -115,10 +107,24 @@ public class FinalScene implements IScene {
         if(win)
         {
             if (firstTime){
-                iGraphics.drawTextNotCentered(fontButton, "+20", 180, 285);
+                if(!adWatched)
+                {
+                    iGraphics.drawTextNotCentered(fontButton, "+" + diamondsPerLevel, 180, 285);
+                    adButton.render();
+                }
+                else
+                    iGraphics.drawTextNotCentered(fontButton, "+" + diamondsPerLevel, 180, 285);
+
                 iGraphics.drawImage(imgDiamond, 150, 275, 30, 30);
+            }
+            else
+            {
                 if(!adWatched)
                     adButton.render();
+                else
+                    iGraphics.drawTextNotCentered(fontButton, "+" + diamondsPerLevel, 180, 285);
+
+                iGraphics.drawImage(imgDiamond, 150, 275, 30, 30);
             }
             shareButton.render();
         }
@@ -153,13 +159,20 @@ public class FinalScene implements IScene {
                     {
                         this.iEngine.setScenes(new MenuScene(gameLoader));
                     }
-                    if(adButton.isTouched(e.x, e.y) && win && this.firstTime)
+                    if(adButton.isTouched(e.x, e.y) && win)
                     {
-                        if(!adWatched)
+                        if(!adWatched && firstTime)
                         {
+                            androidAds.showRewardedAd(() -> diamondsPerLevel *= 2);
                             DiamondManager.addDiamonds(diamondsPerLevel);
                             gameLoader.saveDiamonds(DiamondManager.getDiamonds());
-                            androidAds.showRewardedAd(() -> diamondsPerLevel *= 2);
+                            adWatched = true;
+                        }
+                        else if(!adWatched && !firstTime)
+                        {
+                            androidAds.showRewardedAd(() -> diamondsPerLevel *= 1);
+                            DiamondManager.addDiamonds(diamondsPerLevel);
+                            gameLoader.saveDiamonds(DiamondManager.getDiamonds());
                             adWatched = true;
                         }
                     }

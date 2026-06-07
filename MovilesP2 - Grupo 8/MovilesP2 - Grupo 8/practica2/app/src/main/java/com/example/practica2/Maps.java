@@ -22,12 +22,6 @@ public class Maps {
     private LevelData levelData;
 
     /**
-     * CONSTRUCTORA (por defecto).
-     */
-    public Maps() {
-    }
-
-    /**
      * CONSTRUCTORA.
      * @param levelData
      */
@@ -65,22 +59,5 @@ public class Maps {
     public String getMap() { return this.map; }
     public String getBackground() { return this.background; }
 
-    /**
-     * Nivel 1
-     */
-    public static Maps level1() {
-        Maps m = new Maps();
-        m.rows = 8;
-        m.cols = 15;
-        m.map = "..............." +
-                ".....#########." +
-                ".....#.......#." +
-                ".....######..#." +
-                "..........#..#." +
-                "###########..#." +
-                ".............##" +
-                "...............";
-        m.background = "sprites/forest.png";
-        return m;
-    }
+
 }

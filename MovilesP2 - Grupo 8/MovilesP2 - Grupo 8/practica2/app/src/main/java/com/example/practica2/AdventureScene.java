@@ -78,7 +78,6 @@ public class AdventureScene implements IScene {
 
     // Mundo actual.
     private int currentWorld;
-    private int totalWorlds;
     private int levelsPerWorld;
 
     private ArrayList<Pair<String, Integer>> worlds;

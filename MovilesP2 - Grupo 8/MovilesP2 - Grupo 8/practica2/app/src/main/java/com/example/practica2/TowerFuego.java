@@ -1,5 +1,9 @@
 package com.example.practica2;
 
+import com.example.androidengine.AndroidAudio;
+import com.example.androidengine.AndroidGraphics;
+import com.example.androidengine.AndroidImage;
+import com.example.androidengine.AndroidSound;
 import com.example.engine.IAudio;
 import com.example.engine.IGraphics;
 import com.example.engine.IImage;
@@ -19,11 +23,11 @@ public class TowerFuego extends Tower {
     private float explosionX = -1, explosionY = -1;
 
     // Audio.
-    private IAudio iAudio;
+    private AndroidAudio iAudio;
 
     // Sonido.
-    private IImage img;
-    private ISound fire;
+    private AndroidImage img;
+    private AndroidSound fire;
 
     /**
      * CONSTRUCTORA.
@@ -36,7 +40,7 @@ public class TowerFuego extends Tower {
      * @param cell
      * @param img
      */
-    public TowerFuego(IGraphics iGraphics, IAudio iAudio, int row, int column, float size, int cost, Cell cell, IImage img) {
+    public TowerFuego(AndroidGraphics iGraphics, AndroidAudio iAudio, int row, int column, float size, int cost, Cell cell, AndroidImage img) {
         super(iGraphics, row, column, size, cost, cell);
         this.damage = 5;
         this.range = 75;

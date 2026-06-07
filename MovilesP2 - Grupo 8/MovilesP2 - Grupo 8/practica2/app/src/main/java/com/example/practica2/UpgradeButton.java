@@ -1,5 +1,8 @@
 package com.example.practica2;
 
+import com.example.androidengine.AndroidFont;
+import com.example.androidengine.AndroidGraphics;
+import com.example.androidengine.AndroidImage;
 import com.example.engine.IFont;
 import com.example.engine.IGraphics;
 import com.example.engine.IImage;
@@ -11,13 +14,13 @@ import com.example.engine.IImage;
 public class UpgradeButton {
 
     // Gráficos.
-    private IGraphics iGraphics;
+    private AndroidGraphics iGraphics;
 
     // Fuente.
-    private IFont iFont;
+    private AndroidFont iFont;
 
     // Imagen.
-    private IImage iImage;
+    private AndroidImage iImage;
 
     // Texto.
     private String text;
@@ -44,7 +47,7 @@ public class UpgradeButton {
      * @param buttonColor
      * @param textColor
      */
-    public UpgradeButton(IGraphics graphics, IFont font, IImage image,
+    public UpgradeButton(AndroidGraphics graphics, AndroidFont font, AndroidImage image,
                          float x, float y, float width, float height,
                          int cost, int buttonColor, int textColor) {
         this.iGraphics = graphics;

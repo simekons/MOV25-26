@@ -1,5 +1,9 @@
 package com.example.practica2;
 
+import com.example.androidengine.AndroidAudio;
+import com.example.androidengine.AndroidGraphics;
+import com.example.androidengine.AndroidImage;
+import com.example.androidengine.AndroidSound;
 import com.example.engine.IAudio;
 import com.example.engine.IGraphics;
 import com.example.engine.IImage;
@@ -13,12 +17,12 @@ import java.util.List;
 public class TowerRayo extends Tower {
 
     // Audio.
-    private IAudio iAudio;
+    private AndroidAudio iAudio;
 
     // Sonido.
-    private ISound thunder;
+    private AndroidSound thunder;
 
-    private IImage img;
+    private AndroidImage img;
 
     /**
      * CONSTRUCTORA.
@@ -31,7 +35,7 @@ public class TowerRayo extends Tower {
      * @param cell
      * @param img
      */
-    public TowerRayo(IGraphics iGraphics, IAudio iAudio, int row, int column, float size, int cost, Cell cell, IImage img) {
+    public TowerRayo(AndroidGraphics iGraphics, AndroidAudio iAudio, int row, int column, float size, int cost, Cell cell, AndroidImage img) {
         super(iGraphics, row, column, size, cost, cell);
         this.damage = 10;
         this.range = 50;

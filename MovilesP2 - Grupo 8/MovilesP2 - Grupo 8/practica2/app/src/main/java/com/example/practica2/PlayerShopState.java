@@ -13,12 +13,9 @@ public class PlayerShopState {
     private Set<String> purchasedItems = new HashSet<>();
 
     // Variables de selección.
-    private String selectedTowerId;
-    private String selectedSkinId;
+    private Set<String> selectedTowerIds = new HashSet<>();
+    private Set<String> selectedSkinIds = new HashSet<>();
     private String selectedColorId;
-
-    //private Set<String> selectedTowerIds = new HashSet<>();
-    //private Set<String> selectedSkinIds = new HashSet<>();
 
     /**
      * Método que devuelve si está comprado o no un ítem.
@@ -41,27 +38,67 @@ public class PlayerShopState {
      * Método que selecciona una torre.
      * @param itemId
      */
-    public void selectTower(String itemId) { selectedTowerId = itemId; }
-    //public void selectTower(String itemId) { selectedTowerIds.add(itemId); }
+    public void selectTower(String itemId) {
+        if (itemId == null) {
+            selectedTowerIds.clear();
+            return;
+        }
+        selectedTowerIds.add(itemId);
+    }
+
+    /**
+     * Método que deselecciona una torre.
+     * @param itemId
+     */
+    public void deselectTower(String itemId) {
+        if (itemId == null) {
+            selectedTowerIds.clear();
+            return;
+        }
+        selectedTowerIds.remove(itemId);
+    }
 
     /**
      * Método que selecciona un aspecto.
      * @param itemId
      */
-    public void selectSkin(String itemId) { selectedSkinId = itemId; }
-    //public void selectSkin(String itemId) { selectedSkinIds.add(itemId); }
+    public void selectSkin(String itemId) {
+        if (itemId == null) {
+            selectedSkinIds.clear();
+            return;
+        }
+        selectedSkinIds.add(itemId);
+    }
+
+    /**
+     * Método que deselecciona un aspecto.
+     * @param itemId
+     */
+    public void deselectSkin(String itemId) {
+        if (itemId == null) {
+            selectedSkinIds.clear();
+            return;
+        }
+        selectedSkinIds.remove(itemId);
+    }
+
+    /**
+     * GETTERS & SETTERS.
+     */
+    public boolean isTowerSelected(String itemId) {
+        return selectedTowerIds.contains(itemId);
+    }
+    public boolean isSkinSelected(String itemId) {
+        return selectedSkinIds.contains(itemId);
+    }
+    public Set<String> getSelectedTowerIds() { return Collections.unmodifiableSet(selectedTowerIds); }
+    public Set<String> getSelectedSkinIds() {
+        return Collections.unmodifiableSet(selectedSkinIds);
+    }
+    public Set<String> getPurchasedItems() { return Collections.unmodifiableSet(purchasedItems); }
+    public String getSelectedColorId() { return selectedColorId; }
 
     public void selectColor(String itemId){
         selectedColorId = itemId;
     }
-
-
-    /**
-     * GETTERS.
-     */
-    public String getSelectedTowerId() { return selectedTowerId; }
-    public String getSelectedSkinId() { return selectedSkinId; }
-    public String getSelectedColorId() { return selectedColorId; }
-
-    public Set<String> getPurchasedItems() { return Collections.unmodifiableSet(purchasedItems); }
 }

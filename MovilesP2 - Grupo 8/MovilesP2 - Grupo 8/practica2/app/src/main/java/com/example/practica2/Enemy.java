@@ -183,7 +183,7 @@ public class Enemy {
 
         float step = speed * delta * speedModifier;
 
-// Si este frame llegamos o nos pasamos
+        // Si este frame llegamos o nos pasamos
         if (distance <= step) {
             x = targetX;
             y = targetY;
@@ -196,11 +196,11 @@ public class Enemy {
             return;
         }
 
-// Normalizar
+        // Normalizar
         dx /= distance;
         dy /= distance;
 
-// Avanzar
+        // Avanzar
         x += dx * step;
         y += dy * step;
 

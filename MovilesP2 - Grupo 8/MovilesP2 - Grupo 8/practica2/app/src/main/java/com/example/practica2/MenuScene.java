@@ -1,7 +1,11 @@
 package com.example.practica2;
 
 import com.example.androidengine.AndroidAds;
+import com.example.androidengine.AndroidAudio;
 import com.example.androidengine.AndroidEngine;
+import com.example.androidengine.AndroidFont;
+import com.example.androidengine.AndroidGraphics;
+import com.example.androidengine.AndroidSound;
 import com.example.engine.IAudio;
 import com.example.engine.IEngine;
 import com.example.engine.IFont;
@@ -23,13 +27,10 @@ public class MenuScene implements IScene {
     private AndroidEngine iEngine;
 
     // Gráficos
-    private IGraphics iGraphics;
+    private AndroidGraphics iGraphics;
 
     // Audio.
-    private IAudio iAudio;
-
-    // Ads
-    private AndroidAds androidAds;
+    private AndroidAudio iAudio;
 
     // Botón de menú.
     private Button playButton;
@@ -41,10 +42,10 @@ public class MenuScene implements IScene {
     private Button shopButton;
 
     // Fuente de título.
-    private IFont titleFont, fontButton;
+    private AndroidFont titleFont, fontButton;
 
     // Sonido de botón.
-    private ISound soundButton;
+    private AndroidSound soundButton;
 
     private GameLoader gameLoader;
 

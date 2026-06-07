@@ -40,7 +40,6 @@ public class GameLoader {
 
     // Colores de los botones.
     private int colorUnlocked, colorLocked, worldColor;
-    private int backgroundColor, buttonColor, buttonColor2;
 
     /**
      * CONSTRUCTORA.
@@ -49,11 +48,6 @@ public class GameLoader {
     public GameLoader(AndroidFile iFile)
     {
         this.file = iFile;
-
-        // String[] files = this.file.listFiles("levels/world1");
-        // for (String f : files) {
-           // Log.e("ASSETS", f);
-        // }
 
         levelStates = new ArrayList<>();
         shopItems = new ArrayList<>();
@@ -218,7 +212,7 @@ public class GameLoader {
             path = "gameData.json";
             JSONObject jsonObject = file.loadDataWithHash(path);
             int diamonds = jsonObject.optInt("diamonds", 0);
-            DiamondManager.setDiamonds(10000);
+            DiamondManager.setDiamonds(diamonds);
         } catch (Exception e) {
 
         }
@@ -347,14 +341,29 @@ public class GameLoader {
         try {
             JSONObject json = file.loadDataWithHash("player_shop.json");
 
-
             JSONArray purchased = json.getJSONArray("purchased");
             for (int i = 0; i < purchased.length(); i++) {
                 state.purchase(purchased.getString(i));
             }
 
-            state.selectTower(json.optString("selectedTower", null));
-            state.selectSkin(json.optString("selectedSkin", null));
+            if (json.has("selectedTowers")) {
+                JSONArray selectedTowers = json.getJSONArray("selectedTowers");
+                for (int i = 0; i < selectedTowers.length(); i++) {
+                    state.selectTower(selectedTowers.getString(i));
+                }
+            } else {
+                state.selectTower(json.optString("selectedTower", null));
+            }
+
+            if (json.has("selectedSkins")) {
+                JSONArray selectedSkins = json.getJSONArray("selectedSkins");
+                for (int i = 0; i < selectedSkins.length(); i++) {
+                    state.selectSkin(selectedSkins.getString(i));
+                }
+            } else {
+                state.selectSkin(json.optString("selectedSkin", null));
+            }
+
             state.selectColor(json.optString("selectedColor", null));
 
         } catch (Exception e) {
@@ -395,8 +404,8 @@ public class GameLoader {
             JSONArray purchased = new JSONArray(state.getPurchasedItems());
             json.put("purchased", purchased);
 
-            json.put("selectedTower", state.getSelectedTowerId());
-            json.put("selectedSkin", state.getSelectedSkinId());
+            json.put("selectedTowers", new JSONArray(state.getSelectedTowerIds()));
+            json.put("selectedSkins", new JSONArray(state.getSelectedSkinIds()));
             json.put("selectedColor", state.getSelectedColorId());
 
             file.saveDataWithHash(path, json);
@@ -425,10 +434,20 @@ public class GameLoader {
                     state.purchase(purchased.getString(i));
                 }
             }
-            if (json.has("selectedTower")) {
+            if (json.has("selectedTowers")) {
+                JSONArray selectedTowers = json.getJSONArray("selectedTowers");
+                for (int i = 0; i < selectedTowers.length(); i++) {
+                    state.selectTower(selectedTowers.getString(i));
+                }
+            } else if (json.has("selectedTower")) {
                 state.selectTower(json.getString("selectedTower"));
             }
-            if (json.has("selectedSkin")) {
+            if (json.has("selectedSkins")) {
+                JSONArray selectedSkins = json.getJSONArray("selectedSkins");
+                for (int i = 0; i < selectedSkins.length(); i++) {
+                    state.selectSkin(selectedSkins.getString(i));
+                }
+            } else if (json.has("selectedSkin")) {
                 state.selectSkin(json.getString("selectedSkin"));
             }
             if (json.has("selectedColor")){
@@ -516,7 +535,6 @@ public class GameLoader {
     public int get_worldcolor() { return this.worldColor; }
     public ShopManager getShopManager() { return shopManager; }
 
-    public int get_totalLevels() { return this.totalLevels; }
     public int get_totalWorlds() { return this.totalWorlds; }
     public ArrayList<Pair<String, Integer>> get_levels() { return this.worlds; }
 
