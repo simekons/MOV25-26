@@ -9,6 +9,7 @@ import android.view.Surface;
 import android.view.SurfaceView;
 
 import androidx.work.Data;
+import androidx.work.ExistingWorkPolicy;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
 
@@ -97,6 +98,7 @@ public class AndroidEngine implements Runnable {
      */
     public void programNotification(Long time, String title, String desc, int icon, String mainName){
 
+
         if (Build.VERSION. SDK_INT >= Build.VERSION_CODES. O) {
             CharSequence name = "notification";
             String description = "description";
@@ -118,7 +120,7 @@ public class AndroidEngine implements Runnable {
                 .setInitialDelay(time, TimeUnit.SECONDS)
                 .build();
 
-        WorkManager.getInstance(this.activity.getBaseContext()).enqueue(notificationWork);
+        WorkManager.getInstance(activity).enqueueUniqueWork("notification_work",ExistingWorkPolicy.REPLACE, notificationWork);
     }
 
     /**

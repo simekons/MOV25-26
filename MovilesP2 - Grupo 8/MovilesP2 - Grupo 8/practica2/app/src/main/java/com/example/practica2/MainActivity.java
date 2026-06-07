@@ -1,5 +1,6 @@
 package com.example.practica2;
 
+import android.Manifest;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.SurfaceView;
@@ -49,6 +50,13 @@ public class MainActivity extends AppCompatActivity {
 
         androidAds.loadRewardedAd("ca-app-pub-3940256099942544/5224354917");
 
+        /*Log.d(
+                "NOTIFICATION",
+                "Permiso: " +
+                        checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS)
+        );
+        */
+
         GameLoader gameLoader = new GameLoader(androidEngine.getFile());
         gameLoader.loadGenericData();
 
@@ -71,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        androidEngine.programNotification(5L, "Vuelve", "Vuelve a jugar, ¡obtendrás recompensas!",R.drawable.ic_launcher_foreground,getPackageName());
+        androidEngine.programNotification(60L, "Vuelve", "Vuelve a jugar, ¡obtendrás recompensas!",R.drawable.ic_launcher_foreground,getPackageName());
         androidEngine.onPause();
     }
 

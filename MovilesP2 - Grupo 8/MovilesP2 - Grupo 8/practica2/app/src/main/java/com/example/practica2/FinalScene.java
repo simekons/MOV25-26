@@ -163,17 +163,20 @@ public class FinalScene implements IScene {
                     {
                         if(!adWatched && firstTime)
                         {
-                            androidAds.showRewardedAd(() -> diamondsPerLevel *= 2);
-                            DiamondManager.addDiamonds(diamondsPerLevel);
-                            gameLoader.saveDiamonds(DiamondManager.getDiamonds());
-                            adWatched = true;
+                            androidAds.showRewardedAd(() -> {
+                                this.diamondsPerLevel = this.diamondsPerLevel * 2;
+                                DiamondManager.addDiamonds(this.diamondsPerLevel);
+                                gameLoader.saveDiamonds(DiamondManager.getDiamonds());
+                                adWatched = true;
+                            });
                         }
                         else if(!adWatched && !firstTime)
                         {
-                            androidAds.showRewardedAd(() -> diamondsPerLevel *= 1);
-                            DiamondManager.addDiamonds(diamondsPerLevel);
-                            gameLoader.saveDiamonds(DiamondManager.getDiamonds());
-                            adWatched = true;
+                            androidAds.showRewardedAd(() -> {
+                                DiamondManager.addDiamonds(this.diamondsPerLevel);
+                                gameLoader.saveDiamonds(DiamondManager.getDiamonds());
+                                adWatched = true;
+                            });
                         }
                     }
                     if(shareButton.isTouched(e.x, e.y) && win)
