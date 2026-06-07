@@ -120,7 +120,14 @@ public class AndroidEngine implements Runnable {
                 .setInitialDelay(time, TimeUnit.SECONDS)
                 .build();
 
-        WorkManager.getInstance(activity).enqueueUniqueWork("notification_work",ExistingWorkPolicy.REPLACE, notificationWork);
+        WorkManager.getInstance(activity.getBaseContext()).enqueueUniqueWork("notification_work",ExistingWorkPolicy.REPLACE, notificationWork);
+    }
+
+    /**
+     * Método para cancelar la notificacion pendiente
+     */
+    public void cancelNotification() {
+        WorkManager.getInstance(activity.getBaseContext()).cancelUniqueWork("notification_work");
     }
 
     /**
@@ -204,7 +211,7 @@ public class AndroidEngine implements Runnable {
             this.renderThread = new Thread(this);
             this.renderThread.start();
         }
-
+        cancelNotification();
     }
 
     /**

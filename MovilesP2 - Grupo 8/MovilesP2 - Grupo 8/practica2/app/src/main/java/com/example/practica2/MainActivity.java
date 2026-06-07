@@ -1,12 +1,15 @@
 package com.example.practica2;
 
 import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.os.Build;
 import android.view.SurfaceView;
 import android.widget.FrameLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 import com.example.androidengine.AndroidAds;
 import com.example.androidengine.AndroidEngine;
@@ -28,11 +31,18 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        //Solicitamos permisos de notificaciones
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU){
+            if(checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED){
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.POST_NOTIFICATIONS}, 1);
+            }
+        }
+
         boolean fromNotification =
                 getIntent().getBooleanExtra("FROM_NOTIFICATION", false);
 
         if (fromNotification) {
-            androidEngine.reset();
+            AndroidEngine.reset();
         }
 
         setContentView(R.layout.activity_main);
@@ -46,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
         // AdView
         AndroidAds androidAds = androidEngine.getAds();
         AdView adView = findViewById(R.id.adView);
+
         androidAds.loadBannerAd(adView.getId());
 
         androidAds.loadRewardedAd("ca-app-pub-3940256099942544/5224354917");
